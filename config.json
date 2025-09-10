@@ -2,6 +2,10 @@
   "baseline_models": [
     {
       "name": "DeepSeek 1.5B",
+      "endpoint": "potential-bonobo.tdops.net"
+    },
+    {
+      "name": "DeepSeek 1.5B resolving",
       "endpoint": "vivid-coyote.tdops.net"
     },
     {
