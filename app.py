@@ -9,6 +9,72 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/health-check', methods=['GET'])
+def health_check():
+    model_fqdn = request.args.get('model', '')
+    
+    if not model_fqdn:
+        return {'error': 'No model specified'}, 400
+    
+    try:
+        # Construct status URL based on model FQDN
+        if model_fqdn.startswith('localhost'):
+            # Local development
+            status_url = f'http://{model_fqdn}/api/v1/status'
+        else:
+            # External APIs
+            status_url = f'https://{model_fqdn}/api/v1/status'
+        
+        # Make request with timeout
+        response = requests.get(
+            status_url,
+            timeout=5,
+            verify=False  # For development with self-signed certs
+        )
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                # Check if engine_ready is true
+                if data.get('engine_ready', False):
+                    return {
+                        'status': 'connected',
+                        'message': 'Connected ✓',
+                        'data': data
+                    }
+                else:
+                    return {
+                        'status': 'not_ready', 
+                        'message': 'Service not ready',
+                        'data': data
+                    }
+            except json.JSONDecodeError:
+                return {
+                    'status': 'error',
+                    'message': 'Invalid response format'
+                }
+        else:
+            return {
+                'status': 'error',
+                'message': f'HTTP {response.status_code}'
+            }
+            
+    except requests.exceptions.ConnectionError:
+        return {
+            'status': 'offline',
+            'message': 'Offline ✗'
+        }
+    except requests.exceptions.Timeout:
+        return {
+            'status': 'timeout',
+            'message': 'Connection timeout'
+        }
+    except Exception as e:
+        return {
+            'status': 'error', 
+            'message': f'Error: {str(e)}'
+        }
+
 @app.route('/stream', methods=['GET'])
 def stream():
     prompt = request.args.get('prompt', '')

@@ -17,6 +17,57 @@ document.addEventListener('DOMContentLoaded', function() {
     let twoDeltaEventSource = null;
     let isStreaming = false;
     
+    // Health check function
+    function checkModelHealth(modelUrl, statusDiv) {
+        statusDiv.textContent = 'Checking...';
+        statusDiv.className = 'status streaming';
+        
+        fetch(`/health-check?model=${encodeURIComponent(modelUrl)}`)
+            .then(response => response.json())
+            .then(data => {
+                switch(data.status) {
+                    case 'connected':
+                        statusDiv.textContent = data.message;
+                        statusDiv.className = 'status complete';
+                        break;
+                    case 'offline':
+                        statusDiv.textContent = data.message;
+                        statusDiv.className = 'status error';
+                        break;
+                    case 'not_ready':
+                        statusDiv.textContent = data.message;
+                        statusDiv.className = 'status error';
+                        break;
+                    default:
+                        statusDiv.textContent = data.message;
+                        statusDiv.className = 'status error';
+                        break;
+                }
+            })
+            .catch(error => {
+                console.error('Health check failed:', error);
+                statusDiv.textContent = 'Health check failed';
+                statusDiv.className = 'status error';
+            });
+    }
+    
+    // Add event listeners for dropdown changes
+    baselineModelSelect.addEventListener('change', function() {
+        if (!isStreaming) {
+            checkModelHealth(this.value, baselineStatusDiv);
+        }
+    });
+    
+    twoDeltaModelSelect.addEventListener('change', function() {
+        if (!isStreaming) {
+            checkModelHealth(this.value, twoDeltaStatusDiv);
+        }
+    });
+    
+    // Check initial model health on page load
+    checkModelHealth(baselineModelSelect.value, baselineStatusDiv);
+    checkModelHealth(twoDeltaModelSelect.value, twoDeltaStatusDiv);
+
     // Handle send button click
     sendButton.addEventListener('click', function() {
         const prompt = promptInput.value.trim();
