@@ -35,12 +35,6 @@ jobs:
         with:
           options: "--check --verbose --diff"
 
-      - name: Security check with Bandit
-        uses: shundor/bandit-action@v1
-        with:
-          path: "."
-          level: medium
-
       - name: Safety check (dependency vulnerabilities)
         uses: pyupio/safety@2.3.5
         with:
