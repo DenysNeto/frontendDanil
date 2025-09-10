@@ -1,161 +1,217 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const leftDropdown = document.getElementById('leftDropdown');
-    const rightDropdown = document.getElementById('rightDropdown');
-    const textarea = document.querySelector('.floating-textarea');
-    const submitButton = document.querySelector('.submit-button');
-    const leftOutputDiv = document.querySelector('.left-section .output-div');
-    const rightOutputDiv = document.querySelector('.right-section .output-div');
+    const promptInput = document.getElementById('promptInput');
+    const sendButton = document.getElementById('sendButton');
+    const baselineModelSelect = document.getElementById('baselineModelSelect');
+    const twoDeltaModelSelect = document.getElementById('twoDeltaModelSelect');
     
-    // Store selected model URLs
-    let baseModelUrl = '';
-    let twoDeltaModelUrl = '';
+    // Baseline model elements
+    const baselineStatusDiv = document.getElementById('baselineStatus');
+    const baselineResponseDiv = document.getElementById('baselineResponse');
     
-    // Add smooth scrolling behavior
-    document.documentElement.style.scrollBehavior = 'smooth';
+    // Two Delta model elements
+    const twoDeltaStatusDiv = document.getElementById('twoDeltaStatus');
+    const twoDeltaResponseDiv = document.getElementById('twoDeltaResponse');
     
-    // Handle dropdown changes with transitions
-    leftDropdown.addEventListener('change', function() {
-        baseModelUrl = this.value;
-        console.log('Baseline Model selected:', baseModelUrl);
-        
-        // Add visual transition effect
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 150);
-        
-        updateSubmitButtonState();
-    });
+    // EventSource objects for parallel streaming
+    let baselineEventSource = null;
+    let twoDeltaEventSource = null;
+    let isStreaming = false;
     
-    rightDropdown.addEventListener('change', function() {
-        twoDeltaModelUrl = this.value;
-        console.log('Two Delta Model selected:', twoDeltaModelUrl);
-        
-        // Add visual transition effect
-        this.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            this.style.transform = 'scale(1)';
-        }, 150);
-        
-        updateSubmitButtonState();
-    });
-    
-    // Update submit button state based on selections
-    function updateSubmitButtonState() {
-        if (baseModelUrl && twoDeltaModelUrl) {
-            submitButton.disabled = false;
-            submitButton.style.opacity = '1';
-            submitButton.style.cursor = 'pointer';
-        } else {
-            submitButton.disabled = true;
-            submitButton.style.opacity = '0.6';
-            submitButton.style.cursor = 'not-allowed';
-        }
-    }
-    
-    // Initialize submit button state
-    updateSubmitButtonState();
-    
-    // Handle form submission
-    submitButton.addEventListener('click', async function(e) {
-        e.preventDefault();
-        
-        const prompt = textarea.value.trim();
+    // Handle send button click
+    sendButton.addEventListener('click', function() {
+        const prompt = promptInput.value.trim();
         if (!prompt) {
             alert('Please enter a prompt');
             return;
         }
         
-        if (!baseModelUrl || !twoDeltaModelUrl) {
-            alert('Please select both models');
+        if (isStreaming) {
+            stopAllStreaming();
             return;
         }
         
-        // Disable submit button and show loading state
-        submitButton.disabled = true;
-        submitButton.textContent = 'Processing...';
-        
-        // Show loading states in output divs
-        leftOutputDiv.innerHTML = '<div class="loading">Generating baseline response...</div>';
-        rightOutputDiv.innerHTML = '<div class="loading">Generating Two Delta response...</div>';
-        
-        try {
-            // Send both requests simultaneously
-            const [baseResponse, twoDeltaResponse] = await Promise.all([
-                sendRequest(baseModelUrl, prompt, 'baseline'),
-                sendRequest(twoDeltaModelUrl, prompt, 'twodelta')
-            ]);
-            
-            // Display results
-            displayResponse(leftOutputDiv, baseResponse, 'baseline');
-            displayResponse(rightOutputDiv, twoDeltaResponse, 'twodelta');
-            
-        } catch (error) {
-            console.error('Error:', error);
-            leftOutputDiv.innerHTML = '<div class="error">Error generating baseline response</div>';
-            rightOutputDiv.innerHTML = '<div class="error">Error generating Two Delta response</div>';
-        } finally {
-            // Re-enable submit button
-            submitButton.disabled = false;
-            submitButton.textContent = 'Submit';
-            updateSubmitButtonState();
+        startParallelStreaming(prompt);
+    });
+    
+    // Handle Enter key in textarea (Ctrl+Enter to send)
+    promptInput.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            sendButton.click();
         }
     });
     
-    // Send API request through Flask backend
-    async function sendRequest(url, prompt, type) {
-        const response = await fetch('/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                prompt: prompt,
-                model_url: url
-            })
+    function startParallelStreaming(prompt) {
+        // Close any existing connections
+        stopAllStreaming();
+        
+        // Get selected models
+        const baselineModel = baselineModelSelect.value;
+        const twoDeltaModel = twoDeltaModelSelect.value;
+        
+        // Reset UI for both models
+        resetUI();
+        
+        // Update button
+        sendButton.textContent = 'Stop';
+        sendButton.style.background = '#dc3545';
+        isStreaming = true;
+        
+        // Start both streams in parallel
+        startModelStream(prompt, baselineModel, 'baseline');
+        startModelStream(prompt, twoDeltaModel, 'twodelta');
+    }
+    
+    function startModelStream(prompt, model, modelType) {
+        const params = new URLSearchParams({
+            prompt: prompt,
+            model: model
         });
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const eventSource = new EventSource(`/stream?${params.toString()}`);
         
-        return await response.json();
-    }
-    
-    // Display response in output div
-    function displayResponse(outputDiv, response, type) {
-        if (response.error) {
-            outputDiv.innerHTML = `<div class="error">Error: ${response.error}</div>`;
-            return;
-        }
-        
-        // Assume the response has a 'text' or 'response' field
-        const responseText = response.text || response.response || response.generated_text || JSON.stringify(response);
-        
-        outputDiv.innerHTML = `
-            <div class="response-container">
-                <div class="response-text">${responseText}</div>
-                <div class="response-meta">
-                    <small>Generated by ${type === 'baseline' ? 'Baseline Model' : 'Two Delta Model'}</small>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Add header scroll effect
-    let lastScrollTop = 0;
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('.sticky-header');
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        // Add subtle transparency effect when scrolling
-        if (scrollTop > lastScrollTop) {
-            // Scrolling down
-            header.style.opacity = '0.95';
+        // Store the event source
+        if (modelType === 'baseline') {
+            baselineEventSource = eventSource;
         } else {
-            // Scrolling up
-            header.style.opacity = '1';
+            twoDeltaEventSource = eventSource;
         }
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        
+        // Get the appropriate DOM elements
+        const statusDiv = modelType === 'baseline' ? baselineStatusDiv : twoDeltaStatusDiv;
+        const responseDiv = modelType === 'baseline' ? baselineResponseDiv : twoDeltaResponseDiv;
+        
+        eventSource.onopen = function() {
+            console.log(`${modelType} connection opened`);
+            statusDiv.textContent = 'Connected - Streaming response...';
+            statusDiv.className = 'status streaming';
+        };
+        
+        eventSource.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                console.log(`${modelType} received:`, data);
+                
+                switch(data.type) {
+                    case 'start':
+                        statusDiv.textContent = data.message;
+                        responseDiv.textContent = '';
+                        responseDiv.classList.add('streaming');
+                        break;
+                        
+                    case 'token':
+                        // Add each token/character to the response
+                        responseDiv.textContent += data.content;
+                        // Auto-scroll to bottom
+                        responseDiv.scrollTop = responseDiv.scrollHeight;
+                        break;
+                        
+                    case 'end':
+                        statusDiv.textContent = data.message;
+                        statusDiv.className = 'status complete';
+                        responseDiv.classList.remove('streaming');
+                        eventSource.close();
+                        checkAllComplete();
+                        break;
+                        
+                    case 'error':
+                        statusDiv.textContent = 'Error: ' + data.message;
+                        statusDiv.className = 'status error';
+                        responseDiv.classList.remove('streaming');
+                        eventSource.close();
+                        checkAllComplete();
+                        break;
+                        
+                    default:
+                        console.log('Unknown message type:', data.type);
+                }
+                
+            } catch (error) {
+                console.error(`Error parsing ${modelType} SSE data:`, error);
+                statusDiv.textContent = 'Error parsing response';
+                statusDiv.className = 'status error';
+                responseDiv.classList.remove('streaming');
+                eventSource.close();
+                checkAllComplete();
+            }
+        };
+        
+        eventSource.onerror = function(error) {
+            console.error(`${modelType} EventSource failed:`, error);
+            statusDiv.textContent = 'Connection failed';
+            statusDiv.className = 'status error';
+            responseDiv.classList.remove('streaming');
+            eventSource.close();
+            checkAllComplete();
+        };
+    }
+    
+    function stopAllStreaming() {
+        if (baselineEventSource) {
+            baselineEventSource.close();
+            baselineEventSource = null;
+        }
+        if (twoDeltaEventSource) {
+            twoDeltaEventSource.close();
+            twoDeltaEventSource = null;
+        }
+        
+        baselineStatusDiv.textContent = 'Stopped by user';
+        baselineStatusDiv.className = 'status error';
+        twoDeltaStatusDiv.textContent = 'Stopped by user';
+        twoDeltaStatusDiv.className = 'status error';
+        
+        finishAllStreaming();
+    }
+    
+    function resetUI() {
+        // Reset baseline model UI
+        baselineResponseDiv.textContent = '';
+        baselineResponseDiv.classList.remove('streaming');
+        baselineStatusDiv.textContent = `Connecting to ${baselineModelSelect.value}...`;
+        baselineStatusDiv.className = 'status streaming';
+        
+        // Reset Two Delta model UI
+        twoDeltaResponseDiv.textContent = '';
+        twoDeltaResponseDiv.classList.remove('streaming');
+        twoDeltaStatusDiv.textContent = `Connecting to ${twoDeltaModelSelect.value}...`;
+        twoDeltaStatusDiv.className = 'status streaming';
+    }
+    
+    function checkAllComplete() {
+        // Check if both streams are complete
+        const baselineComplete = !baselineEventSource || baselineEventSource.readyState === EventSource.CLOSED;
+        const twoDeltaComplete = !twoDeltaEventSource || twoDeltaEventSource.readyState === EventSource.CLOSED;
+        
+        if (baselineComplete && twoDeltaComplete) {
+            finishAllStreaming();
+        }
+    }
+    
+    function finishAllStreaming() {
+        // Reset button
+        sendButton.textContent = 'Send';
+        sendButton.style.background = '#667eea';
+        isStreaming = false;
+        
+        // Clean up any remaining connections
+        if (baselineEventSource) {
+            baselineEventSource.close();
+            baselineEventSource = null;
+        }
+        if (twoDeltaEventSource) {
+            twoDeltaEventSource.close();
+            twoDeltaEventSource = null;
+        }
+    }
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', function() {
+        if (baselineEventSource) {
+            baselineEventSource.close();
+        }
+        if (twoDeltaEventSource) {
+            twoDeltaEventSource.close();
+        }
     });
 });
