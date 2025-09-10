@@ -199,12 +199,15 @@ p {
     color: #333;
     white-space: pre-wrap;
     word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
     min-height: 200px;
     padding: 1rem;
     background: white;
     border-radius: 4px;
     border: 1px solid #ddd;
     position: relative;
+    overflow-x: hidden;
 }
 
 .response.streaming {

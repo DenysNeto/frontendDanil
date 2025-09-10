@@ -64,16 +64,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    // Function to update send button state
+    function updateSendButtonState() {
+        const prompt = promptInput.value.trim();
+        if (prompt && !isStreaming) {
+            sendButton.disabled = false;
+            sendButton.style.background = '#667eea';
+        } else if (!isStreaming) {
+            sendButton.disabled = true;
+            sendButton.style.background = '#ccc';
+        }
+    }
+    
+    // Update button state on input changes
+    promptInput.addEventListener('input', updateSendButtonState);
+    
     // Check initial model health on page load
     checkModelHealth(baselineModelSelect.value, baselineStatusDiv);
     checkModelHealth(twoDeltaModelSelect.value, twoDeltaStatusDiv);
+    
+    // Set initial button state
+    updateSendButtonState();
 
     // Handle send button click
     sendButton.addEventListener('click', function() {
         const prompt = promptInput.value.trim();
         if (!prompt) {
-            alert('Please enter a prompt');
-            return;
+            return; // Button should be disabled, but just in case
         }
         
         if (isStreaming) {
@@ -106,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update button
         sendButton.textContent = 'Stop';
         sendButton.style.background = '#dc3545';
+        sendButton.disabled = false;
         isStreaming = true;
         
         // Start both streams in parallel
@@ -242,8 +260,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function finishAllStreaming() {
         // Reset button
         sendButton.textContent = 'Send';
-        sendButton.style.background = '#667eea';
         isStreaming = false;
+        updateSendButtonState();
         
         // Clean up any remaining connections
         if (baselineEventSource) {
