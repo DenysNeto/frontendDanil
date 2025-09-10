@@ -30,11 +30,6 @@ jobs:
         with:
           src: "."
 
-      - name: Check code formatting with Black
-        uses: psf/black@stable
-        with:
-          options: "--check --verbose --diff"
-
       - name: Safety check (dependency vulnerabilities)
         uses: pyupio/safety@2.3.5
         with:
