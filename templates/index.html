@@ -12,7 +12,7 @@
         <p>Enter a prompt and watch the response stream token by token</p>
         
         <div class="input-section">
-            <div class="controls-row">
+            <div class="model-selectors-row">
                 <div class="model-selector">
                     <label for="baselineModelSelect">Baseline Model:</label>
                     <select id="baselineModelSelect">
@@ -25,9 +25,11 @@
                         <option value="conservative-mastodon.tdops.net">DeepSeek 7B</option>
                     </select>
                 </div>
+            </div>
+            <div class="prompt-row">
+                <textarea id="promptInput" placeholder="Enter your prompt here..." rows="3"></textarea>
                 <button id="sendButton">Send</button>
             </div>
-            <textarea id="promptInput" placeholder="Enter your prompt here..." rows="3"></textarea>
         </div>
         
         <div class="comparison-section">

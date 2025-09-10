@@ -13,7 +13,7 @@ body {
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     background: white;
     border-radius: 15px;
@@ -40,11 +40,17 @@ p {
     margin-bottom: 2rem;
 }
 
-.controls-row {
-    display: flex;
-    align-items: center;
+.model-selectors-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
     margin-bottom: 1rem;
+}
+
+.prompt-row {
+    display: flex;
     gap: 1rem;
+    align-items: stretch;
 }
 
 .model-selector {
@@ -52,7 +58,6 @@ p {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
-    flex: 1;
 }
 
 .model-selector label {
@@ -69,7 +74,7 @@ p {
     background: white;
     cursor: pointer;
     transition: border-color 0.3s ease;
-    min-width: 180px;
+    width: 100%;
 }
 
 .model-selector select:focus {
@@ -79,14 +84,14 @@ p {
 }
 
 #promptInput {
-    width: 100%;
+    flex: 1;
     padding: 1rem;
     border: 2px solid #ddd;
     border-radius: 8px;
     font-size: 16px;
     font-family: inherit;
-    resize: vertical;
-    min-height: 80px;
+    resize: none;
+    height: 80px;
     transition: border-color 0.3s ease;
 }
 
@@ -97,7 +102,7 @@ p {
 }
 
 #sendButton {
-    padding: 1rem 2rem;
+    padding: 0 2rem;
     background: #667eea;
     color: white;
     border: none;
@@ -106,7 +111,7 @@ p {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    height: fit-content;
+    height: 80px;
 }
 
 #sendButton:hover {
@@ -226,9 +231,13 @@ p {
         font-size: 2rem;
     }
     
-    .controls-row {
+    .model-selectors-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .prompt-row {
         flex-direction: column;
-        align-items: stretch;
         gap: 1rem;
     }
     
