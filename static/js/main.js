@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', function() {
     let twoDeltaEventSource = null;
     let isStreaming = false;
     
+    // Track model offline status
+    let modelStatus = {
+        [baselineModelSelect.value]: 'unknown',
+        [twoDeltaModelSelect.value]: 'unknown'
+    };
+    
+    // Function to check if model is offline
+    function isModelOffline(modelUrl) {
+        return modelStatus[modelUrl] === 'offline';
+    }
+    
     // Health check function
     function checkModelHealth(modelUrl, statusDiv) {
         statusDiv.textContent = 'Checking...';
@@ -29,18 +40,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'connected':
                         statusDiv.textContent = data.message;
                         statusDiv.className = 'status complete';
+                        modelStatus[modelUrl] = 'online';
                         break;
                     case 'offline':
                         statusDiv.textContent = data.message;
                         statusDiv.className = 'status error';
+                        modelStatus[modelUrl] = 'offline';
                         break;
                     case 'not_ready':
                         statusDiv.textContent = data.message;
                         statusDiv.className = 'status error';
+                        modelStatus[modelUrl] = 'offline';
                         break;
                     default:
                         statusDiv.textContent = data.message;
                         statusDiv.className = 'status error';
+                        modelStatus[modelUrl] = 'offline';
                         break;
                 }
             })
@@ -48,18 +63,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Health check failed:', error);
                 statusDiv.textContent = 'Health check failed';
                 statusDiv.className = 'status error';
+                modelStatus[modelUrl] = 'offline';
             });
     }
     
     // Add event listeners for dropdown changes
     baselineModelSelect.addEventListener('change', function() {
         if (!isStreaming) {
+            // Initialize status for new model if not tracked
+            if (!modelStatus.hasOwnProperty(this.value)) {
+                modelStatus[this.value] = 'unknown';
+            }
             checkModelHealth(this.value, baselineStatusDiv);
         }
     });
     
     twoDeltaModelSelect.addEventListener('change', function() {
         if (!isStreaming) {
+            // Initialize status for new model if not tracked
+            if (!modelStatus.hasOwnProperty(this.value)) {
+                modelStatus[this.value] = 'unknown';
+            }
             checkModelHealth(this.value, twoDeltaStatusDiv);
         }
     });
@@ -98,6 +122,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        // Check if models are offline before starting streaming
+        const baselineOffline = isModelOffline(baselineModelSelect.value);
+        const twoDeltaOffline = isModelOffline(twoDeltaModelSelect.value);
+        
+        if (baselineOffline && twoDeltaOffline) {
+            // Both models are offline
+            baselineStatusDiv.textContent = 'Cannot connect - Server offline';
+            baselineStatusDiv.className = 'status error';
+            twoDeltaStatusDiv.textContent = 'Cannot connect - Server offline';
+            twoDeltaStatusDiv.className = 'status error';
+            return;
+        }
+        
         startParallelStreaming(prompt);
     });
     
@@ -117,6 +154,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const baselineModel = baselineModelSelect.value;
         const twoDeltaModel = twoDeltaModelSelect.value;
         
+        // Check individual model status
+        const baselineOffline = isModelOffline(baselineModel);
+        const twoDeltaOffline = isModelOffline(twoDeltaModel);
+        
         // Reset UI for both models
         resetUI();
         
@@ -126,9 +167,25 @@ document.addEventListener('DOMContentLoaded', function() {
         sendButton.disabled = false;
         isStreaming = true;
         
-        // Start both streams in parallel
-        startModelStream(prompt, baselineModel, 'baseline');
-        startModelStream(prompt, twoDeltaModel, 'twodelta');
+        // Handle offline models individually
+        if (baselineOffline) {
+            baselineStatusDiv.textContent = 'Cannot connect - Server offline';
+            baselineStatusDiv.className = 'status error';
+        } else {
+            startModelStream(prompt, baselineModel, 'baseline');
+        }
+        
+        if (twoDeltaOffline) {
+            twoDeltaStatusDiv.textContent = 'Cannot connect - Server offline';
+            twoDeltaStatusDiv.className = 'status error';
+        } else {
+            startModelStream(prompt, twoDeltaModel, 'twodelta');
+        }
+        
+        // If both models are offline, stop streaming immediately
+        if (baselineOffline && twoDeltaOffline) {
+            finishAllStreaming();
+        }
     }
     
     function startModelStream(prompt, model, modelType) {
