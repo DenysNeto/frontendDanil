@@ -36,7 +36,7 @@ jobs:
           options: "--check --verbose --diff"
 
       - name: Security check with Bandit
-        uses: securecodewarrior/github-action-bandit@v1
+        uses: shundor/bandit-action@v1
         with:
           path: "."
           level: medium
