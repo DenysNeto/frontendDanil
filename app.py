@@ -204,4 +204,4 @@ def generate_stream(prompt, model_fqdn):
         yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001, threaded=True)
+    app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
