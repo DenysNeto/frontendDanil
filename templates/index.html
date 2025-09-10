@@ -1,59 +1,56 @@
-{% extends "base.html" %}
-
-{% block content %}
-<header class="sticky-header">
-    <div class="header-container">
-        <div class="header-top">
-            <div class="company-name">
-                <h1>Two Delta</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two Delta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Two Delta Ltd</h1>
+        <p>An LLM comparison between base models and TwoDelta models</p>
+        
+        <div class="input-section">
+            <div class="model-selectors-row">
+                <div class="model-selector">
+                    <label for="baselineModelSelect">Baseline Model:</label>
+                    <select id="baselineModelSelect">
+                        {% for model in config.baseline_models %}
+                        <option value="{{ model.endpoint }}">{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="model-selector">
+                    <label for="twoDeltaModelSelect">Two Delta Model:</label>
+                    <select id="twoDeltaModelSelect">
+                        {% for model in config.twodelta_models %}
+                        <option value="{{ model.endpoint }}">{{ model.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="prompt-row">
+                <textarea id="promptInput" placeholder="Enter your prompt here..." rows="3"></textarea>
+                <button id="sendButton">Submit</button>
             </div>
         </div>
         
-        <div class="header-bottom">
-            <div class="dropdown-container left-dropdown">
-                <select class="dropdown" id="leftDropdown">
-                    <option value="" disabled selected>Baseline Model</option>
-                    <option value="https://vivid-coyote.tdops.net">DeepSeek R1 1.5B</option>
-                </select>
+        <div class="comparison-section">
+            <div class="model-output baseline-output">
+                <h3>Baseline Model Output</h3>
+                <div class="status" id="baselineStatus">Ready</div>
+                <div class="response" id="baselineResponse"></div>
             </div>
             
-            <div class="dropdown-container right-dropdown">
-                <select class="dropdown" id="rightDropdown">
-                    <option value="" disabled selected>Two Delta Model</option>
-                    <option value="https://vivid-coyote.tdops.net">Two Delta DeepSeek R1 1.5B</option>
-                </select>
+            <div class="model-output twodelta-output">
+                <h3>Two Delta Model Output</h3>
+                <div class="status" id="twoDeltaStatus">Ready</div>
+                <div class="response" id="twoDeltaResponse"></div>
             </div>
         </div>
     </div>
-</header>
-
-<main class="main-content">
-    <div class="content-wrapper">
-        <div class="comparison-container">
-            <div class="model-section left-section">
-                <div class="output-div">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-                </div>
-            </div>
-            
-            <div class="model-section right-section">
-                <div class="output-div">
-                    <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet.</p>
-                    <p>Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
-                    <p>Nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
-
-<!-- Floating Input Section -->
-<div class="floating-input-container">
-    <div class="floating-input-wrapper">
-        <textarea class="floating-textarea" placeholder="Enter your prompt or question here..."></textarea>
-        <button class="submit-button" type="submit">Submit</button>
-    </div>
-</div>
-{% endblock %}
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
