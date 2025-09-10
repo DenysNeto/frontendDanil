@@ -1,0 +1,22 @@
+{
+  "baseline_models": [
+    {
+      "name": "DeepSeek 1.5B",
+      "endpoint": "vivid-coyote.tdops.net"
+    },
+    {
+      "name": "DeepSeek NotWorking 1.5B", 
+      "endpoint": "not-working.tdops.net"
+    }
+  ],
+  "twodelta_models": [
+    {
+      "name": "DeepSeek 7B",
+      "endpoint": "conservative-mastodon.tdops.net"
+    },
+    {
+      "name": "DeepSeek NotWorking 7B",
+      "endpoint": "not-working.tdops.net"
+    }
+  ]
+}

@@ -8,23 +8,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>Real-Time Streaming Demo</h1>
-        <p>Enter a prompt and watch the response stream token by token</p>
+        <h1>Two Delta Ltd</h1>
+        <p>An LLM comparison between base models and TwoDelta models</p>
         
         <div class="input-section">
             <div class="model-selectors-row">
                 <div class="model-selector">
                     <label for="baselineModelSelect">Baseline Model:</label>
                     <select id="baselineModelSelect">
-                        <option value="vivid-coyote.tdops.net">DeepSeek 1.5B</option>
-                        <option value="not-working.tdops.net">DeepSeekNotWorking 1.5B</option>
+                        {% for model in config.baseline_models %}
+                        <option value="{{ model.endpoint }}">{{ model.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="model-selector">
                     <label for="twoDeltaModelSelect">Two Delta Model:</label>
                     <select id="twoDeltaModelSelect">
-                        <option value="conservative-mastodon.tdops.net">DeepSeek 7B</option>
-                        <option value="not-working.tdops.net">DeepSeekNotWorking 7B</option>
+                        {% for model in config.twodelta_models %}
+                        <option value="{{ model.endpoint }}">{{ model.name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
