@@ -217,7 +217,7 @@ def generate_stream(prompt, model_fqdn):
                                 # Small delay to make streaming visible
                                 time.sleep(0.01)
                                 
-                    except json.JSONDecodeError as e:
+                    except json.JSONDecodeError:
                         # If line is not valid JSON, skip it
                         continue
         
