@@ -175,10 +175,16 @@ def generate_stream(prompt, model_fqdn):
             'stream': True
         }
         
+        # Prepare headers with API key if available
+        headers = {'Content-Type': 'application/json'}
+        api_key = os.getenv('API_KEY')
+        if api_key:
+            headers['Authorization'] = f'Bearer {api_key}'
+        
         with requests.post(
             api_url,
             json=payload,
-            headers={'Content-Type': 'application/json'},
+            headers=headers,
             stream=True,
             timeout=60,
             verify=False  # For development with self-signed certs
