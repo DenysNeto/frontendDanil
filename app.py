@@ -3,9 +3,13 @@ import requests
 import json
 import time
 import os
+import sys
 from pathlib import Path
 
 app = Flask(__name__)
+
+# Disable Flask's default buffering for streaming
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 def load_config():
     """Load model configuration from config file or environment variables"""
@@ -137,15 +141,21 @@ def stream():
     if not prompt:
         return Response('data: {"error": "No prompt provided"}\n\n', content_type='text/event-stream')
     
-    return Response(
+    response = Response(
         generate_stream(prompt, model_fqdn),
         content_type='text/event-stream',
         headers={
             'Cache-Control': 'no-cache',
             'Connection': 'keep-alive',
-            'Access-Control-Allow-Origin': '*'
+            'Access-Control-Allow-Origin': '*',
+            'X-Accel-Buffering': 'no',  # Disable nginx proxy buffering
+            'X-Content-Type-Options': 'nosniff'  # Prevent content sniffing buffering
         }
     )
+    
+    # Disable implicit sequence conversion for true streaming
+    response.implicit_sequence_conversion = False
+    return response
 
 def generate_stream(prompt, model_fqdn):
     """Generate streaming response by calling specified model backend"""
@@ -187,6 +197,11 @@ def generate_stream(prompt, model_fqdn):
                         'content': chunk
                     }
                     yield f"data: {json.dumps(data)}\n\n"
+                    
+                    # Force flush to prevent buffering
+                    sys.stdout.flush()
+                    sys.stderr.flush()
+                    
                     # Small delay to make streaming visible
                     time.sleep(0.01)
         
