@@ -189,21 +189,37 @@ def generate_stream(prompt, model_fqdn):
                 yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
                 return
             
-            # Stream response character by character
-            for chunk in response.iter_content(chunk_size=1, decode_unicode=True):
-                if chunk:  # Send all characters including spaces
-                    data = {
-                        'type': 'token',
-                        'content': chunk
-                    }
-                    yield f"data: {json.dumps(data)}\n\n"
-                    
-                    # Force flush to prevent buffering
-                    sys.stdout.flush()
-                    sys.stderr.flush()
-                    
-                    # Small delay to make streaming visible
-                    time.sleep(0.01)
+            # Stream response line by line (each line is a JSON object)
+            for line in response.iter_lines(decode_unicode=True):
+                if line.strip():  # Skip empty lines
+                    try:
+                        # Parse the JSON response from the model
+                        model_data = json.loads(line)
+                        
+                        # Extract text content from the model response
+                        text_content = model_data.get('text', '')
+                        tokens_so_far = model_data.get('tokens_so_far', 0)
+                        
+                        # Send each character individually for character-by-character streaming
+                        for char in text_content:
+                            if char:  # Send all characters including spaces
+                                data = {
+                                    'type': 'token',
+                                    'content': char,
+                                    'tokens_so_far': tokens_so_far
+                                }
+                                yield f"data: {json.dumps(data)}\n\n"
+                                
+                                # Force flush to prevent buffering
+                                sys.stdout.flush()
+                                sys.stderr.flush()
+                                
+                                # Small delay to make streaming visible
+                                time.sleep(0.01)
+                                
+                    except json.JSONDecodeError:
+                        # If line is not valid JSON, skip it
+                        continue
         
         # Send completion message
         yield f"data: {json.dumps({'type': 'end', 'message': 'Generation complete'})}\n\n"

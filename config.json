@@ -2,11 +2,7 @@
   "baseline_models": [
     {
       "name": "DeepSeek 1.5B",
-      "endpoint": "potential-bonobo.tdops.net"
-    },
-    {
-      "name": "DeepSeek 1.5B resolving",
-      "endpoint": "vivid-coyote.tdops.net"
+      "endpoint": "shiny-rhinoceros.tdops.net"
     },
     {
       "name": "DeepSeek NotWorking 1.5B", 
@@ -16,7 +12,7 @@
   "twodelta_models": [
     {
       "name": "DeepSeek 7B",
-      "endpoint": "conservative-mastodon.tdops.net"
+      "endpoint": "unpleasant-rodent.tdops.net"
     },
     {
       "name": "DeepSeek NotWorking 7B",

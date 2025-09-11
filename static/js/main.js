@@ -7,10 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Baseline model elements
     const baselineStatusDiv = document.getElementById('baselineStatus');
     const baselineResponseDiv = document.getElementById('baselineResponse');
+    const baselineTokenCounterDiv = document.getElementById('baselineTokenCounter');
     
     // Two Delta model elements
     const twoDeltaStatusDiv = document.getElementById('twoDeltaStatus');
     const twoDeltaResponseDiv = document.getElementById('twoDeltaResponse');
+    const twoDeltaTokenCounterDiv = document.getElementById('twoDeltaTokenCounter');
     
     // EventSource objects for parallel streaming
     let baselineEventSource = null;
@@ -206,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the appropriate DOM elements
         const statusDiv = modelType === 'baseline' ? baselineStatusDiv : twoDeltaStatusDiv;
         const responseDiv = modelType === 'baseline' ? baselineResponseDiv : twoDeltaResponseDiv;
+        const tokenCounterDiv = modelType === 'baseline' ? baselineTokenCounterDiv : twoDeltaTokenCounterDiv;
         
         eventSource.onopen = function() {
             console.log(`${modelType} connection opened`);
@@ -228,6 +231,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     case 'token':
                         // Add each token/character to the response
                         responseDiv.textContent += data.content;
+                        // Update token counter if tokens_so_far is available
+                        if (data.tokens_so_far !== undefined) {
+                            tokenCounterDiv.textContent = `Tokens: ${data.tokens_so_far}`;
+                        }
                         // Auto-scroll to bottom
                         responseDiv.scrollTop = responseDiv.scrollHeight;
                         break;
@@ -296,12 +303,14 @@ document.addEventListener('DOMContentLoaded', function() {
         baselineResponseDiv.classList.remove('streaming');
         baselineStatusDiv.textContent = `Connecting to ${baselineModelSelect.value}...`;
         baselineStatusDiv.className = 'status streaming';
+        baselineTokenCounterDiv.textContent = 'Tokens: 0';
         
         // Reset Two Delta model UI
         twoDeltaResponseDiv.textContent = '';
         twoDeltaResponseDiv.classList.remove('streaming');
         twoDeltaStatusDiv.textContent = `Connecting to ${twoDeltaModelSelect.value}...`;
         twoDeltaStatusDiv.className = 'status streaming';
+        twoDeltaTokenCounterDiv.textContent = 'Tokens: 0';
     }
     
     function checkAllComplete() {
