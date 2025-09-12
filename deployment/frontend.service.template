@@ -1,0 +1,19 @@
+[Unit]
+Description=Frontend Application
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=10
+Environment="ECR_REGISTRY={{ECR_REGISTRY}}"
+Environment="ECR_REGION={{ECR_REGION}}"
+Environment="API_KEY={{API_KEY}}"
+ExecStartPre=/bin/bash -c 'aws ecr get-login-password --region ${ECR_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}'
+ExecStartPre=/usr/bin/docker pull {{IMAGE}}
+ExecStart=/usr/bin/docker run --rm --name frontend -p 8080:8080 -e API_KEY=${API_KEY} {{IMAGE}}
+ExecStop=/usr/bin/docker stop frontend
+
+[Install]
+WantedBy=multi-user.target

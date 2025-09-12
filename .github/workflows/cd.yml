@@ -1,0 +1,166 @@
+name: CD - Deploy to Development
+
+on:
+  workflow_run:
+    workflows: ["CI - Build and Push to ECR"]
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  ECR_REPOSITORY: frontend-demo
+  ECR_REGISTRY: ${{ vars.AWS_DEV_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_DEV_ECR_REGION }}.amazonaws.com
+  INSTANCE_ID: i-09f9fe068a9daefed
+  SERVICE_NAME: frontend
+  SSH_USER: ubuntu
+
+jobs:
+  deploy:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    
+    # Only run if CI workflow was successful and triggered by push (not PR)
+    if: |
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push'
+    
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
+          aws-region: ${{ vars.AWS_DEV_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Get latest image tag
+        id: get-tag
+        run: |
+          SHORT_SHA=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)
+          MAIN_SHA_TAG="main-${SHORT_SHA}"
+          echo "image_tag=${MAIN_SHA_TAG}" >> $GITHUB_OUTPUT
+          echo "full_image=${ECR_REGISTRY}/${ECR_REPOSITORY}:${MAIN_SHA_TAG}" >> $GITHUB_OUTPUT
+
+      - name: Get EC2 instance details
+        id: get-instance
+        run: |
+          HOST=$(aws ec2 describe-instances \
+            --instance-ids ${{ env.INSTANCE_ID }} \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --output text \
+            --region ${{ vars.AWS_DEV_REGION }})
+          echo "host=${HOST}" >> $GITHUB_OUTPUT
+
+      - name: Verify image exists in ECR
+        run: |
+          aws ecr describe-images \
+            --repository-name ${{ env.ECR_REPOSITORY }} \
+            --image-ids imageTag=${{ steps.get-tag.outputs.image_tag }} \
+            --region ${{ vars.AWS_DEV_ECR_REGION }}
+
+      - name: Copy deployment template to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.get-instance.outputs.host }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          source: "deployment/frontend.service.template"
+          target: "/tmp/"
+
+      - name: Stop existing service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.host }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          port: 22
+          script: |
+            echo "Checking if ${{ env.SERVICE_NAME }} service exists..."
+            if systemctl list-units --full -all | grep -Fq "${{ env.SERVICE_NAME }}.service"; then
+              echo "Service ${{ env.SERVICE_NAME }} exists, stopping it..."
+              sudo systemctl stop ${{ env.SERVICE_NAME }} || true
+              sudo systemctl disable ${{ env.SERVICE_NAME }} || true
+            else
+              echo "Service ${{ env.SERVICE_NAME }} does not exist, skipping stop step"
+            fi
+
+      - name: Update service from template
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.host }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          port: 22
+          script: |
+            echo "Updating ${{ env.SERVICE_NAME }} service from template..."
+            
+            # Get API key from SSM Parameter Store
+            API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
+            
+            # Stop and remove existing container if running
+            sudo docker stop ${{ env.SERVICE_NAME }} || true
+            sudo docker rm ${{ env.SERVICE_NAME }} || true
+            
+            # Copy template and replace placeholders
+            sudo cp /tmp/deployment/frontend.service.template /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            
+            # Update the service file with current values
+            sudo sed -i "s|{{IMAGE}}|${{ steps.get-tag.outputs.full_image }}|g" /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            sudo sed -i "s|{{ECR_REGISTRY}}|${{ env.ECR_REGISTRY }}|g" /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            sudo sed -i "s|{{ECR_REGION}}|${{ vars.AWS_DEV_ECR_REGION }}|g" /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            sudo sed -i "s|{{API_KEY}}|$API_KEY|g" /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            
+            # Reload systemd to pick up the new service file
+            sudo systemctl daemon-reload
+
+      - name: Start service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.host }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          port: 22
+          script: |
+            echo "Starting ${{ env.SERVICE_NAME }} service..."
+            sudo systemctl enable ${{ env.SERVICE_NAME }}
+            sudo systemctl start ${{ env.SERVICE_NAME }}
+            
+            # Wait a moment for service to start
+            sleep 5
+            
+            # Check service status
+            sudo systemctl status ${{ env.SERVICE_NAME }} --no-pager
+
+      - name: Wait for service to be ready
+        run: sleep 30
+
+      - name: Health check
+        uses: jtalk/url-health-check-action@v4
+        with:
+          url: http://${{ steps.get-instance.outputs.host }}:8080
+          max-attempts: 10
+          retry-delay: 10s
+          follow-redirect: false
+          retry-all: true
+
+      - name: Deployment summary
+        run: |
+          echo "### 🚀 Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** development" >> $GITHUB_STEP_SUMMARY
+          echo "**Service:** ${{ env.SERVICE_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Image:** ${{ steps.get-tag.outputs.full_image }}" >> $GITHUB_STEP_SUMMARY
+          echo "**SHA:** ${{ github.event.workflow_run.head_sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Health Check:** ✅ Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Service URL:** http://${{ steps.get-instance.outputs.host }}:8080" >> $GITHUB_STEP_SUMMARY
