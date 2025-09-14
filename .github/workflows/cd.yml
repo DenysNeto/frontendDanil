@@ -78,24 +78,6 @@ jobs:
           echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Copy deployment template to EC2
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ steps.get-instance.outputs.private_ip }}
-          username: ${{ env.SSH_USER }}
-          key: ${{ secrets.SSH_EC2_KEY }}
-          script: |
-            # Get API key from SSM Parameter Store (using local AWS credentials)
-            API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
-
-            # Create service file with substitutions
-            cat > /tmp/frontend.service << EOF
-            ${{ steps.create-service-file.outputs.content }}
-            EOF
-
-            # Move to system location
-            sudo mv /tmp/frontend.service /etc/systemd/system/${{ env.SERVICE_NAME }}.service
-
       - name: Deploy and restart service
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -103,8 +85,16 @@ jobs:
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
           script: |
-            # Create service file
-            echo '${{ steps.create-service-file.outputs.content }}' | sudo tee /etc/systemd/system/${{ env.SERVICE_NAME }}.service > /dev/null
+            # Get API key from SSM Parameter Store
+            API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
+
+            # Create service file with proper content
+            cat > /tmp/frontend.service << 'TEMPLATE_EOF'
+${{ steps.create-service-file.outputs.content }}
+TEMPLATE_EOF
+
+            # Move to system location
+            sudo mv /tmp/frontend.service /etc/systemd/system/${{ env.SERVICE_NAME }}.service
 
             # Stop existing service if it exists
             if systemctl list-units --full -all | grep -Fq '${{ env.SERVICE_NAME }}.service'; then
