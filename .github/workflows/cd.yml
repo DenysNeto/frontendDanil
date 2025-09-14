@@ -19,12 +19,12 @@ env:
 jobs:
   deploy:
     name: Deploy to Development
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, dev-nva]
     
     # Only run if CI workflow was successful and triggered by push (not PR)
-    if: |
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'push'
+    # if: |
+    #   github.event.workflow_run.conclusion == 'success' &&
+    #   github.event.workflow_run.event == 'push'
     
     permissions:
       id-token: write
@@ -61,6 +61,24 @@ jobs:
             --region ${{ vars.AWS_DEV_REGION }})
           echo "private_ip=${PRIVATE_IP}" >> $GITHUB_OUTPUT
 
+      - name: Create service file content
+        id: create-service-file
+        run: |
+          # Get API key from SSM Parameter Store
+          API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
+
+          # Read template and replace placeholders
+          TEMPLATE_CONTENT=$(cat deployment/frontend.service.template)
+          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{IMAGE\}\}/${{ steps.get-tag.outputs.full_image }}}"
+          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGISTRY\}\}/${{ env.ECR_REGISTRY }}}"
+          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGION\}\}/${{ vars.AWS_DEV_ECR_REGION }}}"
+          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{API_KEY\}\}/$API_KEY}"
+
+          # Output the content (escaped for multiline)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Verify image exists in ECR
         run: |
           aws ecr describe-images \
@@ -69,89 +87,68 @@ jobs:
             --region ${{ vars.AWS_DEV_ECR_REGION }}
 
       - name: Copy deployment template to EC2
-        run: |
-          # Get API key from SSM Parameter Store
-          API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
-          
-          # Read template and replace placeholders
-          TEMPLATE_CONTENT=$(cat deployment/frontend.service.template)
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{IMAGE\}\}/${{ steps.get-tag.outputs.full_image }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGISTRY\}\}/${{ env.ECR_REGISTRY }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGION\}\}/${{ vars.AWS_DEV_ECR_REGION }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{API_KEY\}\}/$API_KEY}"
-          
-          # Create the service file on EC2 via SSM
-          aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --parameters "commands=[\"echo '$TEMPLATE_CONTENT' | sudo tee /etc/systemd/system/${{ env.SERVICE_NAME }}.service > /dev/null\"]" \
-            --region ${{ vars.AWS_DEV_REGION }}
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          script: |
+            # Get API key from SSM Parameter Store (using local AWS credentials)
+            API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
 
-      - name: Stop existing service
-        run: |
-          aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["if systemctl list-units --full -all | grep -Fq \"${{ env.SERVICE_NAME }}.service\"; then echo \"Service ${{ env.SERVICE_NAME }} exists, stopping it...\"; sudo systemctl stop ${{ env.SERVICE_NAME }} || true; sudo systemctl disable ${{ env.SERVICE_NAME }} || true; else echo \"Service ${{ env.SERVICE_NAME }} does not exist, skipping stop step\"; fi"]' \
-            --region ${{ vars.AWS_DEV_REGION }}
+            # Create service file with substitutions
+            cat > /tmp/frontend.service << EOF
+            ${{ steps.create-service-file.outputs.content }}
+            EOF
 
-      - name: Update and reload service
-        run: |
-          aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["echo \"Updating ${{ env.SERVICE_NAME }} service...\"; sudo docker stop ${{ env.SERVICE_NAME }} || true; sudo docker rm ${{ env.SERVICE_NAME }} || true; sudo systemctl daemon-reload"]' \
-            --region ${{ vars.AWS_DEV_REGION }}
+            # Move to system location
+            sudo mv /tmp/frontend.service /etc/systemd/system/${{ env.SERVICE_NAME }}.service
 
-      - name: Start service
-        run: |
-          COMMAND_ID=$(aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["echo \"Starting ${{ env.SERVICE_NAME }} service...\"; sudo systemctl enable ${{ env.SERVICE_NAME }}; sudo systemctl start ${{ env.SERVICE_NAME }}; sleep 5; sudo systemctl status ${{ env.SERVICE_NAME }} --no-pager"]' \
-            --region ${{ vars.AWS_DEV_REGION }} \
-            --query 'Command.CommandId' \
-            --output text)
-          
-          # Wait for command to complete
-          aws ssm wait command-executed \
-            --command-id $COMMAND_ID \
-            --instance-id ${{ env.INSTANCE_ID }} \
-            --region ${{ vars.AWS_DEV_REGION }}
+      - name: Deploy and restart service
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          script: |
+            # Create service file
+            echo '${{ steps.create-service-file.outputs.content }}' | sudo tee /etc/systemd/system/${{ env.SERVICE_NAME }}.service > /dev/null
+
+            # Stop existing service if it exists
+            if systemctl list-units --full -all | grep -Fq '${{ env.SERVICE_NAME }}.service'; then
+              echo 'Service ${{ env.SERVICE_NAME }} exists, stopping it...'
+              sudo systemctl stop ${{ env.SERVICE_NAME }} || true
+              sudo systemctl disable ${{ env.SERVICE_NAME }} || true
+            else
+              echo 'Service ${{ env.SERVICE_NAME }} does not exist, skipping stop step'
+            fi
+
+            # Clean up existing containers
+            echo 'Updating ${{ env.SERVICE_NAME }} service...'
+            sudo docker stop ${{ env.SERVICE_NAME }} || true
+            sudo docker rm ${{ env.SERVICE_NAME }} || true
+
+            # Reload systemd and start service
+            sudo systemctl daemon-reload
+            echo 'Starting ${{ env.SERVICE_NAME }} service...'
+            sudo systemctl enable ${{ env.SERVICE_NAME }}
+            sudo systemctl start ${{ env.SERVICE_NAME }}
+            sleep 5
+            sudo systemctl status ${{ env.SERVICE_NAME }} --no-pager
+
 
       - name: Wait for service to be ready
         run: sleep 30
 
-      - name: Health check via SSM
-        run: |
-          COMMAND_ID=$(aws ssm send-command \
-            --instance-ids ${{ env.INSTANCE_ID }} \
-            --document-name "AWS-RunShellScript" \
-            --parameters 'commands=["curl -f http://localhost:8080 || exit 1"]' \
-            --region ${{ vars.AWS_DEV_REGION }} \
-            --query 'Command.CommandId' \
-            --output text)
-          
-          # Wait for health check to complete
-          aws ssm wait command-executed \
-            --command-id $COMMAND_ID \
-            --instance-id ${{ env.INSTANCE_ID }} \
-            --region ${{ vars.AWS_DEV_REGION }}
-          
-          # Get command status
-          STATUS=$(aws ssm get-command-invocation \
-            --command-id $COMMAND_ID \
-            --instance-id ${{ env.INSTANCE_ID }} \
-            --region ${{ vars.AWS_DEV_REGION }} \
-            --query 'Status' \
-            --output text)
-          
-          if [ "$STATUS" != "Success" ]; then
-            echo "Health check failed"
-            exit 1
-          fi
-          
-          echo "Health check passed"
+      - name: Health check
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          script: |
+            curl -f http://localhost:8080 || exit 1
+            echo 'Health check passed'
 
       - name: Deployment summary
         run: |
