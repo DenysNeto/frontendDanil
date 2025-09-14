@@ -60,23 +60,14 @@ jobs:
             --region ${{ vars.AWS_DEV_REGION }})
           echo "private_ip=${PRIVATE_IP}" >> $GITHUB_OUTPUT
 
-      - name: Create service file content
-        id: create-service-file
-        run: |
-          # Get API key from SSM Parameter Store
-          API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
-
-          # Read template and replace placeholders
-          TEMPLATE_CONTENT=$(cat deployment/frontend.service.template)
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{IMAGE\}\}/${{ steps.get-tag.outputs.full_image }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGISTRY\}\}/${{ env.ECR_REGISTRY }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{ECR_REGION\}\}/${{ vars.AWS_DEV_ECR_REGION }}}"
-          TEMPLATE_CONTENT="${TEMPLATE_CONTENT//\{\{API_KEY\}\}/$API_KEY}"
-
-          # Output the content (escaped for multiline)
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+      - name: Copy template to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          source: "deployment/frontend.service.template"
+          target: "/tmp/"
 
       - name: Deploy and restart service
         uses: appleboy/ssh-action@v1.0.3
@@ -84,39 +75,44 @@ jobs:
           host: ${{ steps.get-instance.outputs.private_ip }}
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
+          envs: IMAGE,ECR_REGISTRY,ECR_REGION,SERVICE_NAME
+        env:
+          IMAGE: ${{ steps.get-tag.outputs.full_image }}
+          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
+          ECR_REGION: ${{ vars.AWS_DEV_ECR_REGION }}
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
           script: |
             # Get API key from SSM Parameter Store
             API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
 
-            # Create service file with proper content
-            cat > /tmp/frontend.service << 'TEMPLATE_EOF'
-${{ steps.create-service-file.outputs.content }}
-TEMPLATE_EOF
-
-            # Move to system location
-            sudo mv /tmp/frontend.service /etc/systemd/system/${{ env.SERVICE_NAME }}.service
+            # Create service file from template with substitutions
+            sed -e "s|{{IMAGE}}|${IMAGE}|g" \
+                -e "s|{{ECR_REGISTRY}}|${ECR_REGISTRY}|g" \
+                -e "s|{{ECR_REGION}}|${ECR_REGION}|g" \
+                -e "s|{{API_KEY}}|${API_KEY}|g" \
+                /tmp/frontend.service.template | sudo tee /etc/systemd/system/${SERVICE_NAME}.service > /dev/null
 
             # Stop existing service if it exists
-            if systemctl list-units --full -all | grep -Fq '${{ env.SERVICE_NAME }}.service'; then
-              echo 'Service ${{ env.SERVICE_NAME }} exists, stopping it...'
-              sudo systemctl stop ${{ env.SERVICE_NAME }} || true
-              sudo systemctl disable ${{ env.SERVICE_NAME }} || true
+            if systemctl list-units --full -all | grep -Fq "${SERVICE_NAME}.service"; then
+              echo "Service ${SERVICE_NAME} exists, stopping it..."
+              sudo systemctl stop ${SERVICE_NAME} || true
+              sudo systemctl disable ${SERVICE_NAME} || true
             else
-              echo 'Service ${{ env.SERVICE_NAME }} does not exist, skipping stop step'
+              echo "Service ${SERVICE_NAME} does not exist, skipping stop step"
             fi
 
             # Clean up existing containers
-            echo 'Updating ${{ env.SERVICE_NAME }} service...'
-            sudo docker stop ${{ env.SERVICE_NAME }} || true
-            sudo docker rm ${{ env.SERVICE_NAME }} || true
+            echo "Updating ${SERVICE_NAME} service..."
+            sudo docker stop ${SERVICE_NAME} || true
+            sudo docker rm ${SERVICE_NAME} || true
 
             # Reload systemd and start service
             sudo systemctl daemon-reload
-            echo 'Starting ${{ env.SERVICE_NAME }} service...'
-            sudo systemctl enable ${{ env.SERVICE_NAME }}
-            sudo systemctl start ${{ env.SERVICE_NAME }}
+            echo "Starting ${SERVICE_NAME} service..."
+            sudo systemctl enable ${SERVICE_NAME}
+            sudo systemctl start ${SERVICE_NAME}
             sleep 5
-            sudo systemctl status ${{ env.SERVICE_NAME }} --no-pager
+            sudo systemctl status ${SERVICE_NAME} --no-pager
 
 
       - name: Wait for service to be ready
