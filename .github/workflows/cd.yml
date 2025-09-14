@@ -46,8 +46,7 @@ jobs:
       - name: Get latest image tag
         id: get-tag
         run: |
-          SHORT_SHA=$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)
-          MAIN_SHA_TAG="main-${SHORT_SHA}"
+          MAIN_SHA_TAG="main-stable"
           echo "image_tag=${MAIN_SHA_TAG}" >> $GITHUB_OUTPUT
           echo "full_image=${ECR_REGISTRY}/${ECR_REPOSITORY}:${MAIN_SHA_TAG}" >> $GITHUB_OUTPUT
 
