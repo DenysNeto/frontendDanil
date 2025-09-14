@@ -71,16 +71,16 @@ jobs:
 
       - name: Deploy and restart service
         uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ steps.get-instance.outputs.private_ip }}
-          username: ${{ env.SSH_USER }}
-          key: ${{ secrets.SSH_EC2_KEY }}
-          envs: IMAGE,ECR_REGISTRY,ECR_REGION,SERVICE_NAME
         env:
           IMAGE: ${{ steps.get-tag.outputs.full_image }}
           ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
           ECR_REGION: ${{ vars.AWS_DEV_ECR_REGION }}
           SERVICE_NAME: ${{ env.SERVICE_NAME }}
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          envs: IMAGE,ECR_REGISTRY,ECR_REGION,SERVICE_NAME
           script: |
             # Get API key from SSM Parameter Store
             API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
