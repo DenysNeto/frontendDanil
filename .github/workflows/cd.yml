@@ -79,13 +79,6 @@ jobs:
           echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Verify image exists in ECR
-        run: |
-          aws ecr describe-images \
-            --repository-name ${{ env.ECR_REPOSITORY }} \
-            --image-ids imageTag=${{ steps.get-tag.outputs.image_tag }} \
-            --region ${{ vars.AWS_DEV_ECR_REGION }}
-
       - name: Copy deployment template to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
