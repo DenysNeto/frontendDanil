@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, request, Response, send_from_directory
 import requests
 import json
 import time
@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 # Disable Flask's default buffering for streaming
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -58,9 +58,23 @@ def get_default_config():
 # Load configuration on startup
 MODEL_CONFIG = load_config()
 
+# Route to serve the React app
 @app.route('/')
 def index():
-    return render_template('index.html', config=MODEL_CONFIG)
+    return send_from_directory('static/react-build', 'index.html')
+
+# Route to serve React static files
+@app.route('/<path:path>')
+def serve_react_app(path):
+    if path.startswith('api/') or path.startswith('health-check') or path.startswith('stream'):
+        # Let API routes be handled by their specific handlers
+        return None
+
+    if os.path.exists(os.path.join('static/react-build', path)):
+        return send_from_directory('static/react-build', path)
+    else:
+        # For client-side routing, serve index.html
+        return send_from_directory('static/react-build', 'index.html')
 
 @app.route('/api/config', methods=['GET'])
 def get_config():
@@ -162,6 +176,7 @@ def generate_stream(prompt, model_fqdn):
     try:
         # Send initial message
         yield f"data: {json.dumps({'type': 'start', 'message': 'Starting generation...'})}\n\n"
+
         
         # Construct API URL based on model FQDN
         if model_fqdn.startswith('localhost'):
@@ -201,10 +216,12 @@ def generate_stream(prompt, model_fqdn):
                     try:
                         # Parse the JSON response from the model
                         model_data = json.loads(line)
-                        
+                        print(f"Model response line: {model_data}")  # Debug log
+
                         # Extract text content from the model response
                         text_content = model_data.get('text', '')
                         tokens_so_far = model_data.get('tokens_so_far', 0)
+                        print(f"Extracted text: '{text_content}', tokens: {tokens_so_far}")  # Debug log
                         
                         # Send each character individually for character-by-character streaming
                         for char in text_content:
