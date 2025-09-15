@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 const ResponseDisplay = ({ response, isLoading }) => {
   const responseRef = useRef(null);
@@ -26,7 +26,7 @@ const ResponseDisplay = ({ response, isLoading }) => {
         ) : isLoading ? (
           <div className="flex items-center space-x-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <span className="text-gray-600 text-sm">Connecting to model...</span>
+            <span className="text-gray-600 text-sm">Generating response...</span>
           </div>
         ) : (
           <div className="text-gray-500 italic">

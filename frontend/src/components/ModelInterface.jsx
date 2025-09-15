@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, startTransition } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ModelSelector from './ModelSelector';
 import ResponseDisplay from './ResponseDisplay';
 import MetricsPanel from './MetricsPanel';
@@ -17,8 +17,8 @@ const ModelInterface = ({ prompt, modelType = 'all', promptKey }) => {
   const responseRef = useRef('');
   const eventSourceRef = useRef(null);
 
-  
-  const handlePrompt = async (prompt) => {
+
+  const handlePrompt = useCallback(async (prompt) => {
     if (!endpoint) {
       console.log('No model selected! Please select a model first.')
       return;
@@ -107,13 +107,13 @@ const ModelInterface = ({ prompt, modelType = 'all', promptKey }) => {
       setResponse('Error: Failed to get response from the model.');
       setisLoading(false);
     }
-  };
+  }, [endpoint, selectedModel]);
   
   useEffect(() => {
     if (prompt) {
       handlePrompt(prompt)
     }
-  }, [prompt, promptKey]);
+  }, [prompt, promptKey, handlePrompt]);
 
   // Cleanup EventSource on component unmount
   useEffect(() => {

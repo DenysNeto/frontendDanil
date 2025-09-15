@@ -27,7 +27,7 @@ A Flask application that enables real-time comparison between baseline and Two D
    python app.py
    ```
 
-4. **Open your browser** to `http://localhost:5001`
+4. **Open your browser** to `http://localhost:8080`
 
 ## Usage
 
