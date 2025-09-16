@@ -59,12 +59,12 @@ jobs:
 
       - name: Generate version
         id: version
-        run: |
-          echo "VERSION=$(date +'%Y%m%d%H%M%S')-$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(date +%Y%m%d)-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: Generate tags
         id: tags
-        run: echo "VERSION=$(date +%Y%m%d)-${{ github.run_number }}" >> $GITHUB_OUTPUT
+        run: |
+          echo "TAGS=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:latest,${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ steps.version.outputs.VERSION }}" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
