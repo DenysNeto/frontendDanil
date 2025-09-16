@@ -162,4 +162,4 @@ jobs:
           echo "**SHA:** ${{ github.event.workflow_run.head_sha }}" >> $GITHUB_STEP_SUMMARY
           echo "**Health Check:** ✅ Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Service URL:** http://${{ steps.get-instance.outputs.private_ip }}:8080" >> $GITHUB_STEP_SUMMARY
+          echo "**Service URL:** http://${{ env.HEALTH_CHECK_FQDN }}:${{ env.HEALTH_CHECK_PORT }}" >> $GITHUB_STEP_SUMMARY
