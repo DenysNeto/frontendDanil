@@ -40,9 +40,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEV_GITHUB_ACTION_ROLE }}
           aws-region: ${{ vars.AWS_DEV_REGION }}
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v2
-
       - name: Get latest image tag
         id: get-tag
         run: |
@@ -60,38 +57,37 @@ jobs:
             --region ${{ vars.AWS_DEV_REGION }})
           echo "private_ip=${PRIVATE_IP}" >> $GITHUB_OUTPUT
 
-      - name: Copy template to server
+      - name: Template service file
+        run: |
+          # Get API key from SSM Parameter Store
+          API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
+
+          # Create templated service file
+          sed -e "s|{{IMAGE}}|${{ steps.get-tag.outputs.full_image }}|g" \
+              -e "s|{{ECR_REGISTRY}}|${{ env.ECR_REGISTRY }}|g" \
+              -e "s|{{ECR_REGION}}|${{ vars.AWS_DEV_ECR_REGION }}|g" \
+              -e "s|{{API_KEY}}|${API_KEY}|g" \
+              deployment/frontend.service.template > /tmp/frontend.service
+
+      - name: Copy templated service file to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ steps.get-instance.outputs.private_ip }}
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
-          source: "deployment/frontend.service.template"
+          source: "/tmp/frontend.service"
           target: "/tmp/"
 
-      - name: Deploy and restart service
+      - name: Stop service
         uses: appleboy/ssh-action@v1.0.3
         env:
-          IMAGE: ${{ steps.get-tag.outputs.full_image }}
-          ECR_REGISTRY: ${{ env.ECR_REGISTRY }}
-          ECR_REGION: ${{ vars.AWS_DEV_ECR_REGION }}
           SERVICE_NAME: ${{ env.SERVICE_NAME }}
         with:
           host: ${{ steps.get-instance.outputs.private_ip }}
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
-          envs: IMAGE,ECR_REGISTRY,ECR_REGION,SERVICE_NAME
+          envs: SERVICE_NAME
           script: |
-            # Get API key from SSM Parameter Store
-            API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
-
-            # Create service file from template with substitutions
-            sed -e "s|{{IMAGE}}|${IMAGE}|g" \
-                -e "s|{{ECR_REGISTRY}}|${ECR_REGISTRY}|g" \
-                -e "s|{{ECR_REGION}}|${ECR_REGION}|g" \
-                -e "s|{{API_KEY}}|${API_KEY}|g" \
-                /tmp/frontend.service.template | sudo tee /etc/systemd/system/${SERVICE_NAME}.service > /dev/null
-
             # Stop existing service if it exists
             if systemctl list-units --full -all | grep -Fq "${SERVICE_NAME}.service"; then
               echo "Service ${SERVICE_NAME} exists, stopping it..."
@@ -102,12 +98,44 @@ jobs:
             fi
 
             # Clean up existing containers
-            echo "Updating ${SERVICE_NAME} service..."
+            echo "Cleaning up containers for ${SERVICE_NAME}..."
             sudo docker stop ${SERVICE_NAME} || true
             sudo docker rm ${SERVICE_NAME} || true
 
-            # Reload systemd and start service
+      - name: Sleep after stopping service
+        run: sleep 10
+
+      - name: Copy service file and reload systemd
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          envs: SERVICE_NAME
+          script: |
+            # Copy the templated service file to systemd directory
+            sudo cp /tmp/frontend.service /etc/systemd/system/${SERVICE_NAME}.service
+
+            # Reload systemd
             sudo systemctl daemon-reload
+            echo "Systemd daemon reloaded"
+
+      - name: Sleep after copying and reloading
+        run: sleep 5
+
+      - name: Start service
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
+        with:
+          host: ${{ steps.get-instance.outputs.private_ip }}
+          username: ${{ env.SSH_USER }}
+          key: ${{ secrets.SSH_EC2_KEY }}
+          envs: SERVICE_NAME
+          script: |
+            # Enable and start service
             echo "Starting ${SERVICE_NAME} service..."
             sudo systemctl enable ${SERVICE_NAME}
             sudo systemctl start ${SERVICE_NAME}
