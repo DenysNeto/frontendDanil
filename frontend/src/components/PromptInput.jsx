@@ -53,7 +53,7 @@ const PromptInput = ({ onSubmit }) => {
             <button
               type="submit"
               disabled={!prompt.trim() || isSubmitting}
-              className="h-32 px-6 bg-blue-600 text-white hover:bg-blue-700 font-semibold rounded-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+              className="h-32 px-6 bg-blue-400 text-white hover:bg-blue-500 font-semibold rounded-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
             >
               {isSubmitting ? 'Submitting...' : 'Submit'}
             </button>
