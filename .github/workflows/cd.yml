@@ -76,7 +76,7 @@ jobs:
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
           source: "/tmp/frontend.service"
-          target: "/tmp/"
+          target: "/ubuntu/"
 
       - name: Stop service
         uses: appleboy/ssh-action@v1.0.3
@@ -116,7 +116,7 @@ jobs:
           envs: SERVICE_NAME
           script: |
             # Copy the templated service file to systemd directory
-            sudo cp /tmp/frontend.service /etc/systemd/system/${SERVICE_NAME}.service
+            sudo cp /ubuntu/frontend.service /etc/systemd/system/${SERVICE_NAME}.service
 
             # Reload systemd
             sudo systemctl daemon-reload
