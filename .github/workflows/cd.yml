@@ -62,12 +62,12 @@ jobs:
           # Get API key from SSM Parameter Store
           API_KEY=$(aws ssm get-parameter --name "/inference/api-key" --with-decryption --query 'Parameter.Value' --output text --region ${{ vars.AWS_DEV_REGION }})
 
-          # Create templated service file
+          # Create templated service file in workspace
           sed -e "s|{{IMAGE}}|${{ steps.get-tag.outputs.full_image }}|g" \
               -e "s|{{ECR_REGISTRY}}|${{ env.ECR_REGISTRY }}|g" \
               -e "s|{{ECR_REGION}}|${{ vars.AWS_DEV_ECR_REGION }}|g" \
               -e "s|{{API_KEY}}|${API_KEY}|g" \
-              deployment/frontend.service.template > /tmp/frontend.service
+              deployment/frontend.service.template > frontend.service
 
       - name: Copy templated service file to server
         uses: appleboy/scp-action@v0.1.7
@@ -75,8 +75,8 @@ jobs:
           host: ${{ steps.get-instance.outputs.private_ip }}
           username: ${{ env.SSH_USER }}
           key: ${{ secrets.SSH_EC2_KEY }}
-          source: "/tmp/frontend.service"
-          target: "/ubuntu/"
+          source: "frontend.service"
+          target: "/home/ubuntu/"
 
       - name: Stop service
         uses: appleboy/ssh-action@v1.0.3
@@ -116,7 +116,7 @@ jobs:
           envs: SERVICE_NAME
           script: |
             # Copy the templated service file to systemd directory
-            sudo cp /ubuntu/frontend.service /etc/systemd/system/${SERVICE_NAME}.service
+            sudo cp /home/ubuntu/frontend.service /etc/systemd/system/${SERVICE_NAME}.service
 
             # Reload systemd
             sudo systemctl daemon-reload
