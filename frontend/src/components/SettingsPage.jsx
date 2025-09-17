@@ -109,7 +109,7 @@ export default function SettingsPage() {
                 onChange={(e) => setBaselineModelJson(e.target.value)}
                 placeholder='Enter JSON configuration for baseline models (e.g., {"model": "DeepSeek 1.5B", "endpoint": "...", "parameters": {...}})'
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm font-mono"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[200px] text-sm font-mono"
               />
               <p className="text-xs text-gray-500">
                 JSON configuration for baseline model settings and endpoints
@@ -126,7 +126,7 @@ export default function SettingsPage() {
                 onChange={(e) => setTwoDeltaModelJson(e.target.value)}
                 placeholder='Enter JSON configuration for Two Delta models (e.g., {"model": "DeepSeek 7B", "endpoint": "...", "parameters": {...}})'
                 rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-sm font-mono"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[200px] text-sm font-mono"
               />
               <p className="text-xs text-gray-500">
                 JSON configuration for Two Delta model settings and endpoints
