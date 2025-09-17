@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { DEFAULT_SETTINGS } from '../config/defaults';
 
 export default function SettingsPage() {
-  const [maxTokens, setMaxTokens] = useState(1000);
-  const [temperature, setTemperature] = useState(0.7);
+  const [maxTokens, setMaxTokens] = useState(DEFAULT_SETTINGS.MAX_TOKENS.default);
+  const [temperature, setTemperature] = useState(DEFAULT_SETTINGS.TEMPERATURE.default);
   const [baselineModelJson, setBaselineModelJson] = useState('');
   const [twoDeltaModelJson, setTwoDeltaModelJson] = useState('');
   const [isSaved, setIsSaved] = useState(false);
@@ -21,8 +22,8 @@ export default function SettingsPage() {
   };
 
   const handleReset = () => {
-    setMaxTokens(1000);
-    setTemperature(0.7);
+    setMaxTokens(DEFAULT_SETTINGS.MAX_TOKENS.default);
+    setTemperature(DEFAULT_SETTINGS.TEMPERATURE.default);
     setBaselineModelJson('');
     setTwoDeltaModelJson('');
     setIsSaved(false);
@@ -48,17 +49,17 @@ export default function SettingsPage() {
               <div className="space-y-2">
                 <input
                   type="range"
-                  min="100"
-                  max="4000"
+                  min={DEFAULT_SETTINGS.MAX_TOKENS.min}
+                  max={DEFAULT_SETTINGS.MAX_TOKENS.max}
                   step="100"
                   value={maxTokens}
                   onChange={(e) => setMaxTokens(parseInt(e.target.value))}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 />
                 <div className="flex justify-between text-xs text-gray-500">
-                  <span>100</span>
+                  <span>{DEFAULT_SETTINGS.MAX_TOKENS.min}</span>
                   <span className="font-medium text-blue-600">{maxTokens}</span>
-                  <span>4000</span>
+                  <span>{DEFAULT_SETTINGS.MAX_TOKENS.max}</span>
                 </div>
               </div>
               <p className="text-xs text-gray-500">
@@ -74,17 +75,17 @@ export default function SettingsPage() {
               <div className="space-y-2">
                 <input
                   type="range"
-                  min="0"
-                  max="2"
+                  min={DEFAULT_SETTINGS.TEMPERATURE.min}
+                  max={DEFAULT_SETTINGS.TEMPERATURE.max}
                   step="0.1"
                   value={temperature}
                   onChange={(e) => setTemperature(parseFloat(e.target.value))}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
                 />
                 <div className="flex justify-between text-xs text-gray-500">
-                  <span>0.0</span>
+                  <span>{DEFAULT_SETTINGS.TEMPERATURE.min}</span>
                   <span className="font-medium text-blue-600">{temperature}</span>
-                  <span>2.0</span>
+                  <span>{DEFAULT_SETTINGS.TEMPERATURE.max}</span>
                 </div>
               </div>
               <p className="text-xs text-gray-500">
