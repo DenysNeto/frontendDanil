@@ -1,100 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnected, setEndpoint, modelType = 'all', settings }) => {
+const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnected, setEndpoint, models = [], title = 'Select Model' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const dropdownRef = useRef(null);
-
-  // Loads the model list from Flask API config
-  const [models, setModels] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/config')
-      .then((res) => res.json())
-      .then((config) => {
-        // Transform Flask config into React component format based on modelType
-        let filteredModels = [];
-
-        if (modelType === 'baseline' || modelType === 'all') {
-          filteredModels.push(...config.baseline_models.map(model => ({
-            value: model.name,
-            label: model.name,
-            description: 'Baseline Model',
-            endpoint: model.endpoint,
-            type: 'baseline'
-          })));
-        }
-
-        if (modelType === 'twodelta' || modelType === 'all') {
-          filteredModels.push(...config.twodelta_models.map(model => ({
-            value: model.name,
-            label: model.name,
-            description: 'Two Delta Model',
-            endpoint: model.endpoint,
-            type: 'twodelta'
-          })));
-        }
-
-        // Add models from settings JSON configurations if available
-        if (settings) {
-          if (settings.baselineModelJson && (modelType === 'baseline' || modelType === 'all')) {
-            try {
-              const baselineConfig = JSON.parse(settings.baselineModelJson);
-              if (Array.isArray(baselineConfig)) {
-                filteredModels.push(...baselineConfig.map(model => ({
-                  value: model.name || model.model,
-                  label: model.name || model.model,
-                  description: 'Custom Baseline Model',
-                  endpoint: model.endpoint,
-                  type: 'baseline'
-                })));
-              } else if (baselineConfig.model) {
-                filteredModels.push({
-                  value: baselineConfig.name || baselineConfig.model,
-                  label: baselineConfig.name || baselineConfig.model,
-                  description: 'Custom Baseline Model',
-                  endpoint: baselineConfig.endpoint,
-                  type: 'baseline'
-                });
-              }
-            } catch (error) {
-              console.warn('Error parsing baseline model JSON:', error);
-            }
-          }
-
-          if (settings.twoDeltaModelJson && (modelType === 'twodelta' || modelType === 'all')) {
-            try {
-              const twoDeltaConfig = JSON.parse(settings.twoDeltaModelJson);
-              if (Array.isArray(twoDeltaConfig)) {
-                filteredModels.push(...twoDeltaConfig.map(model => ({
-                  value: model.name || model.model,
-                  label: model.name || model.model,
-                  description: 'Custom Two Delta Model',
-                  endpoint: model.endpoint,
-                  type: 'twodelta'
-                })));
-              } else if (twoDeltaConfig.model) {
-                filteredModels.push({
-                  value: twoDeltaConfig.name || twoDeltaConfig.model,
-                  label: twoDeltaConfig.name || twoDeltaConfig.model,
-                  description: 'Custom Two Delta Model',
-                  endpoint: twoDeltaConfig.endpoint,
-                  type: 'twodelta'
-                });
-              }
-            } catch (error) {
-              console.warn('Error parsing Two Delta model JSON:', error);
-            }
-          }
-        }
-
-        setModels(filteredModels);
-      })
-      .catch(error => {
-        console.error('Error loading model config:', error);
-      });
-  }, [modelType, settings]);
 
   const selectedModelData = models.find(model => model.value === selectedModel);
 
@@ -116,7 +26,6 @@ const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnect
       const newModelObject = models.find(model => model.value === modelValue);
 
       // Immediately select the model
-      console.log(settings);
       onModelChange(modelValue);
       setEndpoint(newModelObject.endpoint);
       setIsOpen(false);
@@ -166,7 +75,7 @@ const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnect
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-            {modelType === 'baseline' ? 'Baseline Model' : modelType === 'twodelta' ? 'Two Delta Model' : 'Select Model'}
+            {title}
         </label>
         
         <div className="flex items-center space-x-2">

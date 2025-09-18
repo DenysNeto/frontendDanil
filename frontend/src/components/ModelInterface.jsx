@@ -3,7 +3,7 @@ import ModelSelector from './ModelSelector';
 import ResponseDisplay from './ResponseDisplay';
 import MetricsPanel from './MetricsPanel';
 
-const ModelInterface = ({ prompt, modelType = 'all', promptKey, settings }) => {
+const ModelInterface = ({ prompt, promptKey, settings, models = [], title = 'Select Model' }) => {
   const [selectedModel, setSelectedModel] = useState(null);
   const [isLoading, setisLoading] = useState(false);
   const [response, setResponse] = useState('');
@@ -144,8 +144,8 @@ const ModelInterface = ({ prompt, modelType = 'all', promptKey, settings }) => {
         isConnected={isConnected}
         setIsConnected={setIsConnected}
         setEndpoint={setEndpoint}
-        modelType={modelType}
-        settings={settings}
+        models={models}
+        title={title}
       />
 
       <ResponseDisplay 

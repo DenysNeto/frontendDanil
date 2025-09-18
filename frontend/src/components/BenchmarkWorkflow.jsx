@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 // import PromptInput from './PromptInput';
 import BenchmarkInterface from './BenchmarkInterface';
 import JsonDragDrop from './JsonDragDrop';
 import { useSettings } from '../contexts/SettingsContext';
+import { parseModelsFromSettings } from '../utils/modelParser';
 
 function BenchmarkWorkflow() {
   const { settings } = useSettings();
+
+  // Parse models from settings for each type
+  const baselineModels = useMemo(() => parseModelsFromSettings(settings, 'baseline'), [settings]);
+  const twodeltaModels = useMemo(() => parseModelsFromSettings(settings, 'twodelta'), [settings]);
   const [submittedPrompt, setSubmittedPrompt] = useState(null);
   const [promptKey, setPromptKey] = useState(0);
 
@@ -25,17 +30,19 @@ function BenchmarkWorkflow() {
         <div className="flex-1">
             <BenchmarkInterface
               prompt={submittedPrompt}
-              modelType="baseline"
               promptKey={promptKey}
               settings={settings}
+              models={baselineModels}
+              title="Baseline Model"
             />
         </div>
         <div className="flex-1">
             <BenchmarkInterface
               prompt={submittedPrompt}
-              modelType="twodelta"
               promptKey={promptKey}
               settings={settings}
+              models={twodeltaModels}
+              title="Two Delta Model"
             />
         </div>
         </div>

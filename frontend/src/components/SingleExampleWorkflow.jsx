@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PromptInput from './PromptInput';
 import ModelInterface from './ModelInterface';
 import { useSettings } from '../contexts/SettingsContext';
+import { parseModelsFromSettings } from '../utils/modelParser';
 
 function SingleExampleWorkflow() {
   const { settings } = useSettings();
+
+  // Parse models from settings for each type
+  const baselineModels = useMemo(() => parseModelsFromSettings(settings, 'baseline'), [settings]);
+  const twodeltaModels = useMemo(() => parseModelsFromSettings(settings, 'twodelta'), [settings]);
   const [submittedPrompt, setSubmittedPrompt] = useState(null);
   const [promptKey, setPromptKey] = useState(0);
 
@@ -23,17 +28,19 @@ function SingleExampleWorkflow() {
         <div className="flex-1">
             <ModelInterface
               prompt={submittedPrompt}
-              modelType="baseline"
               promptKey={promptKey}
               settings={settings}
+              models={baselineModels}
+              title="Baseline Model"
             />
         </div>
         <div className="flex-1">
             <ModelInterface
               prompt={submittedPrompt}
-              modelType="twodelta"
               promptKey={promptKey}
               settings={settings}
+              models={twodeltaModels}
+              title="Two Delta Model"
             />
         </div>
         </div>
