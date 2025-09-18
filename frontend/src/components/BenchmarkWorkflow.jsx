@@ -2,8 +2,10 @@ import { useState } from 'react';
 // import PromptInput from './PromptInput';
 import BenchmarkInterface from './BenchmarkInterface';
 import JsonDragDrop from './JsonDragDrop';
+import { useSettings } from '../contexts/SettingsContext';
 
 function BenchmarkWorkflow() {
+  const { settings } = useSettings();
   const [submittedPrompt, setSubmittedPrompt] = useState(null);
   const [promptKey, setPromptKey] = useState(0);
 
@@ -21,10 +23,20 @@ function BenchmarkWorkflow() {
         <JsonDragDrop/>
         <div className="flex gap-8">
         <div className="flex-1">
-            <BenchmarkInterface prompt={submittedPrompt} modelType="baseline" promptKey={promptKey}/>
+            <BenchmarkInterface
+              prompt={submittedPrompt}
+              modelType="baseline"
+              promptKey={promptKey}
+              settings={settings}
+            />
         </div>
         <div className="flex-1">
-            <BenchmarkInterface prompt={submittedPrompt} modelType="twodelta" promptKey={promptKey}/>
+            <BenchmarkInterface
+              prompt={submittedPrompt}
+              modelType="twodelta"
+              promptKey={promptKey}
+              settings={settings}
+            />
         </div>
         </div>
     </main>

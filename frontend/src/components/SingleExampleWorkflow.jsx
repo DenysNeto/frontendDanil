@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import PromptInput from './PromptInput';
 import ModelInterface from './ModelInterface';
+import { useSettings } from '../contexts/SettingsContext';
 
 function SingleExampleWorkflow() {
+  const { settings } = useSettings();
   const [submittedPrompt, setSubmittedPrompt] = useState(null);
   const [promptKey, setPromptKey] = useState(0);
 
@@ -19,10 +21,20 @@ function SingleExampleWorkflow() {
         <PromptInput onSubmit={handlePromptSubmit}/>
         <div className="flex gap-8">
         <div className="flex-1">
-            <ModelInterface prompt={submittedPrompt} modelType="baseline" promptKey={promptKey}/>
+            <ModelInterface
+              prompt={submittedPrompt}
+              modelType="baseline"
+              promptKey={promptKey}
+              settings={settings}
+            />
         </div>
         <div className="flex-1">
-            <ModelInterface prompt={submittedPrompt} modelType="twodelta" promptKey={promptKey}/>
+            <ModelInterface
+              prompt={submittedPrompt}
+              modelType="twodelta"
+              promptKey={promptKey}
+              settings={settings}
+            />
         </div>
         </div>
     </main>

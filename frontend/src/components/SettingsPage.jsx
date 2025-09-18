@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { DEFAULT_SETTINGS } from '../config/defaults';
+import { useSettings } from '../contexts/SettingsContext';
 
 export default function SettingsPage() {
-  const [maxTokens, setMaxTokens] = useState(DEFAULT_SETTINGS.MAX_TOKENS.default);
-  const [temperature, setTemperature] = useState(DEFAULT_SETTINGS.TEMPERATURE.default);
-  const [baselineModelJson, setBaselineModelJson] = useState('');
-  const [twoDeltaModelJson, setTwoDeltaModelJson] = useState('');
+  const { settings, setters, resetSettings } = useSettings();
+  const { maxTokens, temperature, baselineModelJson, twoDeltaModelJson } = settings;
+  const { setMaxTokens, setTemperature, setBaselineModelJson, setTwoDeltaModelJson } = setters;
   const [isSaved, setIsSaved] = useState(false);
 
   const handleSave = () => {
@@ -22,10 +22,7 @@ export default function SettingsPage() {
   };
 
   const handleReset = () => {
-    setMaxTokens(DEFAULT_SETTINGS.MAX_TOKENS.default);
-    setTemperature(DEFAULT_SETTINGS.TEMPERATURE.default);
-    setBaselineModelJson('');
-    setTwoDeltaModelJson('');
+    resetSettings();
     setIsSaved(false);
   };
 
