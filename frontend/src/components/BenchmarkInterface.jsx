@@ -4,7 +4,7 @@ import CircularProgressBar from './CircularProgressBar';
 // import ResponseDisplay from './ResponseDisplay';
 import MetricsPanel from './MetricsPanel';
 
-const BenchmarkInterface = ({ prompt, modelType = 'all', promptKey }) => {
+const BenchmarkInterface = ({ prompt, promptKey, settings, models = [], title = 'Select Model' }) => {
   const [selectedModel, setSelectedModel] = useState(null);
 //   const [isLoading, setisLoading] = useState(false);
 //   const [response, setResponse] = useState('');
@@ -135,7 +135,8 @@ const BenchmarkInterface = ({ prompt, modelType = 'all', promptKey }) => {
         isConnected={isConnected}
         setIsConnected={setIsConnected}
         setEndpoint={setEndpoint}
-        modelType={modelType}
+        models={models}
+        title={title}
       />
       <CircularProgressBar/>
       <MetricsPanel metrics={metrics} />

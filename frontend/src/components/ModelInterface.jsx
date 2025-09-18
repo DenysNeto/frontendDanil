@@ -3,7 +3,7 @@ import ModelSelector from './ModelSelector';
 import ResponseDisplay from './ResponseDisplay';
 import MetricsPanel from './MetricsPanel';
 
-const ModelInterface = ({ prompt, modelType = 'all', promptKey }) => {
+const ModelInterface = ({ prompt, promptKey, settings, models = [], title = 'Select Model' }) => {
   const [selectedModel, setSelectedModel] = useState(null);
   const [isLoading, setisLoading] = useState(false);
   const [response, setResponse] = useState('');
@@ -40,8 +40,18 @@ const ModelInterface = ({ prompt, modelType = 'all', promptKey }) => {
 
       console.log(`prompt: ${prompt}  selected model: ${selectedModel}, endpoint: ${endpoint}`)
 
-      // Use Flask's streaming endpoint
-      const eventSource = new EventSource(`/stream?prompt=${encodeURIComponent(prompt)}&model=${encodeURIComponent(endpoint)}`);
+      // Create URL parameters with settings
+      const params = new URLSearchParams({
+        prompt: prompt,
+        model: endpoint,
+        ...(settings && {
+          max_tokens: settings.maxTokens,
+          temperature: settings.temperature,
+        })
+      });
+
+      // Use Flask's streaming endpoint with settings
+      const eventSource = new EventSource(`/stream?${params.toString()}`);
       eventSourceRef.current = eventSource;
 
       eventSource.onmessage = (event) => {
@@ -134,7 +144,8 @@ const ModelInterface = ({ prompt, modelType = 'all', promptKey }) => {
         isConnected={isConnected}
         setIsConnected={setIsConnected}
         setEndpoint={setEndpoint}
-        modelType={modelType}
+        models={models}
+        title={title}
       />
 
       <ResponseDisplay 

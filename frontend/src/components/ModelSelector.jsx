@@ -1,47 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnected, setEndpoint, modelType = 'all' }) => {
+const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnected, setEndpoint, models = [], title = 'Select Model' }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
   const dropdownRef = useRef(null);
-
-  // Loads the model list from Flask API config
-  const [models, setModels] = useState([]);
-
-  useEffect(() => {
-    fetch('/api/config')
-      .then((res) => res.json())
-      .then((config) => {
-        // Transform Flask config into React component format based on modelType
-        let filteredModels = [];
-
-        if (modelType === 'baseline' || modelType === 'all') {
-          filteredModels.push(...config.baseline_models.map(model => ({
-            value: model.name,
-            label: model.name,
-            description: 'Baseline Model',
-            endpoint: model.endpoint,
-            type: 'baseline'
-          })));
-        }
-
-        if (modelType === 'twodelta' || modelType === 'all') {
-          filteredModels.push(...config.twodelta_models.map(model => ({
-            value: model.name,
-            label: model.name,
-            description: 'Two Delta Model',
-            endpoint: model.endpoint,
-            type: 'twodelta'
-          })));
-        }
-
-        setModels(filteredModels);
-      })
-      .catch(error => {
-        console.error('Error loading model config:', error);
-      });
-  }, [modelType]);
 
   const selectedModelData = models.find(model => model.value === selectedModel);
 
@@ -112,7 +75,7 @@ const ModelSelector = ({ selectedModel, onModelChange, isConnected, setIsConnect
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">
-            {modelType === 'baseline' ? 'Baseline Model' : modelType === 'twodelta' ? 'Two Delta Model' : 'Select Model'}
+            {title}
         </label>
         
         <div className="flex items-center space-x-2">
