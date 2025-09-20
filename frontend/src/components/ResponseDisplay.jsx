@@ -1,39 +1,151 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 const ResponseDisplay = ({ response, isLoading }) => {
   const responseRef = useRef(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (response) {
+      try {
+        await navigator.clipboard.writeText(response);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy text:', err);
+      }
+    }
+  };
+
+  // Auto-scroll to bottom when response updates
+  useEffect(() => {
+    if (responseRef.current && isLoading) {
+      responseRef.current.scrollTop = responseRef.current.scrollHeight;
+    }
+  }, [response, isLoading]);
+
+  const TypingIndicator = () => (
+    <div className="flex items-center space-x-1 py-2">
+      <div className="flex space-x-1">
+        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+        <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+      </div>
+      <span className="text-blue-600 text-sm font-medium ml-2">Thinking...</span>
+    </div>
+  );
+
+  const BlinkingCursor = () => (
+    <span className="inline-block w-0.5 h-5 bg-blue-500 animate-pulse ml-1"></span>
+  );
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <label 
-          htmlFor="response-display" 
-          className="block text-sm font-medium text-gray-700"
-        >
-          Model Response
-      </label>
-      
-      <div
-        id="response-display"
-        className="w-full min-h-50 max-h-96 px-3 py-2 border border-gray-300 rounded-md bg-gray-50 overflow-y-auto overflow-x-hidden"
-      >
-        {response ? (
-          <pre
-            ref={responseRef}
-            className="whitespace-pre-wrap break-words break-all font-sans text-gray-800 leading-relaxed max-w-full"
-            key={response.length}
-          >
-            {response}
-          </pre>
-        ) : isLoading ? (
-          <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <span className="text-gray-600 text-sm">Generating response...</span>
-          </div>
-        ) : (
-          <div className="text-gray-500 italic">
-            No response yet. Submit a prompt to get started.
+    <div className="relative group">
+      {/* Modern container with subtle styling */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 hover:border-gray-200/80 transition-all duration-300 overflow-hidden">
+
+        {/* Copy button - shows on hover */}
+        {response && (
+          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+            <button
+              onClick={handleCopy}
+              className="flex items-center space-x-2 px-3 py-1.5 bg-gray-900/5 hover:bg-gray-900/10 rounded-lg border border-gray-200/50 text-gray-600 hover:text-gray-900 text-sm font-medium transition-all duration-200"
+            >
+              {copied ? (
+                <>
+                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-green-600">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
           </div>
         )}
+
+        {/* Response content area */}
+        <div
+          ref={responseRef}
+          className="min-h-[200px] max-h-[500px] p-6 overflow-y-auto overflow-x-hidden scroll-smooth"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#e5e7eb #f9fafb'
+          }}
+        >
+          {response ? (
+            <div className="animate-fade-in">
+              <pre
+                className="whitespace-pre-wrap break-words text-gray-900 leading-relaxed font-system text-[15px] selection:bg-blue-100/80"
+                style={{
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                }}
+              >
+                {response}
+                {isLoading && <BlinkingCursor />}
+              </pre>
+            </div>
+          ) : isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <TypingIndicator />
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                </div>
+                <p className="text-gray-500 text-sm font-medium">Ready for your prompt</p>
+                <p className="text-gray-400 text-xs mt-1">The AI response will appear here</p>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      <style jsx>{`
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #f9fafb;
+          border-radius: 3px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #e5e7eb;
+          border-radius: 3px;
+        }
+
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+          background: #d1d5db;
+        }
+
+        /* Smooth font rendering */
+        .font-system {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+        }
+      `}</style>
     </div>
   );
 };
