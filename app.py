@@ -99,13 +99,15 @@ def health_check():
 @app.route('/stream', methods=['GET'])
 def stream():
     prompt = request.args.get('prompt', '')
+    max_tokens = request.args.get('max_tokens', 1000)
+    temperature = request.args.get('temperature', 0.7)
     model_fqdn = request.args.get('model', 'localhost:8000')  # Default to local FastAPI
     
     if not prompt:
         return Response('data: {"error": "No prompt provided"}\n\n', content_type='text/event-stream')
     
     response = Response(
-        generate_stream(prompt, model_fqdn),
+        generate_stream(prompt, max_tokens, temperature, model_fqdn),
         content_type='text/event-stream',
         headers={
             'Cache-Control': 'no-cache',
@@ -120,7 +122,7 @@ def stream():
     response.implicit_sequence_conversion = False
     return response
 
-def generate_stream(prompt, model_fqdn):
+def generate_stream(prompt, max_tokens, temperature, model_fqdn):
     """Generate streaming response by calling specified model backend"""
     try:
         # Send initial message
@@ -136,6 +138,8 @@ def generate_stream(prompt, model_fqdn):
             api_url = f'https://{model_fqdn}/api/v1/generate'
         payload = {
             'prompt': prompt,
+            'max_tokens': max_tokens,
+            'temperature': temperature,
             'stream': True
         }
         
