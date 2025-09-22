@@ -144,14 +144,18 @@ jobs:
             sleep 5
             sudo systemctl status ${SERVICE_NAME} --no-pager
 
-
-      - name: Health check
-        uses: Jtalk/url-health-check-action@v4
-        with:
-          url: https://${{ env.HEALTH_CHECK_FQDN }}
-          max-attempts: 10
-          retry-delay: 5s
-          insecure: true # this is to bypass the missing certificate - should be fixed properly later.
+      - name: Health check (HTTPS, allow self-signed)
+        run: |
+          for i in {1..10}; do
+            if curl -fsSL --insecure https://${{ env.HEALTH_CHECK_FQDN }}/ >/dev/null; then
+              echo "OK"
+              exit 0
+            fi
+            echo "Retrying in 5s..."
+            sleep 5
+          done
+          echo "Health check failed" >&2
+          exit 1
 
       - name: Deployment summary
         run: |
