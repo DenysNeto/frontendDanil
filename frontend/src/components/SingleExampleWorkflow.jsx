@@ -23,27 +23,27 @@ function SingleExampleWorkflow() {
 
   return (
     <main className="space-y-6">
-        <PromptInput onSubmit={handlePromptSubmit}/>
-        <div className="flex gap-8">
+      <div className="flex gap-8">
         <div className="flex-1">
-            <ModelInterface
-              prompt={submittedPrompt}
-              promptKey={promptKey}
-              settings={settings}
-              models={baselineModels}
-              title="Baseline Model"
-            />
+          <ModelInterface
+            prompt={submittedPrompt}
+            promptKey={promptKey}
+            settings={settings}
+            models={baselineModels}
+            title="Baseline Model"
+          />
         </div>
         <div className="flex-1">
-            <ModelInterface
-              prompt={submittedPrompt}
-              promptKey={promptKey}
-              settings={settings}
-              models={twodeltaModels}
-              title="Two Delta Model"
-            />
+          <ModelInterface
+            prompt={submittedPrompt}
+            promptKey={promptKey}
+            settings={settings}
+            models={twodeltaModels}
+            title="Two Delta Model"
+          />
         </div>
-        </div>
+      </div>
+      <PromptInput onSubmit={handlePromptSubmit}/>
     </main>
   );
 }

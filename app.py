@@ -99,8 +99,8 @@ def health_check():
 @app.route('/stream', methods=['GET'])
 def stream():
     prompt = request.args.get('prompt', '')
-    max_tokens = request.args.get('max_tokens', 1000)
-    temperature = request.args.get('temperature', 0.7)
+    max_tokens = int(request.args.get('max_tokens'))
+    temperature = float(request.args.get('temperature'))
     model_fqdn = request.args.get('model', 'localhost:8000')  # Default to local FastAPI
     
     if not prompt:
@@ -137,8 +137,8 @@ def generate_stream(prompt, max_tokens, temperature, model_fqdn):
             # External APIs
             api_url = f'https://{model_fqdn}/api/v1/generate'
         payload = {
-            'prompt': prompt,
-            'max_tokens': max_tokens,
+            "prompt": prompt,
+            "max_tokens": max_tokens,
             'temperature': temperature,
             'stream': True
         }

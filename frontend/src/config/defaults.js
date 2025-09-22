@@ -1,8 +1,8 @@
 export const DEFAULT_SETTINGS = {
   MAX_TOKENS: {
-    default: 3000,
+    default: 1000,
     min: 100,
-    max: 10000,
+    max: 5000,
     step: 100
   },
   TEMPERATURE: {
