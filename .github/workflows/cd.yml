@@ -16,7 +16,6 @@ env:
   SERVICE_NAME: frontend
   SSH_USER: ubuntu
   HEALTH_CHECK_FQDN: demo.tdops.net
-  HEALTH_CHECK_PORT: 8080
   IMAGE_TAG: latest
 
 jobs:
@@ -149,7 +148,7 @@ jobs:
       - name: Health check
         uses: Jtalk/url-health-check-action@v4
         with:
-          url: http://${{ env.HEALTH_CHECK_FQDN }}:${{ env.HEALTH_CHECK_PORT }}
+          url: https://${{ env.HEALTH_CHECK_FQDN }}
           max-attempts: 10
           retry-delay: 5s
 
@@ -163,4 +162,4 @@ jobs:
           echo "**SHA:** ${{ github.event.workflow_run.head_sha }}" >> $GITHUB_STEP_SUMMARY
           echo "**Health Check:** ✅ Passed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Service URL:** http://${{ env.HEALTH_CHECK_FQDN }}:${{ env.HEALTH_CHECK_PORT }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Service URL:** https://${{ env.HEALTH_CHECK_FQDN }}" >> $GITHUB_STEP_SUMMARY
