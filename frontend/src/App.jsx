@@ -12,14 +12,14 @@ function App() {
     <SettingsProvider>
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <header className="text-center mb-8">
+          {/* <header className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Two Delta Demo
             </h1>
             <p className="text-gray-600">
               Select a model, enter your prompt, and get responses!!!
             </p>
-          </header>
+          </header> */}
 
           <Routes>
             <Route path="/" element={<SingleExampleWorkflow/>} />

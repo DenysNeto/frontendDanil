@@ -1,20 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
 const ResponseDisplay = ({ response, isLoading }) => {
   const responseRef = useRef(null);
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    if (response) {
-      try {
-        await navigator.clipboard.writeText(response);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy text:', err);
-      }
-    }
-  };
 
   // Auto-scroll to bottom when response updates
   useEffect(() => {
@@ -43,36 +30,11 @@ const ResponseDisplay = ({ response, isLoading }) => {
       {/* Modern container with subtle styling */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-100/50 hover:border-gray-200/80 transition-all duration-300 overflow-hidden">
 
-        {/* Copy button - shows on hover */}
-        {response && (
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-            <button
-              onClick={handleCopy}
-              className="flex items-center space-x-2 px-3 py-1.5 bg-gray-900/5 hover:bg-gray-900/10 rounded-lg border border-gray-200/50 text-gray-600 hover:text-gray-900 text-sm font-medium transition-all duration-200"
-            >
-              {copied ? (
-                <>
-                  <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-green-600">Copied!</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  <span>Copy</span>
-                </>
-              )}
-            </button>
-          </div>
-        )}
 
         {/* Response content area */}
         <div
           ref={responseRef}
-          className="min-h-[200px] max-h-[500px] p-6 overflow-y-auto overflow-x-hidden scroll-smooth"
+          className="h-[350px] p-6 overflow-y-auto overflow-x-hidden scroll-smooth"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: '#e5e7eb #f9fafb'
