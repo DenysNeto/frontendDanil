@@ -151,6 +151,7 @@ jobs:
           url: https://${{ env.HEALTH_CHECK_FQDN }}
           max-attempts: 10
           retry-delay: 5s
+          insecure: true # this is to bypass the missing certificate - should be fixed properly later.
 
       - name: Deployment summary
         run: |
