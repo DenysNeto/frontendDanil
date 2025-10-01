@@ -1,0 +1,82 @@
+import React from "react";
+
+function cn(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export function Button({
+  variant = "primary",
+  size = "md",
+  loading = false,
+  icon,
+  fullWidth = false,
+  disabled,
+  onSelect = ()=>{},
+  children,
+  className,
+  ariaLabel,
+  type = "button",
+  ...rest
+}) {
+  const isDisabled = disabled || loading;
+
+  const baseStyles =
+    "inline-flex items-center justify-center gap-2 font-semibold rounded-md transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+
+  const variantStyles = {
+    primary: "bg-emerald-500 text-white hover:bg-emerald-600",
+    secondary: "bg-neutral-900 text-white hover:bg-neutral-800",
+    ghost: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
+    info: " text-black-500  hover:text-blue-300",
+  };
+
+  const sizeStyles = {
+    sm: "h-8  text-sm rounded-md",
+    md: "h-10 text-base rounded-lg",
+    lg: "h-12  text-lg rounded-xl",
+  };
+
+  return (
+    <button
+      onClick={onSelect}
+      type={type}
+      className={cn(
+        baseStyles,
+        variantStyles[variant],
+        sizeStyles[size],
+        fullWidth && "w-full",
+        className
+      )}
+      disabled={isDisabled}
+      aria-label={ariaLabel}
+      aria-disabled={isDisabled}
+      aria-busy={loading || undefined}
+      {...rest}
+    >
+      {loading ? (
+        <svg
+          className="animate-spin h-5 w-5 text-white"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          />
+        </svg>
+      ) : (
+        icon && <span className="flex items-center">{icon}</span>
+      )}
+      <span className="truncate">{children}</span>
+    </button>
+  );
+}

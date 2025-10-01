@@ -1,36 +1,60 @@
-import React, { useState } from 'react';
-import './App.css';
-import SingleExampleWorkflow from './components/SingleExampleWorkflow';
-import BenchmarkWorkflow from './components/BenchmarkWorkflow';
-import { Routes, Route } from "react-router-dom";
-import SettingsPage from './components/SettingsPage';
-import { SettingsProvider } from './contexts/SettingsContext';
-
-
+import React, {useEffect, useState} from "react";
+import "./App.css";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { SettingsProvider } from "./contexts/SettingsContext";
+import NewPageTemplate from "./pages/NewHome.jsx"
+import RouteSync from "./components/UI/RouteSync.jsx"
+import ModelsPage from "./pages/ModelsPage.jsx"
+import BenchmarkPage from "./pages/BenchmarkPage.jsx"
+import ModelInfoPage from "./pages/ModelInfoPage.jsx"
+import { useModelStore1 } from "./store/useModelStore1.ts";
+import { useBenchmarkStore1 } from "./store/useBenchmarkStore1.js";
+import ResultPage from "./pages/ResultPage.jsx"
+import ModelBenchmarkPage from "./pages/ModelBenchmarkPage.jsx"
+import ModelPromptPage from "./pages/ModelPromptPage.jsx"
+import NotFoundPage from "./pages/NotFound.jsx"
+import AppFooter from "./components/UI/AppFooter.jsx";
+import AppHeader from "./components/ui/AppHeader.jsx";
 function App() {
-  return (
-    <SettingsProvider>
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* <header className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Two Delta Demo
-            </h1>
-            <p className="text-gray-600">
-              Select a model, enter your prompt, and get responses!!!
-            </p>
-          </header> */}
 
-          <Routes>
-            <Route path="/" element={<SingleExampleWorkflow/>} />
-            <Route path="/benchmark" element={<BenchmarkWorkflow/>} />
-            <Route path="/config" element={<SettingsPage/>} />
-          </Routes>
-          {/* <BenchmarkWorkflow/>   */}
-          {/* <SingleExampleWorkflow/> */}
-        </div>
-      </div>
-    </SettingsProvider>
+    useEffect(() => {
+    (async () => {
+        await useModelStore1.getState().updateModels();
+        await useBenchmarkStore1.getState().loadFromUrl()
+        console.log("MODELS", useModelStore1.getState().models);
+        console.log("MODELS", useBenchmarkStore1.getState().benchmarks);
+    })();
+    }, []);
+
+
+ const { pathname } = useLocation();
+
+  return (
+      <SettingsProvider>
+    <AppHeader/>
+              <main className="w-full">
+                  <div>
+                        <RouteSync />
+                        <Routes>
+                            <Route path="/" element={<NewPageTemplate/>}/>  
+                            <Route path="*" element={<NotFoundPage/>}/>
+
+                            <Route path="/models" element={<ModelsPage />} /> 
+                            <Route path="/models/*" element={<ModelInfoPage />} />
+                            <Route path="/models/benchmark" element={<ModelBenchmarkPage />} />
+                            <Route path="/models/prompt" element={<ModelPromptPage />} />
+                            
+                            {/* <Route path='/result/' element={<ResultPage/>} */}
+                            <Route path="/benchmark" element={<BenchmarkPage />} />
+
+
+
+
+                        </Routes>
+                  </div>
+              </main>
+            <AppFooter isFull={pathname==="/" ? true : false}/>
+      </SettingsProvider>
   );
 }
 

@@ -1,13 +1,4 @@
-/**
- * Utility functions for parsing model configurations from settings JSON
- */
 
-/**
- * Parse models from settings JSON for a specific model type
- * @param {Object} settings - The settings object containing JSON configurations
- * @param {string} modelType - Either 'baseline' or 'twodelta'
- * @returns {Array} Array of model objects formatted for ModelSelector
- */
 export const parseModelsFromSettings = (settings, modelType) => {
   if (!settings) {
     return [];
@@ -16,12 +7,14 @@ export const parseModelsFromSettings = (settings, modelType) => {
   const jsonKey = modelType === 'baseline' ? 'baselineModelJson' : 'twoDeltaModelJson';
   const jsonString = settings[jsonKey];
 
-  if (!jsonString || jsonString.trim() === '') {
+  console.log("SSS" , jsonString)
+
+  if (!jsonString || jsonString === '') {
     return [];
   }
 
   try {
-    const parsed = JSON.parse(jsonString);
+    const parsed = typeof jsonString == "string" ? JSON.parse(jsonString) : jsonString;
 
     // Handle both single object and array formats
     const modelsArray = Array.isArray(parsed) ? parsed : [parsed];

@@ -5,6 +5,7 @@ button, input, textarea {
   transition: all 0.2s ease-in-out;
 }
 
+
 /* Custom scrollbar for textarea */
 textarea::-webkit-scrollbar {
   width: 8px;
