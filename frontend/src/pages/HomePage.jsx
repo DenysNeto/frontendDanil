@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import BenchmarkInterface from "./cards/BenchmarkCard";
-import UploadFileInput from "./UploadFileInput";
+import PromptInput from "../components/ui/PromptInput";
+import ModelCard from "../components/models/ModelCard";
 import { useSettings } from "../contexts/SettingsContext";
 import { parseModelsFromSettings } from "../utils/modelParser";
 
-function BenchmarkWorkflow() {
+function HomePage() {
   const { settings } = useSettings();
 
   // Parse models from settings for each type
@@ -29,10 +29,10 @@ function BenchmarkWorkflow() {
 
   return (
     <>
-      <UploadFileInput />
+      XXXX
       <div className="flex gap-8">
         <div className="flex-1">
-          <BenchmarkInterface
+          <ModelCard
             prompt={submittedPrompt}
             promptKey={promptKey}
             settings={settings}
@@ -41,7 +41,7 @@ function BenchmarkWorkflow() {
           />
         </div>
         <div className="flex-1">
-          <BenchmarkInterface
+          <ModelCard
             prompt={submittedPrompt}
             promptKey={promptKey}
             settings={settings}
@@ -50,7 +50,9 @@ function BenchmarkWorkflow() {
           />
         </div>
       </div>
+      <PromptInput onSubmit={handlePromptSubmit} />
     </>
   );
 }
-export default BenchmarkWorkflow;
+
+export default HomePage;

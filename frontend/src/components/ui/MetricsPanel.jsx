@@ -1,5 +1,5 @@
-import React from 'react';
-import MetricCard from './MetricCard';
+import React from "react";
+import MetricCard from "./MetricCard";
 
 const MetricsPanel = ({ metrics }) => {
   return (

@@ -1,31 +1,39 @@
-import { useState, useMemo } from 'react';
-import PromptInput from './PromptInput';
-import ModelInterface from './ModelInterface';
-import { useSettings } from '../contexts/SettingsContext';
-import { parseModelsFromSettings } from '../utils/modelParser';
+import { useState, useMemo } from "react";
+// import PromptInput from './PromptInput';
+import BenchmarkInterface from "./cards/BenchmarkCard";
+import UploadFileInput from "./UploadFileInput";
+import { useSettings } from "../contexts/SettingsContext";
+import { parseModelsFromSettings } from "../utils/modelParser";
 
-function SingleExampleWorkflow() {
+function BenchmarkPage() {
   const { settings } = useSettings();
 
   // Parse models from settings for each type
-  const baselineModels = useMemo(() => parseModelsFromSettings(settings, 'baseline'), [settings]);
-  const twodeltaModels = useMemo(() => parseModelsFromSettings(settings, 'twodelta'), [settings]);
+  const baselineModels = useMemo(
+    () => parseModelsFromSettings(settings, "baseline"),
+    [settings]
+  );
+  const twodeltaModels = useMemo(
+    () => parseModelsFromSettings(settings, "twodelta"),
+    [settings]
+  );
   const [submittedPrompt, setSubmittedPrompt] = useState(null);
   const [promptKey, setPromptKey] = useState(0);
 
   const handlePromptSubmit = async (prompt) => {
-    console.log('Submitted prompt:', prompt);
+    console.log("Submitted prompt:", prompt);
     setSubmittedPrompt(prompt);
-    setPromptKey(prev => prev + 1); // Force re-execution even with same prompt
+    setPromptKey((prev) => prev + 1); // Force re-execution even with same prompt
     // Add a small delay to ensure the prompt state is updated before resolving
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
   };
 
   return (
-    <main className="space-y-6">
+    <>
+      <UploadFileInput />
       <div className="flex gap-8">
         <div className="flex-1">
-          <ModelInterface
+          <BenchmarkInterface
             prompt={submittedPrompt}
             promptKey={promptKey}
             settings={settings}
@@ -34,7 +42,7 @@ function SingleExampleWorkflow() {
           />
         </div>
         <div className="flex-1">
-          <ModelInterface
+          <BenchmarkInterface
             prompt={submittedPrompt}
             promptKey={promptKey}
             settings={settings}
@@ -43,9 +51,7 @@ function SingleExampleWorkflow() {
           />
         </div>
       </div>
-      <PromptInput onSubmit={handlePromptSubmit}/>
-    </main>
+    </>
   );
 }
-
-export default SingleExampleWorkflow;
+export default BenchmarkPage;
