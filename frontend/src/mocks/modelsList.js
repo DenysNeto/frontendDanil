@@ -1,0 +1,76 @@
+export const llmModels = [
+    {
+        id: 1,
+        title: "GPT-4",
+        description: "OpenAI's most advanced language model with superior reasoning, coding, and creative capabilities.",
+        imageUrl: {
+            icon: "🤖",
+            bg: "linear-gradient(135deg, #10a37f 0%, #1a7f64 100%)",
+            iconBg: "#10a37f",
+            color: "#ffffff"
+        },
+        comingSoon: true,
+        actionText: "Learn More",
+    },
+    {
+        id: 2,
+        title: "Claude 4",
+        description: "Anthropic's flagship AI assistant focused on being helpful, harmless, and honest with advanced reasoning.",
+        imageUrl: {
+            icon: "🧠",
+            bg: "linear-gradient(135deg, #D4915D 0%, #B87642 100%)",
+            iconBg: "#D4915D",
+            color: "#ffffff"
+        },
+        actionText: "Learn More",
+    },
+    {
+        id: 3,
+        title: "Gemini",
+        description: "Google's multimodal AI model designed to understand and generate text, images, code, and more.",
+        imageUrl: {
+            icon: "✨",
+            bg: "linear-gradient(135deg, #4285f4 0%, #34a853 50%, #fbbc05 75%, #ea4335 100%)",
+            iconBg: "#4285f4",
+            color: "#ffffff"
+        },
+        comingSoon: true,
+        actionText: "Learn More",
+    },
+    {
+        id: 4,
+        title: "Llama 3",
+        description: "Meta's open-source large language model offering powerful performance for various AI tasks.",
+        imageUrl: {
+            icon: "🦙",
+            bg: "linear-gradient(135deg, #0668E1 0%, #0452b5 100%)",
+            iconBg: "#0668E1",
+            color: "#ffffff"
+        },
+        actionText: "Learn More",
+    },
+    {
+        id: 5,
+        title: "Mistral AI",
+        description: "European AI company's efficient and powerful open-source models for commercial use.",
+        imageUrl: {
+            icon: "🌪️",
+            bg: "linear-gradient(135deg, #FF7000 0%, #cc5900 100%)",
+            iconBg: "#FF7000",
+            color: "#ffffff"
+        },
+        actionText: "Learn More",
+    },
+    {
+        id: 6,
+        title: "Grok",
+        description: "xAI's conversational AI with real-time knowledge and a unique personality approach.",
+        imageUrl: {
+            icon: "⚡",
+            bg: "linear-gradient(135deg, #000000 0%, #333333 100%)",
+            iconBg: "#000000",
+            color: "#ffffff"
+        },
+        actionText: "Learn More",
+    },
+];

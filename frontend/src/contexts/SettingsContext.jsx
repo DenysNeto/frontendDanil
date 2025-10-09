@@ -46,12 +46,10 @@ export const SettingsProvider = ({ children }) => {
   const [temperature, setTemperature] = useState(() =>
     loadFromStorage(STORAGE_KEYS.TEMPERATURE, DEFAULT_SETTINGS.TEMPERATURE.default)
   );
-  const [baselineModelJson, setBaselineModelJson] = useState(() =>
-    loadFromStorage(STORAGE_KEYS.BASELINE_MODEL_JSON, '')
-  );
-  const [twoDeltaModelJson, setTwoDeltaModelJson] = useState(() =>
-    loadFromStorage(STORAGE_KEYS.TWO_DELTA_MODEL_JSON, '')
-  );
+  const [baselineModelJson, setBaselineModelJson] = useState(DEFAULT_SETTINGS.BASELINE_MODEL_JSON)
+
+  const [twoDeltaModelJson, setTwoDeltaModelJson] = useState( DEFAULT_SETTINGS.BASELINE_MODEL_JSON)
+
 
   // Save to localStorage whenever settings change
   useEffect(() => {
