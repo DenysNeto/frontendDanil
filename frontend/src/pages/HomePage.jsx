@@ -10,7 +10,7 @@ import {Plus , ChevronRight} from "lucide-react";
 import {Button} from "../components/ui/Button.jsx";
 import { useNavigate } from "react-router-dom";
 import {llmOptTypes} from "../mocks/optimizationTypeList.js";
-import LoadingBenchmark from "../components/ui/loading/LoadingBenchmark.jsx";
+import LoadingBenchmark from "../components/loading/LoadingBenchmark.jsx";
 import {comparisonTypeList} from "../mocks/comparisonTypeList.js";
 
 function HomePage() {

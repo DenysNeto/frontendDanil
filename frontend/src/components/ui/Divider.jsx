@@ -55,7 +55,6 @@ export default function Divider({
     );
 }
 
-// Export additional preset variants
 export function DividerDashed({ className = "", spacing = "md" }) {
     return (
         <Divider

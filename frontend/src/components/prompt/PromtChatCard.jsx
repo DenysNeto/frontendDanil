@@ -1,7 +1,6 @@
 // src/components/GPTChatCard.tsx
 import React from "react";
-import Divider from "../Divider.jsx";
-
+import Divider from "../ui/Divider.jsx";
 
 
 

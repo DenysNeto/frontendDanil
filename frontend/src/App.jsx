@@ -14,6 +14,9 @@ import BenchmarkResults from "./pages/BenchmarkResults.jsx";
 import AppHeader from "./components/ui/AppHeader.jsx";
 import OptimizationTypeSelectPage from "./pages/OptimizationTypeSelectPage.jsx";
 import ComparisonTypeSelectPage from "./pages/ComparisonTypeSelectPage.jsx";
+import BenchmarkInputPage from "./pages/BenchmarkInputPage.jsx";
+import ChatInputPage from "./pages/ChatInputPage.jsx";
+import PromptResults from "./pages/PromptResults.jsx";
 
 function App() {
     const [darkMode, setDarkMode] = useState(true);
@@ -36,9 +39,12 @@ function App() {
                                 <Route path="/comparison_type" element={<ComparisonTypeSelectPage />} />
                                 <Route path="/benchmark_test" element={<ComparisonTypeSelectPage />} />
                                 <Route path="/prompt_test" element={<ComparisonTypeSelectPage />} />
-
                                 <Route path="/benchmark" element={<OptimizationTypeSelectPage />} />
-                                <Route path="/compare" element={<BenchmarkResults />} />
+                                
+
+                                <Route path="/prompt_input" element={<PromptResults />} />  
+                                <Route path="/benchmark_input" element={<BenchmarkInputPage />} />
+                                {/* <Route path="/prompt_input" element={<ChatInputPage />} /> */}
                             </Routes>
                   </div>
               </main>

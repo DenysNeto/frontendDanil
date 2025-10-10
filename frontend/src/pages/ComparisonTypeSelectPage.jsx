@@ -23,21 +23,16 @@ function ComparisonTypeSelectPage() {
 
 
     const handleNextClick = ()=>{
-        // todo logic what selected
-        navigate("/compare");
+        let currentTask = tasks.find(t=>t.id == selectedTask);
+        let currentTaskType = currentTask && currentTask.type ? currentTask.type.toLowerCase(): null;
+        if(!currentTaskType)return;
+
+        navigate(`/${currentTaskType}_input`);
     }
 
     const handleBackClick = ()=>{
           if(!selectedTask)return;
-           if(selectedTask.type="Benchmark")
-           {
-               navigate("/benchmark_test");
-           }
-        if(selectedTask.type="Prompt")
-        {
-            navigate("/prompt_test");
-        }
-
+           navigate("/optimization_type");
     }
 
     const  handleCompTypeSelect = (taskId)=>{

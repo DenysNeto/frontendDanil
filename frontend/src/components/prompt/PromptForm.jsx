@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PromptInputWithButton from "./PromtInputWithButton.jsx";
-import {usePromptStore} from "../../../store/usePromptStore.js";
+import {usePromptStore} from "../../store/usePromptStore.js";
 
 
 export default function PromptForm({promptSend}) {
@@ -11,14 +11,15 @@ export default function PromptForm({promptSend}) {
 
 
     const handleSend = () => {
+        if (prompt.trim() === "") return; // Prevent sending empty prompts
         addPrompt(prompt);
         setSelectedPrompt(prompt);
-        promptSend()
-        setPrompt(""); // clear input after sending
+        promptSend(prompt); // Pass the prompt value to the parent
+        setPrompt(""); // Clear input after sending
     };
 
     return (
-        <div className=" w-full  ">
+        <div className=" p-4 mr-4 ml-4">
             <PromptInputWithButton
                 value={prompt}
                 onChange={setPrompt}
