@@ -1,7 +1,6 @@
 from flask import Flask, request, Response, send_from_directory
 import requests
 import json
-import time
 import os
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
