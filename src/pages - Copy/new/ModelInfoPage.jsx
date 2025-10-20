@@ -1,31 +1,54 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx"
+import NavSide from "../../components/UI/NavSide.jsx"
 
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
+import ViewTitle from "../../components/UI/ViewTitle.jsx";
+import ViewContent from "../../components/UI/ViewContent.jsx";
+import AppHeader from "../../components/UI/AppHeader.jsx";
 
-import Template from "../components/UI/Template.jsx";
+import Template from "../../components/UI/Template.jsx";
 
-import { useModelStore1 } from "../store/useModelStore1.ts";
-import { useLocation, useNavigate } from "react-router-dom";
-import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
-import CodeViewer from "../components/UI/CodeViewer.jsx";
-import Accordion from "../components/UI/Accordion.jsx";
-import ScrollButton from "../components/UI/ScrollButton.jsx"
+import { useModelStore1 } from "../../store/useModelStore1.ts";
+import { useLocation } from "react-router-dom";
+import ComparisonContainer from "../../components/Compare/ComparisonContainer.jsx";
+import CodeViewer from "../../components/UI/CodeViewer.jsx";
+import Accordion from "../../components/UI/Accordion.jsx";
+import ScrollButton from "../../components/UI/ScrollButton.jsx"
 
 import { FaServer, FaTools, FaMicrochip, FaRobot, FaBolt } from 'react-icons/fa';
 import { LuCopy } from "react-icons/lu";
-import Tabs from "../components/UI/Tabs.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx";
-
-
+import BgImgPaste from "../../components/UI/BgImgPaste.jsx"
+import Tabs from "../../components/UI/Tabs.jsx";
 
 let tabs = [
   {label:"CURL", value : "CURL"},
    {label:"PYTHON", value : "PYTHON"},
     {label:"TYPESCRIPT", value : "TYPESCRIPT"}
 ]
+
+ let FAQ = [
+    {
+      title: "Applications & Use Cases",
+      text:'Qwen3-Next Thinking features the same highly sparse MoE architecture but specialized for complex reasoning tasks. Supports only thinking mode  with automatic  tag inclusion, delivering exceptional analytical  performance while maintaining extreme efficiency with 10x+ higher  throughput on long contexts and may generate longer thinking content  than predecessors.'
+    },
+        {
+      title: "Applications & Use Cases",
+      text:'Qwen3-Next Thinking features the same highly sparse MoE architecture but specialized for complex reasoning tasks. Supports only thinking mode  with automatic  tag inclusion, delivering exceptional analytical  performance while maintaining extreme efficiency with 10x+ higher  throughput on long contexts and may generate longer thinking content  than predecessors.'
+    },
+        {
+      title: "Applications & Use Cases",
+      text:'Qwen3-Next Thinking features the same highly sparse MoE architecture but specialized for complex reasoning tasks. Supports only thinking mode  with automatic  tag inclusion, delivering exceptional analytical  performance while maintaining extreme efficiency with 10x+ higher  throughput on long contexts and may generate longer thinking content  than predecessors.'
+    },
+        {
+      title: "Applications & Use Cases",
+      text:'Qwen3-Next Thinking features the same highly sparse MoE architecture but specialized for complex reasoning tasks. Supports only thinking mode  with automatic  tag inclusion, delivering exceptional analytical  performance while maintaining extreme efficiency with 10x+ higher  throughput on long contexts and may generate longer thinking content  than predecessors.'
+    },
+        {
+      title: "Applications & Use Cases",
+      text:'Qwen3-Next Thinking features the same highly sparse MoE architecture but specialized for complex reasoning tasks. Supports only thinking mode  with automatic  tag inclusion, delivering exceptional analytical  performance while maintaining extreme efficiency with 10x+ higher  throughput on long contexts and may generate longer thinking content  than predecessors.'
+    }
+  ]
+
+
   const code_example = ` curl -X POST "https://api.together.xyz/v1/chat/completions" \ 
                         -H "Authorization: Bearer $TOGETHER_API_KEY" \ 
                         -H "Content-Type: application/jsxon" \ 
@@ -39,16 +62,10 @@ let tabs = [
                             ] 
                     }'`
 
-
-
-
-export default function ModelInfoPage() {
-  const navigate = useNavigate()
-
+export default function ModelsPage() {
   const templateType = 'action';
   const models = useModelStore1((s) => s.models);
   const index = useModelStore1((s) => s.selectedIndex);
-  const selectedModel =  useModelStore1((s) => s.selectedModel);
   const setSelectedIndex = useModelStore1((s) => s.setSelectedIndex);
   const setSelectedModel =  useModelStore1((s) => s.setSelectedModel);
   const model =  useModelStore1((s) => s.selectedModel);
@@ -75,15 +92,21 @@ export default function ModelInfoPage() {
 
             <div className="pt-20"></div>
           
-            <Template type={templateType} bgActive={true}>
+            <Template type={templateType}>
                
               <div className="grid grid-cols-1 lg:grid-cols-[70%_30%] gap-6 p-6 w-full">
                     
                       <div className=" rounded-xl  p-4">
                                          
                            
-                        <ViewTitle title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
-                
+                        <ViewTitle title={model.title} desc={model.description} actionText= {"TRY DEMO"}  align={"left"}/>
+                      <div className="pb-20"></div>
+                                <div className="bg-black/0">
+                                  <ComparisonContainer/>
+                                </div>
+                    
+        
+                         
                                   
                       <div className="pb-20"></div>
                         <ViewTitle align={'center'} subtitleCustom={
@@ -96,7 +119,6 @@ export default function ModelInfoPage() {
                         } />
                         <Tabs data={tabs} align={"left"} />
                         <CodeViewer language={'jsx'} code={code_example}/>
-    
                       <div className="pb-20 ">
                        
                       </div>
@@ -104,7 +126,7 @@ export default function ModelInfoPage() {
 
                          <ViewTitle  subtitle={"FAQ"} align={'left'} />
                          
-                        <Accordion data={selectedModel.faq} />
+                        <Accordion data={FAQ} />
                         
                       <div className="pb-20"></div>
                         <ScrollButton toTop={true}/>
@@ -126,15 +148,15 @@ export default function ModelInfoPage() {
         <ul className="space-y-3 text-gray-700 sticky top-28 bg-[#297A971A] rounded-2xl p-6 text-lg">
           <li className="flex items-center gap-2 py-4 border-b-2 border-gray-300  p-4">
             <FaRobot className="text-blue-500" />
-            <strong>Provider</strong> <span className="ml-auto">{selectedModel.provider}</span>
+            <strong>Model Provider</strong> <span className="ml-auto">OpenAI</span>
           </li>
           <li className="flex items-center gap-2 py- border-b-2 border-gray-300  p-4">
             <FaMicrochip className="text-blue-500" />
-            <strong>Type</strong> <span className="ml-auto">{selectedModel.type}</span>
+            <strong>Model Type</strong> <span className="ml-auto">LLM</span>
           </li>
           <li className="flex items-center gap-2 py-4   p-4 border-b-2 border-gray-300">
             <FaBolt className="text-blue-500" />
-            <strong>Context Length</strong> <span className="ml-auto">{selectedModel.context_length}</span>
+            <strong>Context Length:</strong> <span className="ml-auto">131072</span>
           </li>
           <li className="flex items-center gap-2 py-4 p-4  border-b-2 border-gray-300">
             <FaServer className="text-blue-500" />
@@ -159,6 +181,7 @@ export default function ModelInfoPage() {
     </div>
     }
 
+    {!model && <div>NO</div>}
     </>
   );
 }

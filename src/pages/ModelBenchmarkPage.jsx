@@ -8,7 +8,7 @@ import ViewContent from "../components/UI/ViewContent.jsx";
 import AppHeader from "../components/UI/AppHeader.jsx";
 import Template from "../components/UI/Template.jsx";
 import CardsBenchmark from "../components/UI/CardsBenchmark.jsx";
-import { useModelStore1 } from "../store/useModelStore1";
+import { useModelStore1 } from "../store/useModelStore1.js";
 
 const images = ["/cards/card1.png","/cards/card2.png","/cards/card3.png","/cards/card4.png","/cards/card5.png","/cards/card6.png"];
 function pickRandom(arr) {
@@ -17,7 +17,7 @@ function pickRandom(arr) {
 
 
 
-export default function BenchmarkPage() {
+export default function ModelBenchmarkPage() {
   const navigate = useNavigate()
   const templateType = 'action';
   const selectedModel = useModelStore1((s)=>s.selectedModel)
@@ -54,7 +54,7 @@ export default function BenchmarkPage() {
             </ViewTitle>
             </div>
             <ViewContent>
-                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks}/>
+                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>=3?3:2}/>
             </ViewContent>
 
               </div>

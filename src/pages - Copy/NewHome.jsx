@@ -4,6 +4,8 @@ import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
 import AppHeader from "../components/UI/AppHeader.jsx";
 import AppFooter from "../components/UI/AppFooter.jsx"
+import Card from "../components/ui/Card.jsx";
+import {llmModels} from "../mocks/modelsList.js";
 import Template from "../components/UI/Template.jsx";
 import LogoGallery from "../components/UI/LogoGallery.jsx";
 import CardsBenchmark from "../components/UI/CardsBenchmark.jsx"
@@ -22,11 +24,13 @@ const tiles = [
 export default function NewPageTemplate() {
     const templateType = "action"
 
+  const [darkMode, setDarkMode] = useState(false);
+  const [models, setModels] = useState(llmModels);
 
     const Template1 = "main"
     const Template2 = "action"
   return (
-<div className={`min-h-screen`}>
+<div className={`min-h-screen ${darkMode ? "bg-gradient-to-br from-blue-950 to-indigo-900 text-white" : "bg-white text-black"}`}>
     <AppHeader />
 
     <NavSide />

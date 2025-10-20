@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx"
-import Template from "../components/UI/Template.jsx";
-import LogoGallery from "../components/UI/LogoGallery.jsx";
-import CardsBenchmark from "../components/UI/CardsBenchmark.jsx"
+import NavSide from "../components/UI/NavSide.js";
+import ViewTitle from "../components/UI/ViewTitle.js";
+import ViewContent from "../components/UI/ViewContent.js";
+import AppHeader from "../components/UI/AppHeader.js";
+import AppFooter from "../components/UI/AppFooter.js"
+import Card from "../components/ui/Card.jsx";
+import {llmModels} from "../mocks/modelsList.js";
+import Template from "../components/UI/Template.js";
+import LogoGallery from "../components/UI/LogoGallery.js";
+import CardsBenchmark from "../components/UI/CardsBenchmark.js"
 import ModelsView from "../components/Models/ModelsView.jsx";
-import ScrollButton from "../components/UI/ScrollButton.jsx";
+import ScrollButton from "../components/UI/ScrollButton.js";
 import {Button} from "../components/UI/Buttons.jsx"
 const tiles = [
   "Code Assistance",
@@ -22,11 +24,13 @@ const tiles = [
 export default function NewPageTemplate() {
     const templateType = "action"
 
+  const [darkMode, setDarkMode] = useState(false);
+  const [models, setModels] = useState(llmModels);
 
     const Template1 = "main"
     const Template2 = "action"
   return (
-<div className={`min-h-screen`}>
+<div className={`min-h-screen ${darkMode ? "bg-gradient-to-br from-blue-950 to-indigo-900 text-white" : "bg-white text-black"}`}>
     <AppHeader />
 
     <NavSide />
