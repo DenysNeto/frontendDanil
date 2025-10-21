@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
 
 import Template from "../components/UI/Template.jsx";
 ;
 import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx"
 import PromptInput from "../components/UI/PromptInput.jsx";
 import AppFooter from "../components/UI/AppFooter.jsx";
-import BgImgPaste from "../components/UI/BgImgPaste.jsx";
 
 import { useModelStore1 } from "../store/useModelStore1.js";
 
@@ -60,9 +57,8 @@ export default function ModelPromptPage() {
   }
 
   return (
-    <div className={`min-h-screen bg-white text-black`}>
-        <AppHeader />
-         <NavSide typeNav="horizontal" />
+    <div className={` bg-white text-black`}>
+ 
         <Template  type={templateType}>
            
         <ViewTitle title={"Model Demo"} align="left" />
@@ -90,8 +86,7 @@ export default function ModelPromptPage() {
     </ViewContent>
           
         </Template>
-     
-           <BgImgPaste position={"bot"} />
+    
     </div>
 
 

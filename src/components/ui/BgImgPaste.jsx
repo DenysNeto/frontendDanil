@@ -1,50 +1,58 @@
-export default function BgImgPaste({
+import React from "react";
+
+
+
+export function BgHeader(){
+  return (
+           <div
+  className="absolute left-0 w-full z-[0] pointer-events-none bg-cover bg-center"
+  style={{
+    backgroundImage: 'url(/e_bg.png)',
+    filter: 'blur(40px)',
+    backgroundSize: '130%',
+    height: '200%',
+    top: '0',
+  }}
+/>
+  )
+}
+
+export function BgFooter() {
+  return (
+    <div
+      className="fixed  w-full z-[0] pointer-events-none bg-cover bg-center"
+      style={{
+        backgroundImage: 'url(/e_bg.png)',
+        filter: 'blur(40px)',
+        backgroundSize: '120%',
+        height: '200%',        // запас, чтобы при масштабировании/blur не появлялись углы
+        bottom: '0',           // прижимает фон к низу контейнера
+        top: 'auto',
+      }}
+      aria-hidden="true"
+    />
+  );
+}
+
+
+export function BgContainer({
   src = "/e_bg.png",
   className = "",
-  position, // "top" | "bot" | undefined
 }) {
-  // wrapper — обрезающий контейнер
-  const wrapperStyle = {
-    position: "absolute",
-    left: 0,
-    width: "100%",
-    overflow: "hidden",
-    pointerEvents: "none",
-    zIndex: 0,
-
-    height: position === "top" || position === "bot" ? "50%" : "100%",
-  };
-
-  if (position === "top") {
-    wrapperStyle.top = 0;
-    delete wrapperStyle.bottom;
-  } else if (position === "bot") {
-    wrapperStyle.bottom = 0;
-    wrapperStyle.bot = "0"
-    delete wrapperStyle.top;
-  } else {
-    wrapperStyle.top = 0;
-    delete wrapperStyle.bottom;
-  }
-
-  // inner — сам фон, больше по высоте и сдвинут
-  const innerStyle = {
-    position: "absolute",
-    left: 0,
-    top: !position ? "10%" : "0",
-    width: "100%",
-    height: "80%", 
+  const style = {
     backgroundImage: `url(${src})`,
+    filter: "blur(30px)",
+    backgroundSize: "120%",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    backgroundSize: "100%",
-    filter: "blur(30px)",
-    transform: position === "bot" ? "translateY(50%)" : position === "top" ? "translateY(-50%)" : "none",
+    width: "100%",
+    height: "100%",
   };
 
   return (
-    <div style={wrapperStyle}>
-      <div className={`bg-cover bg-center ${className}`} style={innerStyle} />
-    </div>
+    <div
+      className={`absolute left-0 w-full z-[0] pointer-events-none bg-cover bg-center ${className}`}
+      style={style}
+    />
   );
 }

@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
-
 import NewPageTemplate from "./pages/NewHome.jsx"
 import RouteSync from "./components/UI/RouteSync.jsx"
 import ModelsPage from "./pages/ModelsPage.jsx"
@@ -14,6 +13,8 @@ import ResultPage from "./pages/ResultPage.jsx"
 import ModelBenchmarkPage from "./pages/ModelBenchmarkPage.jsx"
 import ModelPromptPage from "./pages/ModelPromptPage.jsx"
 import NotFoundPage from "./pages/NotFound.jsx"
+import AppFooter from "./components/UI/AppFooter.jsx";
+import AppHeader from "./components/ui/AppHeader.jsx";
 function App() {
 
     useEffect(() => {
@@ -26,10 +27,11 @@ function App() {
     }, []);
 
 
+ const { pathname } = useLocation();
 
   return (
       <SettingsProvider>
-          
+    <AppHeader/>
               <main className="w-full">
                   <div>
                         <RouteSync />
@@ -51,7 +53,7 @@ function App() {
                         </Routes>
                   </div>
               </main>
-
+            <AppFooter isFull={pathname==="/" ? true : false}/>
       </SettingsProvider>
   );
 }

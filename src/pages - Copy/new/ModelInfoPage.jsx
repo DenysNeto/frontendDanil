@@ -16,7 +16,6 @@ import ScrollButton from "../../components/UI/ScrollButton.jsx"
 
 import { FaServer, FaTools, FaMicrochip, FaRobot, FaBolt } from 'react-icons/fa';
 import { LuCopy } from "react-icons/lu";
-import BgImgPaste from "../../components/UI/BgImgPaste.jsx"
 import Tabs from "../../components/UI/Tabs.jsx";
 
 let tabs = [

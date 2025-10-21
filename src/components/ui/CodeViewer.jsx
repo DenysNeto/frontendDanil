@@ -7,12 +7,18 @@ export default function CodeViewer({ code, language = 'bash' }) {
       language={language}
       style={oneDark}
       showLineNumbers
-      customStyle={{
-        borderRadius: '0.75rem',
-        padding: '2rem',
-        fontSize: '0.875rem',
-        backgroundColor: '#282c34',
-      }}
+        wrapLines={true}
+  lineProps={{ style: { wordBreak: 'break-word' } }}
+
+    customStyle={{
+    borderRadius: '2rem',
+    paddingTop: '1.5rem',
+    paddingBottom: '1.5rem',
+    fontSize: '0.8rem',
+    backgroundColor: '#282c34',
+    whiteSpace: 'pre-wrap',
+  }}
+
     >
       {code}
     </SyntaxHighlighter>

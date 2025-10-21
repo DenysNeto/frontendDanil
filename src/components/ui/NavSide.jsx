@@ -8,20 +8,20 @@ import { CgShapeHexagon } from "react-icons/cg";
 import useNavigationStore from "../../store/useNavStore";
 
 let navBtns = [
-  { label: "Platform", link: "/platform" },
+  { label: "Platform", link: "/platform",disabled:true },
   { label: "Models", link: "/models" },
-  { label: "Developers", link: "/developers" },
-  { label: "Pricing", link: "/pricing" },
-  { label: "Partners", link: "/partners" },
-  { label: "Company", link: "/company" },
+  { label: "Developers", link: "/developers",disabled:true },
+  { label: "Pricing", link: "/pricing",disabled:true },
+  { label: "Partners", link: "/partners",disabled:true },
+  { label: "Company", link: "/company",disabled:true },
 ];
 
 
 let actBtns = [
-  { label: "screen", icon: <FaDesktop />, link: "/screen" },
-  { label: "book", icon: <FaBookmark />, link: "/book" },
-  { label: "chart", icon: <FaChartBar />, link: "/chart" },
-  { label: "set", icon: <CgShapeHexagon />, link: "/set" }
+  { label: "screen", icon: <FaDesktop />, link: "/screen",disabled:true },
+  { label: "book", icon: <FaBookmark />, link: "/book",disabled:true },
+  { label: "chart", icon: <FaChartBar />, link: "/chart",disabled:true },
+  { label: "set", icon: <CgShapeHexagon />, link: "/set",disabled:true }
 ]
 
 
@@ -84,9 +84,11 @@ export default function NavComp({ typeNav }) {
         {navBtns.map((btn, index) => (
           <button
             key={index}
-            onClick={() => navigate(btn.link)}
+            onClick={() => !btn.disabled && navigate(btn.link)}
             className={`
               ${main_nav === btn.label.toLowerCase() ? " text-green-400" : "text-white"}
+              ${btn.disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"}
+
               px-4
               py-2
               rounded-full

@@ -1,16 +1,18 @@
 import React from "react";
 import logo from  "../../assets/bg/Logo.png";
 import { Link } from 'react-router-dom';
-import BgImgPaste from "./BgImgPaste";
-
+import {BgHeader} from "./BgImgPaste"
+import NavComp from "./NavSide";
 export default function AppHeader() {
   return (
     <>
     
-
+        <NavComp/>
       <header className="sticky top-0 z-10 relative">
-        
-      <BgImgPaste position={"top"}/>    
+    
+      <BgHeader />
+
+  
    
       <Link to="/">
         <img

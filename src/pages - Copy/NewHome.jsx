@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import NavSide from "../components/UI/NavSide.jsx";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx"
+
 import Card from "../components/ui/Card.jsx";
 import {llmModels} from "../mocks/modelsList.js";
 import Template from "../components/UI/Template.jsx";
@@ -105,8 +104,6 @@ export default function NewPageTemplate() {
 
     </Template>
 
-
-        <AppFooter/>
 </div>
   );
 }

@@ -1,23 +1,20 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx"
+
 
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
+
 
 import Template from "../components/UI/Template.jsx";
 
 import { useModelStore1 } from "../store/useModelStore1.ts";
 import { useLocation, useNavigate } from "react-router-dom";
-import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
 import CodeViewer from "../components/UI/CodeViewer.jsx";
 import Accordion from "../components/UI/Accordion.jsx";
 import ScrollButton from "../components/UI/ScrollButton.jsx"
-
 import { FaServer, FaTools, FaMicrochip, FaRobot, FaBolt } from 'react-icons/fa';
 import { LuCopy } from "react-icons/lu";
 import Tabs from "../components/UI/Tabs.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx";
 
 
 
@@ -54,6 +51,15 @@ export default function ModelInfoPage() {
   const model =  useModelStore1((s) => s.selectedModel);
   const location = useLocation();
 
+   const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code_example);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 500); // ⏱️ сброс через 2 секунды
+  };
+
+
     let m_id = location.pathname.split('/')[2]
     let m_index =  models.findIndex(s=>s.id==m_id)
     if(index != m_index) setSelectedIndex(m_index)
@@ -64,10 +70,6 @@ export default function ModelInfoPage() {
 
       
     {model &&
-        <div className={` w-full "}`}>
-            <AppHeader />
-            <NavSide typeNav={"horizontal"} />
-      
           <div
             className="relative bg-repeat-y bg-center bg-[length:100%_300px] min-h-screen"
 
@@ -89,13 +91,22 @@ export default function ModelInfoPage() {
                         <ViewTitle align={'center'} subtitleCustom={
                             <div className="flex items-center justify-between text-center w-full">
                             <h3>API USAGE</h3> 
-                            <button onClick={()=>{navigator.clipboard.writeText(code_example)}} className={"hover:bg-gray-200 rounded-3xl p-3"}> <LuCopy/></button>
+                           
                             </div>
 
                           
                         } />
-                        <Tabs data={tabs} align={"left"} />
-                        <CodeViewer language={'jsx'} code={code_example}/>
+
+                        <div className="flex justify-between">
+                            <Tabs data={tabs} align={"left"} />
+                         
+                            <button onClick={handleCopy} className={`p-3 rounded-full text-sm font-medium transition-colors duration-300
+                                ${copied ? 'bg-green-300 text-black' : 'text-black hover:bg-gray-300'}
+                              `}> <LuCopy/>
+                            </button>
+                        </div>
+                        
+                        <CodeViewer language={'js'} code={code_example}/>
     
                       <div className="pb-20 ">
                        
@@ -153,10 +164,8 @@ export default function ModelInfoPage() {
        
             </Template>
 
-        </div>
-      
 
-    </div>
+        </div>
     }
 
     </>

@@ -9,7 +9,6 @@ import Template from "../components/UI/Template.js";
 import ComparisonContainer from "../components/Compare/ComparisonContainer.js"
 import PromptInput from "../components/UI/PromptInput.js";
 import AppFooter from "../components/UI/AppFooter.js";
-import BgImgPaste from "../components/UI/BgImgPaste.js";
 
 
 const comparisonData2 = [
@@ -62,8 +61,7 @@ export default function NewPageTemplate() {
     </ViewContent>
           
         </Template>
-     
-           <BgImgPaste position={"bot"} />
+
     </div>
 
 

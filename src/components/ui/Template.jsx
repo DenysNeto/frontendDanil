@@ -2,7 +2,7 @@
 //    Template1 = "main"
 //    Template2 = "action"
 import ScrollButton from "../UI/ScrollButton"
-import BgImgPaste from "./BgImgPaste";
+import {BgContainer} from "./BgImgPaste";
 
 const Template = ({ type = "main" ,padding = 2, children ,bgActive = false }) => {
   let resolvedPadding = padding;
@@ -17,7 +17,7 @@ const Template = ({ type = "main" ,padding = 2, children ,bgActive = false }) =>
   const contentSpan = 24 - resolvedPadding * 2;
 
   return (
-    <div className="grid-24 relative bg-transparent">
+    <div className="grid-24 relative bg-transparent ">
      
       <aside className={`col-${resolvedPadding}`} />
       <main className={`col-${contentSpan} z-12 `}>
@@ -25,7 +25,7 @@ const Template = ({ type = "main" ,padding = 2, children ,bgActive = false }) =>
       </main>
       <aside className={`col-${resolvedPadding}`} />
 
-       {bgActive && <BgImgPaste /> }
+       {bgActive && <BgContainer /> }
     </div>
   );
 };

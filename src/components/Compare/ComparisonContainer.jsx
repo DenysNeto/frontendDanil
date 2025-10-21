@@ -16,7 +16,7 @@ export default function ComparisonContainer({backButton=false, header = true, da
    
   <div className="w-full  mx-auto max-h-[60vh] bg-transparent rounded-2xl" >
     
-    {header &&   <ComparisonHeader headerData={data && data?.compareTypes ? data.compareTypes:false} /> }
+    {header &&   <ComparisonHeader price={data.price} headerData={data && data?.compareTypes ? data.compareTypes:false} /> }
 
 
     {Object.entries(data && data.compareFields ? data.compareFields: data).map(([metricName, metricObj], index) => (

@@ -4,6 +4,7 @@ import logo from "../../assets/bg/bg_footer.png";
 import { Link } from "react-router-dom";
 import Template from "./Template";
 import ViewTitle from "./ViewTitle";
+import { BgFooter } from "./BgImgPaste";
 
 
 let footerColumns = [
@@ -12,13 +13,14 @@ let footerColumns = [
   ["© 2025 Fireworks AI, Inc. All rights reserved."]
 ]
 
-export default function AppFooter(isFull = false) {
+export default function AppFooter({isFull = false}) {
+
   return (
-   <footer className={"bg-[#303030] text-white mt-30 z-2 py-10"}>
-      
+   <footer className={` ${isFull ? "bg-[#303030] mt-30  py-10" : ""}  text-white `}>
+      {!isFull  && <BgFooter/>   }
       
       <Template type="action">
-         {isFull && <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-12  z-12">
+         {isFull && <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 ">
             <div className="flex flex-col gap-6 ">
               <img src={logo} alt="Logo" className="w-10 m-4 mt-10" />
               <ViewTitle  align={"left"}
@@ -60,8 +62,7 @@ export default function AppFooter(isFull = false) {
           </div>}
       </Template>
 
-  
- 
+
     </footer>
 
   );

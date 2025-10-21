@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
 import AppFooter from "../components/UI/AppFooter.jsx"
 import Template from "../components/UI/Template.jsx";
 import LogoGallery from "../components/UI/LogoGallery.jsx";
@@ -27,9 +25,7 @@ export default function NewPageTemplate() {
     const Template2 = "action"
   return (
 <div className={`min-h-screen`}>
-    <AppHeader />
-
-    <NavSide />
+   
 
     <Template type={templateType}> 
         
@@ -101,8 +97,6 @@ export default function NewPageTemplate() {
 
     </Template>
 
-
-        <AppFooter/>
 </div>
   );
 }

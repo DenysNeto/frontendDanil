@@ -10,7 +10,6 @@ import ModelsC from "../components/Models/ModelsView.jsx";
 import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx"
 import PromptInput from "../components/UI/PromptInput.jsx";
 import AppFooter from "../components/UI/AppFooter.jsx";
-import BgImgPaste from "../components/UI/BgImgPaste.jsx";
 
 
 export default function NewPageTemplate() {
@@ -52,7 +51,6 @@ export default function NewPageTemplate() {
         
         </Template>
      
-           <BgImgPaste position={"bot"} />
     </div>
 
 

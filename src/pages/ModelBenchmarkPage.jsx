@@ -1,11 +1,8 @@
 import React, { useState, Nav } from "react";
 import { useNavigate } from "react-router-dom";
-
-
-import NavSide from "../components/UI/NavSide.jsx";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
+
 import Template from "../components/UI/Template.jsx";
 import CardsBenchmark from "../components/UI/CardsBenchmark.jsx";
 import { useModelStore1 } from "../store/useModelStore1.js";
@@ -41,11 +38,12 @@ export default function ModelBenchmarkPage() {
 
 
   return (
-    <div className={`min-h-screen`}>
-        <AppHeader/>
-         <NavSide />
+  
+  <>
+    <div className={``}>
+
         <Template type={templateType}>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[40%_60%] gap-6 lg:gap-8 w-full">
             <div className="pt-50">
             <ViewTitle 
                     align={"left"}
@@ -53,14 +51,19 @@ export default function ModelBenchmarkPage() {
                     desc={"Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements."} >
             </ViewTitle>
             </div>
-            <ViewContent>
+           <Template>
+             <ViewContent>
                 <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>=3?3:2}/>
             </ViewContent>
+           </Template>
 
               </div>
         </Template>
 
 
     </div>
+
+  </>
+
   );
 }

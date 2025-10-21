@@ -1,10 +1,10 @@
 import { useBenchmarkStore1 } from "../../store/useBenchmarkStore1";
 
 
-export default function CardsBenchmark({ cardsInRow = 3, benchmarks=[], onSelect =()=>{}}) {
+export default function CardsBenchmark({ cardsInRow = 3, benchmarks, onSelect =()=>{}}) {
   
   const defaultBenchmarks = useBenchmarkStore1(b=>b.benchmarks)
-  benchmarks = benchmarks && benchmarks.length>0 ? benchmarks : defaultBenchmarks
+  benchmarks = benchmarks ?  benchmarks.length>0 ? benchmarks : [] : defaultBenchmarks
   const gridColsClass = {
     1: "lg:grid-cols-1",
     2: "lg:grid-cols-2",
