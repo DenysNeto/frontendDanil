@@ -1,9 +1,7 @@
 from flask import Flask, request, Response, send_from_directory
 import requests
 import json
-import time
 import os
-import sys
 
 app = Flask(__name__, static_folder='static', static_url_path='/static')
 
@@ -164,38 +162,54 @@ def generate_stream(prompt, max_tokens, temperature, model_fqdn):
                 return
             
             # Stream response line by line (each line is a JSON object)
-            for line in response.iter_lines(decode_unicode=True):
-                if line.strip():  # Skip empty lines
-                    try:
-                        # Parse the JSON response from the model
-                        model_data = json.loads(line)
-                        print(f"Model response line: {model_data}")  # Debug log
+            # Use chunk_size=1 for immediate streaming
+            token_counter = 0
+            for line in response.iter_lines(decode_unicode=True, chunk_size=1):
+                if not line:  # Skip empty lines
+                    continue
 
-                        # Extract text content from the model response
-                        text_content = model_data.get('text', '')
-                        tokens_so_far = model_data.get('tokens_so_far', 0)
-                        print(f"Extracted text: '{text_content}', tokens: {tokens_so_far}")  # Debug log
-                        
-                        # Send each character individually for character-by-character streaming
-                        for char in text_content:
-                            if char:  # Send all characters including spaces
-                                data = {
-                                    'type': 'token',
-                                    'content': char,
-                                    'tokens_so_far': tokens_so_far
-                                }
-                                yield f"data: {json.dumps(data)}\n\n"
-                                
-                                # Force flush to prevent buffering
-                                sys.stdout.flush()
-                                sys.stderr.flush()
-                                
-                                # Small delay to make streaming visible
-                                time.sleep(0.01)
-                                
-                    except json.JSONDecodeError:
-                        # If line is not valid JSON, skip it
-                        continue
+                # Ensure line is a string (decode if bytes)
+                if isinstance(line, bytes):
+                    line = line.decode('utf-8', errors='ignore')
+
+                line = line.strip()
+                if not line:
+                    continue
+
+                # First try to parse as JSON
+                try:
+                    # Parse the JSON response from the model
+                    model_data = json.loads(line)
+                    print(f"Model response JSON: {model_data}", flush=True)  # Debug log
+
+                    # Extract text content from the model response
+                    text_content = model_data.get('text', '')
+                    tokens_so_far = model_data.get('tokens_so_far', 0)
+                    print(f"Extracted text: '{text_content}', tokens: {tokens_so_far}", flush=True)  # Debug log
+
+                    # Send all chunks including empty ones (for token tracking)
+                    data = {
+                        'type': 'token',
+                        'content': text_content,
+                        'tokens_so_far': tokens_so_far
+                    }
+                    yield f"data: {json.dumps(data)}\n\n"
+
+                except json.JSONDecodeError:
+                    # If not JSON, treat as plain text line
+                    # Some APIs send plain text lines mixed with JSON
+                    print(f"Plain text line (not JSON): {line}", flush=True)
+
+                    # Increment our own token counter
+                    token_counter += 1
+
+                    # Send plain text as a chunk
+                    data = {
+                        'type': 'token',
+                        'content': line + '\n',  # Add newline since it's a line
+                        'tokens_so_far': token_counter
+                    }
+                    yield f"data: {json.dumps(data)}\n\n"
         
         # Send completion message
         yield f"data: {json.dumps({'type': 'end', 'message': 'Generation complete'})}\n\n"
