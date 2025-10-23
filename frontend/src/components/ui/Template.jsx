@@ -1,7 +1,7 @@
 
 //    Template1 = "main"
 //    Template2 = "action"
-import ScrollButton from "../UI/ScrollButton"
+import ScrollButton from "./ScrollButton"
 import {BgContainer} from "./BgImgPaste";
 
 const Template = ({ type = "main" ,padding = 2, children ,bgActive = false }) => {

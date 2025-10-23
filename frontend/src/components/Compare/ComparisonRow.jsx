@@ -1,4 +1,4 @@
-import Metric from "../UI/Metric.jsx"
+import Metric from "../ui/Metric.jsx"
 
 export default function ComparisonRow({name, metric, compareTypes =[0,1], first }) {
 
