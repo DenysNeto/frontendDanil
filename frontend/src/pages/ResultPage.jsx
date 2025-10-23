@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import NavSide from "../components/UI/NavSide.jsx";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
-import AppHeader from "../components/UI/AppHeader.jsx";
+import NavSide from "../components/ui/NavSide.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
+import AppHeader from "../components/ui/AppHeader.jsx";
 
-import Template from "../components/UI/Template.jsx";
+import Template from "../components/ui/Template.jsx";
 ;
 import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx"
-import PromptInput from "../components/UI/PromptInput.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx";
+import PromptInput from "../components/ui/PromptInput.jsx";
+import AppFooter from "../components/ui/AppFooter.jsx";
 
 
 const comparisonData2 = [
