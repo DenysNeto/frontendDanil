@@ -13,8 +13,6 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-
-
 export default function BenchmarkPage() {
   const navigate = useNavigate()
   const templateType = 'action';
@@ -31,7 +29,6 @@ export default function BenchmarkPage() {
   function onSelectBenchmark(val){
 
     let subModelData = selectedModel['sub-models'].filter(m=>m.title.toLowerCase()===val.toLowerCase())[0]
-    
     setSelectedModelBenchmark(subModelData)
     navigate('/models/prompt')
     console.log("subModelData",subModelData)
@@ -46,12 +43,14 @@ export default function BenchmarkPage() {
             <div className="pt-50">
             <ViewTitle 
                     align={"left"}
+                    alignV={"top"}
+                    backButton={true}
                     title={'Select a Benchmark'} 
                     desc={"Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements."} >
             </ViewTitle>
             </div>
             <ViewContent>
-                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks}/>
+                <CardsBenchmark onSelect={onSelectBenchmark} />
             </ViewContent>
 
               </div>

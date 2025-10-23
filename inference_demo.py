@@ -7,6 +7,13 @@ from flask import Flask, request, Response
 import json
 import time
 
+# CORS headers for allowing cross-origin requests
+CORS_HEADERS = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+}
+
 app = Flask(__name__)
 
 # Sample responses for demo purposes
@@ -28,17 +35,21 @@ def status():
     Status endpoint that returns engine readiness.
     The Flask app checks for 'engine_ready': True to determine connection status.
     """
-    return {
+    response = {
         'engine_ready': True,
         'model_name': 'demo-model-v1',
         'version': '1.0.0',
         'status': 'ready',
         'timestamp': time.time()
-    }, 200
+    }
+    return response, 200, CORS_HEADERS
 
 
-@app.route('/api/v1/generate', methods=['POST'])
+@app.route('/api/v1/generate', methods=['POST', 'OPTIONS'])
 def generate():
+    # Handle preflight OPTIONS request
+    if request.method == 'OPTIONS':
+        return '', 200, CORS_HEADERS
     """
     Generate endpoint that accepts a prompt and returns streaming or non-streaming responses.
 
@@ -65,24 +76,27 @@ def generate():
 
     if stream:
         # Return streaming response
-        return Response(
+        response = Response(
             generate_stream(prompt, max_tokens, temperature),
             content_type='application/json',
             headers={
                 'Cache-Control': 'no-cache',
                 'Connection': 'keep-alive',
-                'X-Accel-Buffering': 'no'
+                'X-Accel-Buffering': 'no',
+                **CORS_HEADERS
             }
         )
+        return response
     else:
         # Return complete response
         full_text = ''.join(SAMPLE_RESPONSES[:min(len(SAMPLE_RESPONSES), max_tokens // 10)])
-        return {
+        response = {
             'text': full_text,
             'tokens_generated': len(full_text.split()),
             'prompt': prompt,
             'finish_reason': 'length'
-        }, 200
+        }
+        return response, 200, CORS_HEADERS
 
 
 def generate_stream(prompt, max_tokens, temperature):

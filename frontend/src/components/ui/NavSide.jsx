@@ -44,7 +44,7 @@ export default function NavComp({ typeNav }) {
           flex
           gap-4
           shadow-lg
-          z-40
+          z-9999
         `;     
  let V_style = `
     fixed

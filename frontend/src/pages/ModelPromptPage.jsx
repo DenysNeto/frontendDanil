@@ -1,24 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-
 import Template from "../components/UI/Template.jsx";
-;
-import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx"
+import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
 import PromptInput from "../components/UI/PromptInput.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx";
-
+import useInferenceAPI from "../hooks/useInferenceAPI.js";
 import { useModelStore1 } from "../store/useModelStore1.js";
-
-
-
-
-let TestForPromptData = {
-    "live data" : ["ABC","deg"]
-}
-
-
+import ModelsSelectReminder from "../components/Models/ModelSelectReminder.jsx"
+// Move function outside component to prevent recreation
 function transformForCompare(input){
+  if (!input) return {};
+
   const isObj=v=>v&&typeof v==='object'&&!Array.isArray(v);
   const unitPat=/_(ms|tps|%|s|sec|kb|mb|gb|ops|rps|qps)$/i;
   const norm=k=>k.replace(/_vs_.*|_(list|array|items)|_(ms|tps|%|s|sec|kb|mb|gb|ops|rps|qps)$/i,'').replace(/[^a-z0-9_]/ig,'').toLowerCase();
@@ -41,54 +34,117 @@ function transformForCompare(input){
   return { id: input.id||null, title: input.title||null, price: input.price||null, compareFields, compareTypes: types };
 }
 
-
+// Memoize the store selector to prevent unnecessary re-renders
+const useSelectedBenchmark = () => {
+  return useModelStore1((s) => s.selectedModelBenchmark);
+};
 
 export default function ModelPromptPage() {
-  const selectedModelBenchmark = useModelStore1((s)=>s.selectedModelBenchmark)
-  const templateType = 'action';
+  const navigate = useNavigate();
+  const selectedModelBenchmark = useSelectedBenchmark();
 
+  // Debug: Log when component re-renders (only when benchmark changes)
+  const benchmarkId = selectedModelBenchmark?.id;
+  console.log("🔄 ModelPromptPage re-render, benchmark:", benchmarkId || 'none');
 
-  const compareData = transformForCompare(selectedModelBenchmark)
+  // Use hooks directly, not in useState
+  const optimizedAPI = useInferenceAPI("http://localhost:8000/api/v1");
+  const baselineAPI = useInferenceAPI("http://localhost:8000/api/v1");
+
+  // Memoize the transformed data to prevent unnecessary recalculations
+  const compareData = useMemo(() => {
+    console.log("🔄 Computing compareData for benchmark:", selectedModelBenchmark?.id);
+    const result = selectedModelBenchmark ? transformForCompare(selectedModelBenchmark) : {};
+    console.log("📊 compareData result:", result);
+    return result;
+  }, [selectedModelBenchmark]);
+
+  // Check if we have benchmark data
+  const hasBenchmarkData = selectedModelBenchmark && Object.keys(compareData).length > 0;
+
   const [responsePrompt, setResponsePrompt] = useState(false);
+  const promptChat = useRef(null);
+
+  // Memoize scroll function to prevent recreation
+  const scrollToBottom = useCallback(() => {
+    if (promptChat.current) {
+      promptChat.current.scrollTo({
+        top: promptChat.current.scrollHeight,
+        behavior: "smooth", // плавная прокрутка
+      });
+    }
+  }, []);
+
+  // Memoize sendPrompt function to prevent recreation
+  const sendPrompt = useCallback((val) => {
+    if (!val.trim()) return;
+    console.log("🎯 Sending prompt:", val);
+    optimizedAPI.sendPrompt(val);
+    baselineAPI.sendPrompt(val);
+    setResponsePrompt(true);
+  }, [optimizedAPI, baselineAPI]);
+
+  // Scroll to bottom when responses update - use more stable dependencies
+  useEffect(() => {
+    if (responsePrompt && (optimizedAPI.response || baselineAPI.response)) {
+      console.log("✅ Optimized response:", optimizedAPI.response);
+      console.log("✅ Baseline response:", baselineAPI.response);
+      scrollToBottom();
+    }
+  }, [optimizedAPI.response, baselineAPI.response, responsePrompt, scrollToBottom]);
+
+  // Memoize the response data to prevent recreation of objects passed to components
+  const responseData = useMemo(() => {
+    if (!responsePrompt || !optimizedAPI.response || !baselineAPI.response) return null;
+
+    return {
+      compareFields: {
+        "LiveData": {
+          "optimized": optimizedAPI.response,
+          "baseline": baselineAPI.response
+        }
+      },
+      compareTypes: ["optimized", "baseline"]
+    };
+  }, [optimizedAPI.response, baselineAPI.response, responsePrompt]);
 
 
-  function sendPrompt(val){
-     setResponsePrompt(true) 
-  }
+return (
+  <div className="bg-white text-black h-[70vh]">
+    <Template type="action">
+      <ViewTitle title="Model Demo" align="left" backButton={true} />
 
-  return (
-    <div className={` bg-white text-black`}>
- 
-        <Template  type={templateType}>
-           
-        <ViewTitle title={"Model Demo"} align="left" />
- 
-        <ViewContent>
-      
-        <div className="min-h-[70vh] flex flex-col justify-between ">
-          <div className="min-h-[50vh] max-h-[50vh] overflow-y-auto ">
-            <ComparisonContainer  data={compareData} />
-     
-            <div className="mb-18"></div>
-            {responsePrompt && <ComparisonContainer data={TestForPromptData} header={false} />
-            }
-            
-          
+      {/* Ограничиваем высоту только здесь */}
+      <ViewContent> {/* ← подставь нужную высоту ViewTitle */}
+        <div className="flex flex-col max-h-[65vh]">
+
+          {/* Прокручиваемый блок */}
+          <div ref={promptChat} className=" flex-1 overflow-y-auto px-4 py-2">
+            {hasBenchmarkData ? (
+              <>
+                <ComparisonContainer data={compareData} />
+                <div className="mb-20" />
+
+                {responseData && (
+                    <ComparisonContainer
+                      data={responseData}
+                      header={true}
+                    />
+                  )}
+              </>
+            ) : <ModelsSelectReminder/>}
+
+            <div className="mb-6" />
           </div>
-          
 
-          <div className="mb-4" />
-
-          <div className="sticky bottom-0 min-h-[20vh] max-h-[20vh] w-4/5 ml-auto ">
-            <PromptInput onSend={sendPrompt} />
-          </div>
+          {hasBenchmarkData && (
+            <div className="py-4 px-4 w-4/5 ml-auto">
+              <PromptInput onSend={sendPrompt} />
+            </div>
+          )}
         </div>
-    </ViewContent>
-          
-        </Template>
-    
-    </div>
-
-
-  );
+      </ViewContent>
+    </Template>
+  </div>
+);
 }

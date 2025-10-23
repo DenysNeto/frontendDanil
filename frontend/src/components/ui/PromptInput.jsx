@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { VscSend } from "react-icons/vsc";
 
 export default function PromptInput({
-  value,
   onChange = ()=>{},
   onSend = ()=>{},
   placeholder = "Type a prompt to compare...",
@@ -10,11 +9,14 @@ export default function PromptInput({
   rows = 4,
   className = "",
 }) {
+   const [value, setValue] = useState();
+
+ 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full bg-transparent">
       <textarea
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {onChange(e.target.value);setValue(e.target.value)}}
         placeholder={placeholder}
         rows={rows}
         disabled={disabled}
@@ -33,7 +35,7 @@ export default function PromptInput({
       <button
         className="absolute right-4 bottom-4  rounded-3xl  bg-black p-2 text-white hover:text-blue-300 transition"
         disabled={disabled}
-        onClick={(e) => onSend(e.target.value)}
+        onClick={() => onSend(value)}
       >
        <VscSend/>
       </button>
