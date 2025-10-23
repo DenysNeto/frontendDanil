@@ -3,7 +3,7 @@ import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import NewPageTemplate from "./pages/NewHome.jsx"
-import RouteSync from "./components/UI/RouteSync.jsx"
+import RouteSync from "./components/ui/RouteSync.jsx"
 import ModelsPage from "./pages/ModelsPage.jsx"
 import BenchmarkPage from "./pages/BenchmarkPage.jsx"
 import ModelInfoPage from "./pages/ModelInfoPage.jsx"
@@ -13,7 +13,7 @@ import ResultPage from "./pages/ResultPage.jsx"
 import ModelBenchmarkPage from "./pages/ModelBenchmarkPage.jsx"
 import ModelPromptPage from "./pages/ModelPromptPage.jsx"
 import NotFoundPage from "./pages/NotFound.jsx"
-import AppFooter from "./components/UI/AppFooter.jsx";
+import AppFooter from "./components/ui/AppFooter.jsx";
 import AppHeader from "./components/ui/AppHeader.jsx";
 function App() {
 

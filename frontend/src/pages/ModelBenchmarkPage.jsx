@@ -1,10 +1,10 @@
 import React, { useState, Nav } from "react";
 import { useNavigate } from "react-router-dom";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
 
-import Template from "../components/UI/Template.jsx";
-import CardsBenchmark from "../components/UI/CardsBenchmark.jsx";
+import Template from "../components/ui/Template.jsx";
+import CardsBenchmark from "../components/ui/CardsBenchmark.jsx";
 import { useModelStore1 } from "../store/useModelStore1.js";
 
 const images = ["/cards/card1.png","/cards/card2.png","/cards/card3.png","/cards/card4.png","/cards/card5.png","/cards/card6.png"];

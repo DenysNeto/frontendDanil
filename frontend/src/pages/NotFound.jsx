@@ -1,6 +1,6 @@
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import NavSide from "../components/UI/NavSide.jsx";
+import NavSide from "../components/ui/NavSide.jsx";
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
