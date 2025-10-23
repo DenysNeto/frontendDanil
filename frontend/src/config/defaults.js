@@ -10,5 +10,24 @@ export const DEFAULT_SETTINGS = {
     min: 0,
     max: 1,
     step: 0.1
-  }
+  },
+
+    BASELINE_MODEL_JSON  :   [
+      {
+          "name": "DeepSeek-R1-Distill-Qwen-1.5B",
+          "endpoint": "bright-wildcat.tdops.net"
+      },
+          {
+              "name": "DeepSeek-R1-Distill-Qwen-7B",
+              "endpoint": "semantic-kite.tdops.net"
+          },
+          {
+              "name": "DeepSeek-R1-Distill-Qwen-32B-2D",
+              "endpoint": "ridiculous-primate.tdops.net"
+          },
+          {
+              "name": "DeepSeek-R1-Distill-Qwen-32B-2D-V2",
+              "endpoint": "certain-centipede.tdops.net"
+          }
+      ]
 };
