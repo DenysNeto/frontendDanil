@@ -1,7 +1,7 @@
 // components/ModelTabs.jsx
 import React, { useState } from "react";
 import ModelList from "./ModelsList";
-import Tabs from "../UI/Tabs";
+import Tabs from "../ui/Tabs";
 import { useModelStore1 } from "../../store/useModelStore1";
 import { useNavigate } from "react-router-dom";
 
