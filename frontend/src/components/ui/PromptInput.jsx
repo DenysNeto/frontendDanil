@@ -33,7 +33,7 @@ export default function PromptInput({
       <button
         className="absolute right-4 bottom-4  rounded-3xl  bg-black p-2 text-white hover:text-blue-300 transition"
         disabled={disabled}
-        onClick={(e) => onSend(e.target.value)}
+        onClick={() => onSend(value)}
       >
        <VscSend/>
       </button>
