@@ -1,22 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef,useMemo } from "react";
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-
-import Template from "../components/UI/Template.jsx";
-;
-import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx"
+import Template from "../components/ui/Template.jsx";
+import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
 import PromptInput from "../components/UI/PromptInput.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx";
-
+import useInferenceAPI from "../hooks/useInferenceAPI.js";
 import { useModelStore1 } from "../store/useModelStore1.js";
-
-
-
-
-let TestForPromptData = {
-    "live data" : ["ABC","deg"]
-}
-
 
 function transformForCompare(input){
   const isObj=v=>v&&typeof v==='object'&&!Array.isArray(v);
@@ -41,54 +30,86 @@ function transformForCompare(input){
   return { id: input.id||null, title: input.title||null, price: input.price||null, compareFields, compareTypes: types };
 }
 
-
-
 export default function ModelPromptPage() {
-  const selectedModelBenchmark = useModelStore1((s)=>s.selectedModelBenchmark)
-  const templateType = 'action';
+  const selectedModelBenchmark = useModelStore1((s) => s.selectedModelBenchmark);
+  
+  console.log("SELECTED_BENCHMARK", selectedModelBenchmark)
+
+  const [compareData,setCompareData] = useState({})
+  const [optimizedAPI , setOptimizedAPI] = useState( useInferenceAPI("http://localhost:8000/api/v1")) 
+  const [baselineAPI , setBaselineAPI] = useState( useInferenceAPI("http://localhost:8000/api/v1")) 
 
 
-  const compareData = transformForCompare(selectedModelBenchmark)
+  useEffect(() => {
+      setCompareData(transformForCompare(selectedModelBenchmark)) 
+  }, []);
+
   const [responsePrompt, setResponsePrompt] = useState(false);
+  
+  const promptChat = useRef(null) 
 
-
-  function sendPrompt(val){
-     setResponsePrompt(true) 
+const isValidResponse = (res) => res && typeof res === "object" && !Array.isArray(res);
+  function scrollToBottom() {
+    if (promptChat.current) {
+      promptChat.current.scrollTo({
+        top: promptChat.current.scrollHeight,
+        behavior: "smooth", // плавная прокрутка
+      });
+    }
   }
 
-  return (
-    <div className={` bg-white text-black`}>
- 
-        <Template  type={templateType}>
+  function sendPrompt(val) {
+    if (!val.trim()) return;
+    optimizedAPI.sendPrompt(val);
+    baselineAPI.sendPrompt(val);
+    setResponsePrompt(true);
+  }
+
+  useEffect(() => {
+    if (responsePrompt) {
+      console.log("✅ Optimized response:", optimizedAPI.response);
+      console.log("✅ Baseline response:", baselineAPI.response);
+      scrollToBottom();
+    }
+  }, [optimizedAPI.response, baselineAPI.response]);
+
+
+return (
+  <div className="bg-white text-black h-[70vh]">
+    <Template type="action">
+      <ViewTitle title="Model Demo" align="left" />
+
+      {/* Ограничиваем высоту только здесь */}
+      <ViewContent className="h-[50vh]"> {/* ← подставь нужную высоту ViewTitle */}
+        <div className="flex flex-col">
+
+          {/* Прокручиваемый блок */}
+          <div ref={promptChat} className="flex-1 overflow-y-auto px-4 py-2">
+             <ComparisonContainer data={compareData} />
+            <div className="mb-20" />
            
-        <ViewTitle title={"Model Demo"} align="left" />
- 
-        <ViewContent>
-      
-        <div className="min-h-[70vh] flex flex-col justify-between ">
-          <div className="min-h-[50vh] max-h-[50vh] overflow-y-auto ">
-            <ComparisonContainer  data={compareData} />
-     
-            <div className="mb-18"></div>
-            {responsePrompt && <ComparisonContainer data={TestForPromptData} header={false} />
-            }
-            
-          
+           
+            {/* {responsePrompt &&
+              isValidResponse(optimizedAPI) &&
+              isValidResponse(baselineAPI) && (
+                <ComparisonContainer
+                  data={
+                    {compareFields:{"LiveData": {"optimized":optimizedAPI.response , baseline:  baselineAPI.response}}}
+                  }
+                  header={true}
+                />
+              )} */}
+
+
+            <div className="mb-6" />
           </div>
           
-
-          <div className="mb-4" />
-
-          <div className="sticky bottom-0 min-h-[20vh] max-h-[20vh] w-4/5 ml-auto ">
+          <div className="shrink-0 sticky bottom-0 bg-white py-4 px-4 w-4/5 ml-auto">
             <PromptInput onSend={sendPrompt} />
           </div>
         </div>
-    </ViewContent>
-          
-        </Template>
-    
-    </div>
-
-
-  );
+      </ViewContent>
+    </Template>
+  </div>
+);
 }

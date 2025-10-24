@@ -1,9 +1,11 @@
+import React from "react";
+
 function percentChange(oldVal, newVal) {
   if (oldVal === 0) return newVal === 0 ? 0 : Infinity;
   return ((newVal - oldVal) / oldVal) * 100;
 }
 
-export default function ComparisonHeader({
+export default React.memo(function ComparisonHeader({
   backButton = false,
   price,
   headerData = ["optimized", "baseline"],
@@ -46,4 +48,4 @@ export default function ComparisonHeader({
       })}
     </div>
   );
-}
+})

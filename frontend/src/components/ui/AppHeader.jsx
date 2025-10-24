@@ -1,17 +1,22 @@
 import React from "react";
 import logo from  "../../assets/bg/Logo.png";
 import { Link } from 'react-router-dom';
-import {BgHeader} from "./BgImgPaste"
 import NavComp from "./NavSide";
 export default function AppHeader() {
   return (
     <>
     
         <NavComp/>
-      <header className="sticky top-0 z-10 relative">
-    
-      <BgHeader />
+<header
+  className="sticky top-0 z-10 h-[20vh]"
+  style={{
+   background:" linear-gradient(to bottom, rgba(156, 211, 248, 0.8), rgba(255, 255, 255, 0.06))",
+    backdropFilter: "blur(6px)",
+    WebkitBackdropFilter: "blur(10px)",
+  }}
+>
 
+ 
   
    
       <Link to="/">
