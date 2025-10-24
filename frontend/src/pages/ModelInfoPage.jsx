@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import ViewTitle from "../components/UI/ViewTitle.jsx";
 import ViewContent from "../components/UI/ViewContent.jsx";
-
+import Icon from "../components/ui/Icon.jsx"
 
 import Template from "../components/UI/Template.jsx";
 
@@ -60,22 +60,53 @@ export default function ModelInfoPage() {
   };
 
 
+  console.log("SELE", selectedModel)
     let m_id = location.pathname.split('/')[2]
     let m_index =  models.findIndex(s=>s.id==m_id)
     if(index != m_index) setSelectedIndex(m_index)
 
+     
+const sideList = [
+  {
+    icon: "Cube",
+    title :"Model Provider",
+    value :selectedModel.provider || "",
+},
+{
+  icon: "Stripes3" ,
+  title:"Model Type",
+  value : selectedModel.type
+},
+{
+  icon: "CntxLength" ,
+  title:" Context Length",
+  value : selectedModel.context_length
+},
+{
+  title:"Serverless",
+  icon:"Cloud",
+  value: "Available",
+  tab:true
+},
+{
+  title:"Fine-Tuning",
+  icon:"FineTune",
+  value: "Available",
+  tab:true
+},
+{
+  title:"Pricing per audio minute",
+  icon:"Price",
+  value: "price",
+  tab:true
+}
+]
+
 
   return (
     <>
-
-      
     {model &&
-          <div
-            className="relative bg-repeat-y bg-center bg-[length:100%_300px] min-h-screen"
-
-          >
-
-            <div className="pt-20"></div>
+          <div className="relative bg-repeat-y bg-center bg-[length:100%_300px] min-h-screen">
           
             <Template type={templateType} bgActive={true}>
                
@@ -84,7 +115,7 @@ export default function ModelInfoPage() {
                       <div className=" rounded-xl  p-4">
                                          
                            
-                        <ViewTitle title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
+                        <ViewTitle backButton={true} title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
                 
                                   
                       <div className="pb-20"></div>
@@ -132,30 +163,25 @@ export default function ModelInfoPage() {
           />
       
          
+   
         )}
-        
-        <ul className="space-y-3 text-gray-700 sticky top-28 bg-[#297A971A] rounded-2xl p-6 text-lg">
-          <li className="flex items-center gap-2 py-4 border-b-2 border-gray-300  p-4">
-            <FaRobot className="text-blue-500" />
-            <strong>Provider</strong> <span className="ml-auto">{selectedModel.provider}</span>
-          </li>
-          <li className="flex items-center gap-2 py- border-b-2 border-gray-300  p-4">
-            <FaMicrochip className="text-blue-500" />
-            <strong>Type</strong> <span className="ml-auto">{selectedModel.type}</span>
-          </li>
-          <li className="flex items-center gap-2 py-4   p-4 border-b-2 border-gray-300">
-            <FaBolt className="text-blue-500" />
-            <strong>Context Length</strong> <span className="ml-auto">{selectedModel.context_length}</span>
-          </li>
-          <li className="flex items-center gap-2 py-4 p-4  border-b-2 border-gray-300">
-            <FaServer className="text-blue-500" />
-            <strong>Serverless:</strong> <span className="ml-auto">Available</span>
-          </li>
-          <li className="flex items-center gap-2  p-4 py-4">
-            <FaTools className="text-blue-500" />
-            <strong>Fine-Tuning:</strong> <span className="ml-auto">Available</span>
-          </li>
+      <ul className="space-y-3 text-gray-700 sticky top-28 bg-[#297A971A] rounded-2xl p-6">
+          {sideList.map((item, index) => {
+            return (
+              <li key={index} className={`flex items-center flex-wrap py-4  ${index+1!=sideList.length  && "border-b-2 border-gray-300"} `}>
+                <div className="p-3 bg-white rounded-full">
+                <Icon size="small" name={item.icon}/>
+                </div>
+                <span className={` text-md px-4 py-2 `}>
+                  {item.title}
+                </span>
+                <span className={`ml-auto font-bold ${item.tab && "rounded-full bg-[#297A971A] font-semibold px-4 py-2"} `} >{item.value}</span>
+              </li>
+            )
+          })}
         </ul>
+        
+  
     </div>
 
                     </div>

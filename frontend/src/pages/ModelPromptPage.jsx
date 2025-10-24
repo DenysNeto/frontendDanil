@@ -7,7 +7,7 @@ import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
 import PromptInput from "../components/UI/PromptInput.jsx";
 import useInferenceAPI from "../hooks/useInferenceAPI.js";
 import { useModelStore1 } from "../store/useModelStore1.js";
-
+import ModelsSelectReminder from "../components/Models/ModelSelectReminder.jsx"
 // Move function outside component to prevent recreation
 function transformForCompare(input){
   if (!input) return {};
@@ -112,14 +112,14 @@ export default function ModelPromptPage() {
 return (
   <div className="bg-white text-black h-[70vh]">
     <Template type="action">
-      <ViewTitle title="Model Demo" align="left" />
+      <ViewTitle title="Model Demo" align="left" backButton={true} />
 
       {/* Ограничиваем высоту только здесь */}
-      <ViewContent className="h-[50vh]"> {/* ← подставь нужную высоту ViewTitle */}
-        <div className="flex flex-col">
+      <ViewContent> {/* ← подставь нужную высоту ViewTitle */}
+        <div className="flex flex-col max-h-[65vh]">
 
           {/* Прокручиваемый блок */}
-          <div ref={promptChat} className="flex-1 overflow-y-auto px-4 py-2">
+          <div ref={promptChat} className=" flex-1 overflow-y-auto px-4 py-2">
             {hasBenchmarkData ? (
               <>
                 <ComparisonContainer data={compareData} />
@@ -132,28 +132,13 @@ return (
                     />
                   )}
               </>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <div className="mb-6">
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">No Benchmark Data Available</h3>
-                  <p className="text-gray-500 mb-4">
-                    You need to select a model first to view benchmark data and test prompts.
-                  </p>
-                </div>
-                <button
-                  onClick={() => navigate('/models')}
-                  className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  Select a Model
-                </button>
-              </div>
-            )}
+            ) : <ModelsSelectReminder/>}
 
             <div className="mb-6" />
           </div>
 
           {hasBenchmarkData && (
-            <div className="shrink-0 sticky bottom-0 bg-white py-4 px-4 w-4/5 ml-auto">
+            <div className="py-4 px-4 w-4/5 ml-auto">
               <PromptInput onSend={sendPrompt} />
             </div>
           )}

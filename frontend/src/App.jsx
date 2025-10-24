@@ -55,7 +55,7 @@ function App() {
                         </Routes>
                   </div>
               </main>
-            {/* <AppFooter isFull={pathname==="/" ? true : false}/> */}
+            <AppFooter isFull={pathname==="/" ? true : false}/>
       </SettingsProvider>
   );
 }

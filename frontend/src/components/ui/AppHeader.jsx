@@ -7,14 +7,15 @@ export default function AppHeader() {
     <>
     
         <NavComp/>
-<header
-  className="sticky top-0 z-10 h-[20vh]"
+<header className="sticky top-0 h-[15vh] z-9997">
+<div
+  className="fixed left-[10vw] mx-auto w-[80vw] h-[40vh] pointer-events-none "
   style={{
-   background:" linear-gradient(to bottom, rgba(156, 211, 248, 0.8), rgba(255, 255, 255, 0.06))",
-    backdropFilter: "blur(6px)",
-    WebkitBackdropFilter: "blur(10px)",
+      transform: "translate(0%, -60%)",
+    backgroundColor: "rgba(199, 233, 255, 1)",
+    filter: "blur(100px)",
   }}
->
+></div>
 
  
   

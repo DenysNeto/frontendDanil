@@ -13,7 +13,7 @@ export default function PromptInput({
 
  
   return (
-    <div className="relative w-full">
+    <div className="relative w-full bg-transparent">
       <textarea
         value={value}
         onChange={(e) => {onChange(e.target.value);setValue(e.target.value)}}
