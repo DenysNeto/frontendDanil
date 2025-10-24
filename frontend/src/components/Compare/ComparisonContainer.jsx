@@ -4,14 +4,29 @@ import ComparisonHeader from "./ComparisonHeader"
 import { HiMiniArrowLeft } from "react-icons/hi2";
 
 
-export default function ComparisonContainer({backButton=false, header = true, data }) {
+const ComparisonContainer = React.memo(function ComparisonContainer({backButton=false, header = true, data }) {
+  const dataRows = data?.compareFields ? data.compareFields : data;
 
-  const dataRows = data?.compareFields ? data.compareFields    : data
-  console.log("INSIEDE COMPONENT" , data)
+  // Only log when data changes (using JSON stringify to compare deep equality)
+  React.useEffect(() => {
+    console.log("📊 ComparisonContainer data changed:", data?.id || 'no-id', "has compareFields:", !!data?.compareFields, "data keys:", Object.keys(data || {}), "dataRows keys:", Object.keys(dataRows || {}));
+  }, [JSON.stringify(data)]);
+
+  // If no data to display, show a message
+  if (!dataRows || Object.keys(dataRows).length === 0) {
+    return (
+      <div className="w-full mx-auto max-h-[60vh] bg-transparent rounded-2xl p-4">
+        <div className="text-center text-gray-500">
+          No benchmark data to display
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <> 
+    <>
   <div className="w-full  mx-auto max-h-[60vh] bg-transparent rounded-2xl" >
-    
+
     <ComparisonHeader  headerData={data?.compareTypes} />
 
 
@@ -27,7 +42,9 @@ export default function ComparisonContainer({backButton=false, header = true, da
 ))}
 
   </div>
-  
+
    </>
 );
-}
+});
+
+export default ComparisonContainer;

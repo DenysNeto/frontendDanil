@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 export default function useInferenceAPI(apiBaseUrl) {
   const [response, setResponse] = useState("");
@@ -6,7 +6,7 @@ export default function useInferenceAPI(apiBaseUrl) {
   const [isLoading, setIsLoading] = useState(false);
   const [engineStatus, setEngineStatus] = useState(null);
 
-  const checkEngineStatus = async () => {
+  const checkEngineStatus = useCallback(async () => {
     try {
       const res = await fetch(`${apiBaseUrl}/status`);
       const data = await res.json();
@@ -16,9 +16,9 @@ export default function useInferenceAPI(apiBaseUrl) {
       setEngineStatus({ error: error.message });
       throw error;
     }
-  };
+  }, [apiBaseUrl]);
 
-  const sendPrompt = async (promptText, stream = true) => {
+  const sendPrompt = useCallback(async (promptText, stream = true) => {
     console.log("INSIDE PROMPT", promptText)
     if (!promptText.trim()) return;
 
@@ -76,9 +76,10 @@ export default function useInferenceAPI(apiBaseUrl) {
       setIsLoading(false);
       setIsStreaming(false);
     }
-  };
+  }, [apiBaseUrl]);
 
-  return {
+  // Memoize the return object to prevent re-renders
+  return React.useMemo(() => ({
     response,
     isStreaming,
     isLoading,
@@ -86,5 +87,5 @@ export default function useInferenceAPI(apiBaseUrl) {
     checkEngineStatus,
     sendPrompt,
     setResponse,
-  };
+  }), [response, isStreaming, isLoading, engineStatus]);
 }
