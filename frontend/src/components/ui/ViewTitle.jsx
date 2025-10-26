@@ -1,3 +1,6 @@
+import { useNavigate } from "react-router-dom";
+import { HiMiniArrowLeft } from "react-icons/hi2";
+import { Button } from "./Buttons";
 export default function ViewTitle({
   title,
   titleCustom,
@@ -7,23 +10,42 @@ export default function ViewTitle({
   uptitle,
   desc,
   actionText,
+  actionVariant= "secondary",
   onAction=()=>{},
   uptitleSize = 2,
   uptitleSmall = false,
   titleSize = 3,
   subtitleSize = 1,
-  align
+  align,
+  alignV, 
+  backButton = false
 }) {
-
+const navigate= useNavigate()
 const alignmentClass = {
   left: "text-left",
   center: "text-center",
   right: "text-right",
 }[align] || "text-center";
 
+const verticalAlignmentClass = {
+  top: "align-top",
+  middle: "align-middle",
+  bottom: "align-bottom",
+}[alignV] || "align-middle";
+
+
   return (
-    <div className={`flex  items-center text-center  px-4 ${alignmentClass} w-full`} >
+    <div className={`flex  items-center ${verticalAlignmentClass} ${alignmentClass}  px-4  w-full mt-8`} >
+
+
       <div className={`${alignmentClass=="text-left" ?  '' : 'mx-auto'  } w-full`}>
+               {backButton && ( <button
+            onClick={() => navigate(-1)}
+            className="mb-2 flex items-center gap-2 text-gray-700 hover:text-black transition"
+          >
+            <HiMiniArrowLeft className="text-xl" />
+
+          </button>)}
         {uptitle && (
           <h2
             className={`${
@@ -58,10 +80,8 @@ const alignmentClass = {
         </div>
 
         {actionText && 
-        <div className="flex py-10">
-                    <button onClick={onAction} className="bg-gray-900 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-dashed transition hover:bg-gray-800">
-                    {actionText} <span className="text-white text-lg">»</span>
-                    </button>
+        <div className="flex py-3">
+          <Button onSelect={onAction} size={'lg'} variant={actionVariant}><span className="text-white text-lg"> {actionText} »</span> </Button>
                     
             </div>
         }

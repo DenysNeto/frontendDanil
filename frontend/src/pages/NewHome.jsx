@@ -8,21 +8,11 @@ import CardsBenchmark from "../components/ui/CardsBenchmark.jsx"
 import ModelsView from "../components/Models/ModelsView.jsx";
 import ScrollButton from "../components/ui/ScrollButton.jsx";
 import {Button} from "../components/ui/Buttons.jsx"
-const tiles = [
-  "Code Assistance",
-  "Conversational AI",
-  "Agentic Systems",
-  "Search",
-  "Multimedia",
-  "Enterprise RAG",
-];
+import BlockCTA from "../components/ui/BlockCTA.jsx";
 
 export default function NewPageTemplate() {
     const templateType = "action"
 
-
-    const Template1 = "main"
-    const Template2 = "action"
   return (
 <div className={`min-h-screen`}>
    
@@ -30,8 +20,10 @@ export default function NewPageTemplate() {
     <Template type={templateType}> 
         
         <div className="py-30"> 
+          
        <ViewTitle 
             uptitle="Build the future with AI"
+            align={"center"}
             uptitleSize = "3"
             titleCustom = {<h1 className="text-4xl font-bold">
             From Spark To{" "}
@@ -53,7 +45,7 @@ export default function NewPageTemplate() {
         </div>
  
     </Template>
-    <div className="w-full bg-gradient-to-r from-blue-100 to-blue-200 ">
+    <div className="w-full bg-gradient-to-r from-blue-100 to-blue-200 overflow-hidden">
         <LogoGallery />
 
     </div>
@@ -94,7 +86,8 @@ export default function NewPageTemplate() {
       /> 
       
         <ModelsView cardsInRow={4} pagination={true}/>
-
+        <div className="pb-24"></div>
+        <BlockCTA />
     </Template>
 
 </div>

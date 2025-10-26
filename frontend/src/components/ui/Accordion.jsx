@@ -12,11 +12,11 @@ export default function Accordion({ data }) {
   return (
     <div className="space-y-2">
       {data.map((item, index) => (
-        <div key={index} className=" rounded-xl overflow-hidden mb-4">
+        <div key={index} className=" rounded-2xl overflow-hidden mb-4 bg-white shadow-[0_10px_15px_rgba(199,233,255,0.9)] ">
           {/* Заголовок */}
           <button
             onClick={() => toggle(index)}
-            className="w-full flex justify-between text-xl   items-center px-4 py-5 shadow-[0px_10px_40px_rgba(195,230,255,0.4)] hover:bg-gray-100 text-left"
+            className="w-full flex justify-between text-xl   items-center px-4 py-5  hover:bg-gray-100 text-left"
           >
             <span className="font-medium text-gray-800">{item.title}</span>
             {openIndex === index ? <FiMinus/> : <FiPlus/>}

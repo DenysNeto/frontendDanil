@@ -4,7 +4,6 @@ import logo from "../../assets/bg/bg_footer.png";
 import { Link } from "react-router-dom";
 import Template from "./Template";
 import ViewTitle from "./ViewTitle";
-import { BgFooter } from "./BgImgPaste";
 
 
 let footerColumns = [
@@ -16,9 +15,21 @@ let footerColumns = [
 export default function AppFooter({isFull = false}) {
 
   return (
-   <footer className={` ${isFull ? "bg-[#303030] mt-30  py-10" : ""}  text-white `}>
-      {!isFull  && <BgFooter/>   }
-      
+<footer className={`${
+    isFull
+      ? "bg-[#303030] mt-30 py-10"
+      : "fixed bottom-0 h-[15vh]"
+  } text-white`}>
+<div
+  className="fixed bottom-[-10vh] left-[10vw] mx-auto w-[80vw] h-[40vh] pointer-events-none z-[-1]"
+  style={{
+    transform: "translate(0%, 60%)",
+    backgroundColor: "rgba(199, 233, 255, 1)",
+    filter: "blur(120px)",
+  }}
+></div>
+
+
       <Template type="action">
          {isFull && <div className=" mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 ">
             <div className="flex flex-col gap-6 ">

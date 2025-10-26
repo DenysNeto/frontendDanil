@@ -21,19 +21,20 @@ export function Button({
   const isDisabled = disabled || loading;
 
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 font-semibold rounded-md transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantStyles = {
     primary: "bg-emerald-500 text-white hover:bg-emerald-600",
     secondary: "bg-neutral-900 text-white hover:bg-neutral-800",
+    outlined: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
     ghost: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
     info: " text-black-500  hover:text-blue-300",
   };
 
   const sizeStyles = {
-    sm: "h-8  text-sm rounded-md",
-    md: "h-10 text-base rounded-lg",
-    lg: "h-12  text-lg rounded-xl",
+    sm: "h-8  px-6 py-3 text-sm ",
+    md: "h-10 px-6 py-3 text-base",
+    lg: "h-12 px-6 py-3 text-lg",
   };
 
   return (
@@ -45,8 +46,8 @@ export function Button({
         variantStyles[variant],
         sizeStyles[size],
         fullWidth && "w-full",
-        className
-      )}
+        className,
+      ) }
       disabled={isDisabled}
       aria-label={ariaLabel}
       aria-disabled={isDisabled}

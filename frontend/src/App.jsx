@@ -12,6 +12,7 @@ import { useBenchmarkStore1 } from "./store/useBenchmarkStore1.js";
 import ResultPage from "./pages/ResultPage.jsx"
 import ModelBenchmarkPage from "./pages/ModelBenchmarkPage.jsx"
 import ModelPromptPage from "./pages/ModelPromptPage.jsx"
+import StreamDemoPage from "./pages/StreamDemoPage.jsx"
 import NotFoundPage from "./pages/NotFound.jsx"
 import AppFooter from "./components/ui/AppFooter.jsx";
 import AppHeader from "./components/ui/AppHeader.jsx";
@@ -43,7 +44,8 @@ function App() {
                             <Route path="/models/*" element={<ModelInfoPage />} />
                             <Route path="/models/benchmark" element={<ModelBenchmarkPage />} />
                             <Route path="/models/prompt" element={<ModelPromptPage />} />
-                            
+                            <Route path="/stream-demo" element={<StreamDemoPage />} />
+
                             {/* <Route path='/result/' element={<ResultPage/>} */}
                             <Route path="/benchmark" element={<BenchmarkPage />} />
 

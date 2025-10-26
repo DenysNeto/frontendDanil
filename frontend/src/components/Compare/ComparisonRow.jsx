@@ -1,13 +1,16 @@
 import Metric from "../ui/Metric.jsx"
+import React from "react";
+export default function ComparisonRow({name, metric, compareTypes =["optimized","baseline"], first }) {
 
-export default function ComparisonRow({name, metric, compareTypes =[0,1], first }) {
-
-  
+  console.log("RPW PROPS",name, metric )
  return (
   <div
-        key={metric.id || Date.now() }
+        key={name+Math.random()}
         className={` flex text-xs rounded-2xl ${first? 'rounded-tr-none' : 'rounded-2xl'}  m-1 z-20 `}
       >
+
+
+
         <div className="w-1/5 flex flex-col gap-1 p-4 ">
           <div className="text-md font-semibold text-gray-800">{ name.toUpperCase() || metric.name.toUpperCase() }</div>
           {metric.improvement || metric.change ? (
@@ -23,7 +26,7 @@ export default function ComparisonRow({name, metric, compareTypes =[0,1], first 
             
                       value={metric[compareTypes[0]]}
                       unit={metric.unit}
-                    /> : <span>{metric[compareTypes[0]]} </span>}
+                    /> : <span>"aaaa" + {metric[compareTypes[0]]} </span>}
           </div>
        
         </div>

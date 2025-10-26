@@ -2,7 +2,7 @@ import React, { useState, Nav } from "react";
 import { useNavigate } from "react-router-dom";
 import ViewTitle from "../components/ui/ViewTitle.jsx";
 import ViewContent from "../components/ui/ViewContent.jsx";
-
+import ModelsSelectReminder from "../components/Models/ModelSelectReminder.jsx";
 import Template from "../components/ui/Template.jsx";
 import CardsBenchmark from "../components/ui/CardsBenchmark.jsx";
 import { useModelStore1 } from "../store/useModelStore1.js";
@@ -19,6 +19,8 @@ export default function ModelBenchmarkPage() {
   const templateType = 'action';
   const selectedModel = useModelStore1((s)=>s.selectedModel)
   const setSelectedModelBenchmark = useModelStore1(s=>s.setSelectedModelBenchmark)
+
+  const hasSelectedModel = selectedModel ? true:false
 
   const benchmarks = selectedModel && selectedModel['sub-models'] ? selectedModel['sub-models'].map((e)=>{
     return {
@@ -44,17 +46,19 @@ export default function ModelBenchmarkPage() {
 
         <Template type={templateType}>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[40%_60%] gap-6 lg:gap-8 w-full">
-            <div className="pt-50">
+            <div >
             <ViewTitle 
                     align={"left"}
+                    alignV={"top"}
+                    backButton={true}
                     title={'Select a Benchmark'} 
                     desc={"Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements."} >
             </ViewTitle>
             </div>
            <Template>
-             <ViewContent>
-                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>=3?3:2}/>
-            </ViewContent>
+             {hasSelectedModel ? <ViewContent>
+                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={3}/>
+            </ViewContent> : <ModelsSelectReminder/>}
            </Template>
 
               </div>

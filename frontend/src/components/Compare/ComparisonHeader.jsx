@@ -1,3 +1,5 @@
+import React from "react";
+
 function percentChange(oldVal, newVal) {
   if (oldVal === 0) return newVal === 0 ? 0 : Infinity;
   return ((newVal - oldVal) / oldVal) * 100;
@@ -8,12 +10,15 @@ export default function ComparisonHeader({
   price,
   headerData = ["optimized", "baseline"],
 }) {
+
+
   const hasPrice = price && Object.keys(price).length > 0;
   const input = hasPrice ? Number(price.input_per_million_tokens ?? 0) : null;
   const output = hasPrice ? Number(price.output_per_million_tokens ?? 0) : null;
   const currency = hasPrice ? price.currency ?? "" : "";
-
+  
   return (
+    
     <div className="flex gap-1 bg-transparent z-20">
       <div className="w-1/5 p-2 flex items-center">
         {backButton === true && <button><HiMiniArrowLeft /></button>}
