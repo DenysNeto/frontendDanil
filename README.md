@@ -87,8 +87,8 @@ python app.py
 - `GET /` - Main application page
 - `GET /stream?prompt=<text>&model=<endpoint>` - Streaming endpoint (Server-Sent Events)
 - `GET /health-check?model=<endpoint>` - Model health check
-- `GET /api/config` - Current model configuration
-- `GET /api/models` - Get available models
+- `GET /api/models` - Get all available models
+- `GET /api/models/<model_id>` - Get a specific model by ID
 
 ---
 
@@ -180,9 +180,9 @@ Upload to S3 at `s3://your-bucket/config.json`:
 }
 ```
 
-## API Endpoints (with S3)
+## API Endpoints
 
-### Get Available Models
+### Get All Models
 
 ```bash
 GET /api/models
@@ -192,9 +192,36 @@ GET /api/models
 ```json
 {
   "status": "success",
-  "models": {
-    "baseline_models": [...],
-    "twodelta_models": [...]
+  "models": [
+    {
+      "id": "gpt-oss-20b",
+      "title": "OpenAI gpt-oss-20b",
+      "description": "...",
+      "provider": "OpenAI",
+      "type": "instruct",
+      "context_length": 131072,
+      "baseline_id": "gpt-oss-base",
+      "price": {...},
+      "derivatives": [...]
+    }
+  ]
+}
+```
+
+### Get Specific Model
+
+```bash
+GET /api/models/<model_id>
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "model": {
+    "id": "gpt-oss-20b",
+    "title": "OpenAI gpt-oss-20b",
+    ...
   }
 }
 ```

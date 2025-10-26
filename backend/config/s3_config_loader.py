@@ -209,46 +209,6 @@ class S3ConfigLoader:
                 return model
         return None
 
-    def get_derivative_by_id(self, model_id: str, derivative_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Get a specific derivative of a model.
-
-        Args:
-            model_id: ID of the base model
-            derivative_id: ID of the derivative
-
-        Returns:
-            Derivative dict or None if not found
-        """
-        model = self.get_model_by_id(model_id)
-        if not model:
-            return None
-
-        for derivative in model.get("derivatives", []):
-            if derivative.get("id") == derivative_id:
-                return derivative
-        return None
-
-    def get_all_derivatives(self) -> list:
-        """
-        Get all derivatives across all models.
-
-        Returns:
-            List of all derivatives with their parent model info
-        """
-        derivatives = []
-        models = self.get_models()
-
-        for model in models:
-            for derivative in model.get("derivatives", []):
-                derivatives.append({
-                    "model_id": model.get("id"),
-                    "model_title": model.get("title"),
-                    "derivative": derivative
-                })
-
-        return derivatives
-
     def shutdown(self):
         """Shutdown the scheduler gracefully."""
         if self._scheduler.running:
