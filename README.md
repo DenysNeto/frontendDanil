@@ -24,7 +24,8 @@ A Flask application that enables real-time comparison between baseline and Two D
 
 3. **Run the Flask app:**
    ```bash
-   python app.py
+   # From project root
+   python -m backend.app
    ```
 
 4. **Open your browser** to `http://localhost:8080`
@@ -243,7 +244,7 @@ GET /stream?model=bright-wildcat.tdops.net&prompt=Hello&max_tokens=100&temperatu
 Don't set S3 environment variables. Flask will use local `config.json`:
 
 ```bash
-# Run from project root
+# Always run from project root
 python -m backend.app
 ```
 
@@ -252,9 +253,11 @@ python -m backend.app
 Set environment variables and run:
 
 ```bash
+# From project root
 export S3_BUCKET=my-config-bucket
 export S3_CONFIG_KEY=config.json
 export AWS_REGION=us-east-1
+
 python -m backend.app
 ```
 
