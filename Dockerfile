@@ -27,7 +27,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 # Copy Flask application code
-COPY app.py config.json gunicorn.conf.py ./
+COPY backend/ ./backend/
+COPY config.json ./
 
 # Copy built React frontend from previous stage
 COPY --from=frontend-builder /app/static ./static
@@ -36,4 +37,4 @@ COPY --from=frontend-builder /app/static ./static
 EXPOSE 8080
 
 # Run with Gunicorn for production streaming
-CMD ["gunicorn", "--config", "gunicorn.conf.py", "app:app"]
+CMD ["gunicorn", "--config", "backend/gunicorn.conf.py", "backend.app:app"]
