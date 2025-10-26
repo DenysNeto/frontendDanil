@@ -3,7 +3,7 @@ import requests
 import json
 import os
 import logging
-from config import init_config_loader
+from .config import init_config_loader
 
 # Configure logging
 logging.basicConfig(
