@@ -31,7 +31,7 @@ COPY backend/ ./backend/
 COPY config.json ./
 
 # Copy built React frontend from previous stage
-COPY --from=frontend-builder /app/static ./static
+COPY --from=frontend-builder /app/static/react-build ./static/react-build
 
 # Expose port 8080
 EXPOSE 8080
