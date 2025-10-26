@@ -12,7 +12,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-app = Flask(__name__, static_folder='../static', static_url_path='/static')
+# Determine static folder path (works in both Docker and local dev)
+STATIC_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static')
+REACT_BUILD_DIR = os.path.join(STATIC_FOLDER, 'react-build')
+
+app = Flask(__name__, static_folder=STATIC_FOLDER, static_url_path='/static')
 
 # Disable Flask's default buffering for streaming
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -26,7 +30,7 @@ logger.info("Config loader initialized successfully")
 # Route to serve the React app
 @app.route('/')
 def index():
-    return send_from_directory('../static/react-build', 'index.html')
+    return send_from_directory(REACT_BUILD_DIR, 'index.html')
 
 # Route to serve React static files
 @app.route('/<path:path>')
@@ -35,11 +39,12 @@ def serve_react_app(path):
         # Let API routes be handled by their specific handlers
         return None
 
-    if os.path.exists(os.path.join('../static/react-build', path)):
-        return send_from_directory('../static/react-build', path)
+    file_path = os.path.join(REACT_BUILD_DIR, path)
+    if os.path.exists(file_path):
+        return send_from_directory(REACT_BUILD_DIR, path)
     else:
         # For client-side routing, serve index.html
-        return send_from_directory('../static/react-build', 'index.html')
+        return send_from_directory(REACT_BUILD_DIR, 'index.html')
 
 
 # API: Get all available models from config
