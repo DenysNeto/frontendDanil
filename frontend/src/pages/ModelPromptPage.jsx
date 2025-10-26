@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
-import Template from "../components/UI/Template.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
+import Template from "../components/ui/Template.jsx";
 import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
-import PromptInput from "../components/UI/PromptInput.jsx";
+import PromptInput from "../components/ui/PromptInput.jsx";
 import useInferenceAPI from "../hooks/useInferenceAPI.js";
 import { useModelStore1 } from "../store/useModelStore1.js";
 import ModelsSelectReminder from "../components/Models/ModelSelectReminder.jsx"

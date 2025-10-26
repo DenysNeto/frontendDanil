@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
 
-import Template from "../components/UI/Template.jsx";
+import Template from "../components/ui/Template.jsx";
 import ModelsView from "../components/Models/ModelsView.jsx";
 
 
