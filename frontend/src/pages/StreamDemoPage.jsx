@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import useInferenceAPI from "../hooks/useInferenceAPI";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
 import Template from "../components/ui/Template.jsx";
-import PromptInput from "../components/UI/PromptInput.jsx";
+import PromptInput from "../components/ui/PromptInput.jsx";
 
 export default function StreamDemoPage() {
   const [prompt, setPrompt] = useState("");
