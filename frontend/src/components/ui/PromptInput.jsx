@@ -6,7 +6,7 @@ export default function PromptInput({
   onSend = ()=>{},
   placeholder = "Type a prompt to compare...",
   disabled = false,
-  rows = 4,
+  rows = 3,
   className = "",
 }) {
    const [value, setValue] = useState();
@@ -21,10 +21,11 @@ export default function PromptInput({
         rows={rows}
         disabled={disabled}
         className={`
-        bg-[rgba(41,122,151,0.1)]
+      
           w-full px-4 py-3 pr-12 rounded-2xl resize-none
           text-gray-800
-          shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+          border border-gray-400
+           focus:outline-none  
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
           ${className}
@@ -33,9 +34,13 @@ export default function PromptInput({
 
       {/* Отправка / иконка */}
       <button
-        className="absolute right-4 bottom-4  rounded-3xl  bg-black p-2 text-white hover:text-blue-300 transition"
+        className="absolute right-4 bottom-8  rounded-3xl  bg-black p-2 text-white hover:text-blue-300 transition"
         disabled={disabled}
-        onClick={() => onSend(value)}
+        onClick={() => {
+          onSend(value);
+          setValue(''); // Clear the input after sending
+          onChange(''); // Notify parent component of the change
+        }}
       >
        <VscSend/>
       </button>

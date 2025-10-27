@@ -41,11 +41,14 @@ export default function BenchmarkPage() {
         <Template type={templateType}>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
             <div className="pt-50">
+            
+            
             <ViewTitle 
                     align={"left"}
-                    alignV={"top"}
+                    alignV={"middle"}
                     backButton={true}
-                    title={'Select a Benchmark'} 
+                    title={'Select a Benchmark '} 
+                    tit
                     desc={"Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements."} >
             </ViewTitle>
             </div>

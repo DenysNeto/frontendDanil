@@ -6,13 +6,16 @@ function Tab({data,isActive, onTabClick}){
   return (
     <button
       onClick={() => onTabClick(data.value)}
-      className={`group text-xs rounded-full px-4 py-2 transition-all duration-300 ${
-        isActive ? "bg-white text-black font-semibold" : "text-white"
+      className={` group text-[14px] rounded-full px-6 py-3 transition-all duration-800 text-black ${
+        isActive && "bg-white font-bold pointer-events-none" 
       }`}
     >
       <span
-        className="p-1 py-0.5 text-black group-hover:font-semibold "
+        class="text-md transition-all duration-300 hover:font-bold hover:bg-gradient-to-r hover:from-purple-400 hover:via-blue-500 hover:to-pink-400 hover:bg-clip-text hover:text-transparent"
       >
+
+
+
         {data.label}
       </span>
     </button>

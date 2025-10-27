@@ -1,19 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import { HiMiniArrowLeft } from "react-icons/hi2";
 import { Button } from "./Buttons";
+import Icon from "./Icon"
 export default function ViewTitle({
   title,
+  titleFontSize,
   titleCustom,
   children,
   subtitle,
+  subtitleFontSize,
   subtitleCustom,
   uptitle,
   desc,
   actionText,
   actionVariant= "secondary",
   onAction=()=>{},
-  uptitleSize = 2,
+  uptitleSize,
+  uptitleFontSize = '70px',
   uptitleSmall = false,
+  uptitleBold = false,
   titleSize = 3,
   subtitleSize = 1,
   align,
@@ -35,44 +40,39 @@ const verticalAlignmentClass = {
 
 
   return (
-    <div className={`flex  items-center ${verticalAlignmentClass} ${alignmentClass}  px-4  w-full mt-8`} >
+    <div className={`flex   ${verticalAlignmentClass} ${alignmentClass}   w-full `} >
 
 
-      <div className={`${alignmentClass=="text-left" ?  '' : 'mx-auto'  } w-full`}>
+      <div className={`${alignmentClass=="text-left" ?  '' : 'mx-auto'  } w-full `}>
                {backButton && ( <button
             onClick={() => navigate(-1)}
             className="mb-2 flex items-center gap-2 text-gray-700 hover:text-black transition"
           >
-            <HiMiniArrowLeft className="text-xl" />
-
+            <Icon name={'ArrowLeft'} className={'w-7 h-7 mb-6'} />
           </button>)}
         {uptitle && (
-          <h2
-            className={`${
-              uptitleSmall ? "text-xs" : `text-${uptitleSize}xl `
-            } font-bold mb-2`}
+          <p className={`mb-3 ${uptitleSize ? `text-${uptitleSize}xl` : 'text-s'}  ${uptitleBold ? 'font-bold' : 'font-semibold '} `}
           >
-            {uptitle}
-          </h2>
+           {uptitle}
+          </p>
         )}
 
-        {/* если передан titleCustom — отрисовываем его */}
         {titleCustom ? (
           titleCustom
         ) :  titleCustom != "" ? (
-          <h1 className={`text-${titleSize}xl font-semibold`}>
+          <p className={`text-${titleSize}xl font-semibold`}>
             {title || ""}
-          </h1>
+          </p>
         ): null}
 
-        {subtitleCustom ? subtitleCustom : (    <h4 className={`text-${subtitleSize}xl font-semibold mt-2`}>
+        {subtitleCustom ? subtitleCustom : (    <h4 className={`text-${subtitleSize}xl  mt-4`}>
             {subtitle}
           </h4>)}
 
-        <div className="mt-4 text-base">
+        <div className="mt-4 text-xl">
           {desc
             ? desc.split("\n").map((line, index) => (
-                <div key={index} className="mb-2">
+                <div key={index} className="mb-2 text-xl">
                   {line}
                 </div>
               ))
@@ -80,8 +80,8 @@ const verticalAlignmentClass = {
         </div>
 
         {actionText && 
-        <div className="flex py-3">
-          <Button onSelect={onAction} size={'lg'} variant={actionVariant}><span className="text-white text-lg"> {actionText} »</span> </Button>
+        <div className={` flex py-6 ${align=='center' ? 'justify-center items-center' : 'items-center'} `} >
+          <Button onSelect={onAction} size={'lg'} variant={actionVariant}><span className="flex justify-center items-center"> {actionText} <Icon name='ChevronsRight' style={{ paddingLeft:"5px" }} /> </span> </Button>
                     
             </div>
         }

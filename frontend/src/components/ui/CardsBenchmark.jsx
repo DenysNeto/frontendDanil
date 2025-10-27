@@ -1,5 +1,5 @@
 import { useBenchmarkStore1 } from "../../store/useBenchmarkStore1";
-
+import Icon from "./Icon.jsx"
 
 export default function CardsBenchmark({ cardsInRow = 3, benchmarks, onSelect =()=>{}}) {
   
@@ -15,11 +15,11 @@ export default function CardsBenchmark({ cardsInRow = 3, benchmarks, onSelect =(
   }[cardsInRow] || "lg:grid-cols-3";
 
   return (
-    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridColsClass} gap-6 px-6 py-4 `}>
+    <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridColsClass} gap-4 py-4 `}>
       {benchmarks.map((item, i) => (
         <div
-          key={'benchmark' + {i}}
-          className="w-full max-h-[27vh] max-w-[11vw] pt-36 pb-6  flex-1 rounded-3xl shadow-xl overflow-hidden relative group transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl ring-1 ring-white/6 bg-transparent"
+          key={'benchmark' + Math.random()*100}
+          className="w-full    h-[33vh] rounded-3xl  overflow-hidden relative group transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl ring-1 ring-white/6 bg-transparent"
           onClick={()=>onSelect(item.title)}
         >
           {item?.img &&     <img
@@ -35,10 +35,19 @@ export default function CardsBenchmark({ cardsInRow = 3, benchmarks, onSelect =(
                 "linear-gradient(180deg, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.44)70%, rgba(56, 35, 35, 0.6) 100%)",
             }}
           />
-          <div className=" relative z-20 p-5 flex flex-col justify-center h-full">
-            <div className="font-semibold text-white leading-tight text-md mb-8">
-              {item.title}
+          <div className=" relative z-20 p-4 flex flex-col  h-full">
+            <div className="flex-2/3">
+  
             </div>
+            <div className="min-h-[35%] flex flex-col justify-end ">
+                <div className="text-md w-1/2 font-semibold text-white leading-tight mb-4">
+                {item.title}
+              </div >
+              <div className="flex w-1/2 justify-end transform transition duration-500 opacity-0 group-hover:translate-x-2/2 group-hover:opacity-100">
+              <Icon name="ChevronsRight" style={{ color:"white" }} />
+              </div>
+            </div>
+
           </div>
         </div>
       ))}

@@ -11,7 +11,7 @@ export default function AppHeader() {
 <div
   className="fixed left-[10vw] mx-auto w-[80vw] h-[40vh] pointer-events-none "
   style={{
-      transform: "translate(0%, -60%)",
+      transform: "translate(0%, -70%)",
     backgroundColor: "rgba(199, 233, 255, 1)",
     filter: "blur(100px)",
   }}

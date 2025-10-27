@@ -9,87 +9,143 @@ import ModelsView from "../components/Models/ModelsView.jsx";
 import ScrollButton from "../components/UI/ScrollButton.jsx";
 import {Button} from "../components/UI/Buttons.jsx"
 import BlockCTA from "../components/ui/BlockCTA.jsx";
+import {PageEnterAnimation} from "../components/Animation.jsx"
+import { motion } from "framer-motion";
 
 export default function NewPageTemplate() {
     const templateType = "action"
 
   return (
-<div className={`min-h-screen`}>
+    <PageEnterAnimation>
+
+<div className={`min-h-screen overflow-hidden mt-10 `}>
    
+
+<motion.img
+  src="/bg/variant5.svg"
+  alt="Left decoration"
+  initial={{ opacity: 0.3, y:-50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+  className="absolute top-30 left-0 w-[25vw] h-auto z-[96] overflow-hidden animate-[floatY_6s_ease-in-out_infinite]"
+     style={{
+    animation: "floatY 6s ease-in-out infinite",
+  }}
+/>
+
+<motion.img
+  src="/bg/variant4.svg"
+  alt="Right decoration"
+  initial={{ opacity: 0.3, y:100}}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+   style={{
+    animation: "floatY 6s ease-in-out infinite",
+  }}
+  className="absolute top-[-20%] right-0  w-[18vw] h-auto z-[96] overflow-hidden animate-[floatY_6s_ease-in-out_infinite]"
+/>
+
+  
+
+<style>
+{`
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(50px); }
+  }
+`}
+</style>
+
+
+<motion.div
+  alt="Right decoration"
+  initial={{ opacity: 0, y:100 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1.5, ease: "easeIn", delay: 0.1 }}
+ >
 
     <Template type={templateType}> 
         
         <div className="py-30"> 
           
        <ViewTitle 
-            uptitle="Build the future with AI"
+            uptitle="Build the future of AI"
             align={"center"}
-            uptitleSize = "3"
-            titleCustom = {<h1 className="text-4xl font-bold">
+            uptitleSize = "6"
+            uptitleBold={false}
+            titleCustom = {<p className="text-8xl font-semibold">
+            
             From Spark To{" "}
             <span className="bg-gradient-to-r from-purple-400 via-blue-500 to-pink-400 bg-clip-text text-transparent">
                 Scale.
             </span>
-            </h1>
+            </p>
             }
             desc={`Open-source AI models at blazing speed, optimized for your \n use case,scaled globally with our AI Cloud.`}
-        > 
-            <div className="flex  justify-center py-10">
-                    <button className="bg-gray-900 text-white px-6 py-3 rounded-full font-semibold flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-dashed transition hover:bg-gray-800">
-                    GET STARTED <span className="text-white text-lg">»</span>
-                    </button>
-                    
-            </div>
+            actionText={'GET STARTED'}
+       > 
+
             <ScrollButton/>
         </ViewTitle>
         </div>
  
     </Template>
-    <div className="w-full bg-gradient-to-r from-blue-100 to-blue-200 overflow-hidden">
+
+</motion.div>
+
+
+
+
+    <div className="w-full overflow-hidden ">
         <LogoGallery />
 
     </div>
     
-    <div className="pb-48"></div>
+    <div className=" pt-[250px] flex flex-col gap-[250px]">
 
     <Template type={templateType} bgActive={true}> 
-             
-   
-
-       <ViewTitle 
+       <ViewTitle
+           uptitleSize = "2"
             uptitle="BENCHMARK TASKS"
-            uptitleSize = "2"
-            titleSize="1"
-            uptitleSmall = {true}
+            titleSize="7"
+            uptitleBold={false}
             title='All capabilities needed'
             desc={`From experimentation to production, Fireworks provides the platform to build your \nGenerative AI capabilities - optimized and at scale`}
-       / > 
+       />
 
-        
         <CardsBenchmark cardsInRow={6}/>
 
- 
     </Template>
 
 
-        <div className="pb-24"></div>
+    
 
     <Template  type={templateType} bgActive={true}>
-
-
-      <ViewTitle  uptitle="MODEL LIBRARY"
-        uptitleSmall = {true}
-            uptitleSize = "1"
-            titleSize={1}
+<div className="flex flex-col gap-[250px]">
+  <div>
+  <ViewTitle  uptitle="MODEL LIBRARY"
+            titleSize={6}
+            uptitleBold={false}
             title='200+ generative AI models'
-            desc={`Build with open-source and specialized multimodal models for chat, images,  code, and  more. Migrate from closed models with OpenAI-compatible APIs.`}
+            desc={`Build with open-source and specialized multimodal models for chat, images,  code, and  more.\n  Migrate from closed models with OpenAI-compatible APIs.`}
       /> 
       
         <ModelsView cardsInRow={4} pagination={true}/>
-        <div className="pb-24"></div>
+  </div>
+
+
         <BlockCTA />
+</div>
+
+     
     </Template>
 
+ 
+    </div>
+
+
 </div>
+    </PageEnterAnimation>
+
   );
 }

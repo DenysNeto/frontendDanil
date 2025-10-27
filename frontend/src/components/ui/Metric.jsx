@@ -64,7 +64,7 @@ export default React.memo(function Metric({
   if (type === "circle") {
     return (
       <div className={`flex flex-col items-center ${className}`}>
-        <div className="relative w-24 h-24">
+        <div className="relative w-45 h-45">
           <svg className="absolute top-0 left-0 w-full h-full" viewBox={`0 0 ${SVG_SIZE} ${SVG_SIZE}`}>
             <circle
               cx={SVG_SIZE / 2}
@@ -89,8 +89,8 @@ export default React.memo(function Metric({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-lg font-semibold text-gray-700">{numeric}</span>
-            {unit && <span className="text-md text-gray-500">{unit}</span>}
+            <span className="text-3xl font-semibold text-gray-700">{numeric}<span className="text-xl">{unit}</span></span>
+        
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default React.memo(function Metric({
           }}
         />
       </div>
-      <span className="mt-4 text-xl text-black">
+      <span className="mt-4 text-2xl text-black font-semibold">
         {numeric} {unit}
       </span>
     </div>

@@ -15,6 +15,7 @@ import ModelPromptPage from "./pages/ModelPromptPage.jsx"
 import StreamDemoPage from "./pages/StreamDemoPage.jsx"
 import NotFoundPage from "./pages/NotFound.jsx"
 import AppFooter from "./components/UI/AppFooter.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import AppHeader from "./components/ui/AppHeader.jsx";
 function App() {
 
@@ -32,9 +33,11 @@ function App() {
 
   return (
       <SettingsProvider>
+        <ScrollToTop/>
     <AppHeader/>
               <main className="w-full">
                   <div>
+                    
                         <RouteSync />
                         <Routes>
                             <Route path="/" element={<NewPageTemplate/>}/>  

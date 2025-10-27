@@ -99,7 +99,7 @@ export default function ModelPromptPage() {
 
     return {
       compareFields: {
-        "LiveData": {
+        "Live Data": {
           "optimized": optimizedAPI.response,
           "baseline": baselineAPI.response
         }
@@ -110,15 +110,14 @@ export default function ModelPromptPage() {
 
 
 return (
-  <div className="bg-white text-black h-[70vh]">
+  <div className="text-black h-full">
     <Template type="action">
-      <ViewTitle title="Model Demo" align="left" backButton={true} />
+      <ViewTitle  title="Model Demo" titleSize="6" align="left" backButton={true} />
 
-      {/* Ограничиваем высоту только здесь */}
-      <ViewContent> {/* ← подставь нужную высоту ViewTitle */}
+
+      <ViewContent> 
         <div className="flex flex-col max-h-[65vh]">
 
-          {/* Прокручиваемый блок */}
           <div ref={promptChat} className=" flex-1 overflow-y-auto px-4 py-2">
             {hasBenchmarkData ? (
               <>
@@ -129,6 +128,7 @@ return (
                     <ComparisonContainer
                       data={responseData}
                       header={true}
+                      isPrompt="true"
                     />
                   )}
               </>
@@ -138,7 +138,7 @@ return (
           </div>
 
           {hasBenchmarkData && (
-            <div className="py-4 px-4 w-4/5 ml-auto">
+            <div className="py-4 px-4 flex justify-end pl-[230px]">
               <PromptInput onSend={sendPrompt} />
             </div>
           )}

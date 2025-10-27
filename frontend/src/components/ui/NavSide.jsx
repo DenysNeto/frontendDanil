@@ -32,39 +32,11 @@ export default function NavComp({ typeNav }) {
   if (typeNav === 'main') typeNav = "horizontal";
   if (typeNav === 'act') typeNav = 'horizontal';
 
- let H_style = `
-         fixed
-          top-5
-          left-1/2
-          -translate-x-1/2
-          bg-gray-900
-          rounded-full
-          px-6
-          py-2
-          flex
-          gap-4
-          shadow-lg
-          z-9999
-        `;     
- let V_style = `
-    fixed
-          left-6
-          top-1/2
-          -translate-y-1/2
-          w-15
-          min-h-[60vh]
-          bg-gray-900
-          rounded-full
-          py-6
-          flex
-          flex-col
-          items-center
-          gap-4
-          shadow-lg
-          z-40 `
+let H_style = "fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 rounded-full px-1 py-1 flex gap-4 shadow-lg z-[9999]";
+let V_style = "fixed left-6 top-1/2 -translate-y-1/2 w-[70px] min-h-[60vh] bg-gray-900 rounded-full py-6 flex flex-col items-center gap-4 shadow-lg z-[40]";
+ 
 
-
-  if (typeNav === "horizontal") {
+if (typeNav === "horizontal") {
     return (
       <nav
         className={H_style}
@@ -73,8 +45,8 @@ export default function NavComp({ typeNav }) {
        
         <button
          onClick={() => navigate("/")}
-          className={` text-sm rounded-full hover:bg-green-600 transition px-3 py-3 rounded-full hover:bg-green-600 
-             ${main_nav === "/" ? "bg-green-500 text-black" : "text-white"}
+          className={` text-sm rounded-full transition px-3 py-3 rounded-full  hover:text-[#51FFA3] 
+             ${main_nav === "/" ? " hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
              `}
  
         >
@@ -86,7 +58,7 @@ export default function NavComp({ typeNav }) {
             key={index}
             onClick={() => !btn.disabled && navigate(btn.link)}
             className={`
-              ${main_nav === btn.label.toLowerCase() ? " text-green-400" : "text-white"}
+              ${main_nav === btn.label.toLowerCase() ? " text-[#51FFA3]" : "text-white"}
               ${btn.disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"}
 
               px-4
@@ -118,7 +90,7 @@ export default function NavComp({ typeNav }) {
               key={index}
               onClick={() => navigate(btn.link)}
               className={`
-                ${main_nav === btn.label.toLowerCase() ? "bg-green-500 text-black" : "text-white"}
+                ${main_nav === btn.label.toLowerCase() ? "bg-[#51FFA3] text-black" : "text-white"}
                 ${isUser ? "mt-auto" : ""}
                 w-10 h-10
                 text-white
@@ -138,7 +110,7 @@ export default function NavComp({ typeNav }) {
 
           <button
              className={`
-              ${main_nav === "user" ? "bg-green-500 text-black" : "text-white"}
+              ${main_nav === "user" ? "bg-[#51FFA3] text-black" : "text-white"}
                mt-auto
                 w-10 h-10
                 text-white
