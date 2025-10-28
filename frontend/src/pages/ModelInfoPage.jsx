@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 
 
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
 import Icon from "../components/ui/Icon.jsx"
 
-import Template from "../components/UI/Template.jsx";
+import Template from "../components/ui/Template.jsx";
 
 import { useModelStore1 } from "../store/useModelStore1.ts";
 import { useLocation, useNavigate } from "react-router-dom";
-import CodeViewer from "../components/UI/CodeViewer.jsx";
-import Accordion from "../components/UI/Accordion.jsx";
-import ScrollButton from "../components/UI/ScrollButton.jsx"
+import CodeViewer from "../components/ui/CodeViewer.jsx";
+import Accordion from "../components/ui/Accordion.jsx";
+import ScrollButton from "../components/ui/ScrollButton.jsx"
 import { FaServer, FaTools, FaMicrochip, FaRobot, FaBolt } from 'react-icons/fa';
 import { LuCopy } from "react-icons/lu";
-import Tabs from "../components/UI/Tabs.jsx";
+import Tabs from "../components/ui/Tabs.jsx";
 import defaultModelImage from "../assets/modelsImage/Model.png";
 
 
