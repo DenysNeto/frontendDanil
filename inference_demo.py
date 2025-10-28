@@ -132,7 +132,7 @@ def generate():
         return response, 200, CORS_HEADERS
 
 
-def generate_stream(prompt, max_tokens, temperature, model_fqdn):
+def generate_stream(prompt, max_tokens, temperature):
     """
     Generator function that yields JSON objects line by line.
     Each line contains: {"text": "content", "tokens_so_far": N}
