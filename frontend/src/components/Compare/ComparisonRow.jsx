@@ -1,5 +1,5 @@
-import Icon from "../UI/Icon.jsx";
-import Metric from "../UI/Metric.jsx"
+import Icon from "../ui/Icon.jsx";
+import Metric from "../ui/Metric.jsx"
 import React from "react";
 export default function ComparisonRow({name, metric, compareTypes =["optimized","baseline"] ,isPrompt}) {
 
