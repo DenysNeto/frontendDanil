@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../UI/Buttons";
+import { Button } from "../ui/Buttons";
 
 import { FaAnglesRight } from "react-icons/fa6";
 import defaultModelImage from "../../assets/modelsImage/Model.png";

@@ -1,31 +1,123 @@
-from flask import Flask, request, Response, send_from_directory
+from flask import Flask, request, Response, send_from_directory, jsonify
 import requests
 import json
 import os
+import logging
+from .config import init_config_loader
 
-app = Flask(__name__, static_folder='static', static_url_path='/static')
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+# Determine static folder path (works in both Docker and local dev)
+STATIC_FOLDER = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static')
+REACT_BUILD_DIR = os.path.join(STATIC_FOLDER, 'react-build')
+
+app = Flask(__name__, static_folder=STATIC_FOLDER, static_url_path='/static')
 
 # Disable Flask's default buffering for streaming
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+# Initialize S3 config loader
+logger.info("Initializing S3 config loader...")
+config_loader = init_config_loader()
+logger.info("Config loader initialized successfully")
 
 
 # Route to serve the React app
 @app.route('/')
 def index():
-    return send_from_directory('static/react-build', 'index.html')
+    return send_from_directory(REACT_BUILD_DIR, 'index.html')
 
 # Route to serve React static files
 @app.route('/<path:path>')
 def serve_react_app(path):
-    if path.startswith('health-check') or path.startswith('stream'):
+    if path.startswith('health-check') or path.startswith('stream') or path.startswith('api'):
         # Let API routes be handled by their specific handlers
         return None
 
-    if os.path.exists(os.path.join('static/react-build', path)):
-        return send_from_directory('static/react-build', path)
+    file_path = os.path.join(REACT_BUILD_DIR, path)
+    if os.path.exists(file_path):
+        return send_from_directory(REACT_BUILD_DIR, path)
     else:
         # For client-side routing, serve index.html
-        return send_from_directory('static/react-build', 'index.html')
+        return send_from_directory(REACT_BUILD_DIR, 'index.html')
+
+
+# API: Get all available models from config
+@app.route('/api/models', methods=['GET'])
+def get_models():
+    """
+    Return all available models from the current configuration.
+
+    Response format:
+    {
+        "status": "success",
+        "models": [
+            {
+                "id": "gpt-oss-20b",
+                "title": "OpenAI gpt-oss-20b",
+                "description": "...",
+                "provider": "OpenAI",
+                "type": "instruct",
+                "context_length": 131072,
+                "baseline_id": "gpt-oss-base",
+                "price": {...},
+                "derivatives": [...]
+            }
+        ]
+    }
+    """
+    try:
+        models = config_loader.get_models()
+        return jsonify({
+            'status': 'success',
+            'models': models
+        }), 200
+    except Exception as e:
+        logger.error(f"Error fetching models: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+
+# API: Get a specific model by ID
+@app.route('/api/models/<model_id>', methods=['GET'])
+def get_model_by_id(model_id):
+    """
+    Return a specific model by its ID.
+
+    Args:
+        model_id: The model ID (e.g., "gpt-oss-20b")
+
+    Response:
+    {
+        "status": "success",
+        "model": {...}
+    }
+    """
+    try:
+        model = config_loader.get_model_by_id(model_id)
+        if model:
+            return jsonify({
+                'status': 'success',
+                'model': model
+            }), 200
+        else:
+            return jsonify({
+                'status': 'error',
+                'message': f'Model {model_id} not found'
+            }), 404
+    except Exception as e:
+        logger.error(f"Error fetching model {model_id}: {e}")
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
 
 
 @app.route('/health-check', methods=['GET'])
@@ -225,4 +317,9 @@ def generate_stream(prompt, max_tokens, temperature, model_fqdn):
         yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
+    try:
+        app.run(debug=True, host='0.0.0.0', port=8080, threaded=True)
+    finally:
+        # Gracefully shutdown the config loader
+        if config_loader:
+            config_loader.shutdown()

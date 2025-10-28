@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import ViewTitle from "../components/UI/ViewTitle.jsx";
-import ViewContent from "../components/UI/ViewContent.jsx";
-import AppFooter from "../components/UI/AppFooter.jsx"
-import Template from "../components/UI/Template.jsx";
-import LogoGallery from "../components/UI/LogoGallery.jsx";
-import CardsBenchmark from "../components/UI/CardsBenchmark.jsx"
+import ViewTitle from "../components/ui/ViewTitle.jsx";
+import ViewContent from "../components/ui/ViewContent.jsx";
+import AppFooter from "../components/ui/AppFooter.jsx"
+import Template from "../components/ui/Template.jsx";
+import LogoGallery from "../components/ui/LogoGallery.jsx";
+import CardsBenchmark from "../components/ui/CardsBenchmark.jsx"
 import ModelsView from "../components/Models/ModelsView.jsx";
-import ScrollButton from "../components/UI/ScrollButton.jsx";
-import {Button} from "../components/UI/Buttons.jsx"
+import ScrollButton from "../components/ui/ScrollButton.jsx";
+import {Button} from "../components/ui/Buttons.jsx"
 import BlockCTA from "../components/ui/BlockCTA.jsx";
 import {PageEnterAnimation} from "../components/Animation.jsx"
 import { motion } from "framer-motion";

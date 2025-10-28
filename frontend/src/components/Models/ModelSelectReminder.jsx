@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../UI/Buttons";
+import { Button } from "../ui/Buttons";
 import { useNavigate } from "react-router-dom";
 
 export default function ModelsSelectReminder() {
