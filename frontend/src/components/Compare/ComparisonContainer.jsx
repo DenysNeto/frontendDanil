@@ -4,9 +4,11 @@ import ComparisonHeader from "./ComparisonHeader"
 import { HiMiniArrowLeft } from "react-icons/hi2";
 
 
-const ComparisonContainer = React.memo(function ComparisonContainer({backButton=false, header = true, data }) {
+const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPrompt}) {
   const dataRows = data?.compareFields ? data.compareFields : data;
+  const price = data?.price;
 
+  console.log("SSS" , data)
   // Only log when data changes (using JSON stringify to compare deep equality)
   React.useEffect(() => {
     console.log("📊 ComparisonContainer data changed:", data?.id || 'no-id', "has compareFields:", !!data?.compareFields, "data keys:", Object.keys(data || {}), "dataRows keys:", Object.keys(dataRows || {}));
@@ -25,21 +27,22 @@ const ComparisonContainer = React.memo(function ComparisonContainer({backButton=
 
   return (
     <>
-  <div className="w-full  mx-auto max-h-[60vh] bg-transparent rounded-2xl" >
+ 
+  <div className="w-full mx-auto max-h-[60vh] bg-transparent rounded-2xl shadow-[0_10px_20px_rgba(199,233,255,0.3)] !bg-white z-20 ">
 
-    <ComparisonHeader  headerData={data?.compareTypes} />
+    <ComparisonHeader headerData={data?.compareTypes} price={price} />
 
-
-    {Object.entries(dataRows).map(([metricName, metricObj], index) => (
-  <div key={metricName + index} className="shadow-[0_10px_20px_rgba(199,233,255,0.3)] rounded-2xl !bg-white z-20">
-    <ComparisonRow
-      name={metricName}
-      metric={metricObj}
-      first={index === 0}
-      compareTypes={data?.compareTypes}
-    />
-  </div>
-))}
+    <div className="border-t border-gray-100 flex flex-col ">
+      {Object.entries(dataRows).map(([metricName, metricObj], index) => (
+        <ComparisonRow
+          key={metricName + index}
+          name={metricName}
+          metric={metricObj}
+          compareTypes={data?.compareTypes}
+          isPrompt={isPrompt}
+        />
+      ))}
+    </div>
 
   </div>
 

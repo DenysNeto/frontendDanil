@@ -3,7 +3,7 @@ import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import NewPageTemplate from "./pages/NewHome.jsx"
-import RouteSync from "./components/ui/RouteSync.jsx"
+import RouteSync from "./components/UI/RouteSync.jsx"
 import ModelsPage from "./pages/ModelsPage.jsx"
 import BenchmarkPage from "./pages/BenchmarkPage.jsx"
 import ModelInfoPage from "./pages/ModelInfoPage.jsx"
@@ -14,7 +14,8 @@ import ModelBenchmarkPage from "./pages/ModelBenchmarkPage.jsx"
 import ModelPromptPage from "./pages/ModelPromptPage.jsx"
 import StreamDemoPage from "./pages/StreamDemoPage.jsx"
 import NotFoundPage from "./pages/NotFound.jsx"
-import AppFooter from "./components/ui/AppFooter.jsx";
+import AppFooter from "./components/UI/AppFooter.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 import AppHeader from "./components/ui/AppHeader.jsx";
 function App() {
 
@@ -32,9 +33,11 @@ function App() {
 
   return (
       <SettingsProvider>
+        <ScrollToTop/>
     <AppHeader/>
               <main className="w-full">
                   <div>
+                    
                         <RouteSync />
                         <Routes>
                             <Route path="/" element={<NewPageTemplate/>}/>  

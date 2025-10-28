@@ -25,10 +25,12 @@ export function Button({
 
   const variantStyles = {
     primary: "bg-emerald-500 text-white hover:bg-emerald-600",
-    secondary: "bg-neutral-900 text-white hover:bg-neutral-800",
-    outlined: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
+    secondary: "cursor-pointer bg-neutral-900 text-white hover:text-[#51FFA3] hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.12),0_8px_16px_rgba(0,0,0,0.15)] transition-shadow duration-600 ",
+    outlined: " text-white border border-[#51FFA3] hover:text-[#51FFA3] transition-colors duration-300",
     ghost: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
-    info: " text-black-500  hover:text-blue-300",
+    info: " text-black-500  hover:text-blue-300 !p-0",
+    // 3-layer shadow example
+    shadowDemo: "bg-blue-500 text-white hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.12),0_8px_16px_rgba(0,0,0,0.15)] transition-shadow duration-600",
   };
 
   const sizeStyles = {

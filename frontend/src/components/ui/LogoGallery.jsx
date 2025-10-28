@@ -5,19 +5,19 @@ export default function LogoGallery() {
   const duplicatedLogos = [...logoUrls, ...logoUrls];
   
   return (
-    <div className="-mx-4 [background:#E6F0F5] overflow-hidden">
-      <div className="max-w-4xl ml-1/2 mx-auto overflow-hidden">
+    <div className=" h-[120px] absolute w-full overflow-hidden  [background:#E6F0F5]   z-100 ">
+      <div className="max-w-7xl  mx-auto overflow-hidden  ">
         <div 
-          className="flex gap-8"
+          className="flex gap-8 "
           style={{
-            animation: 'scroll 30s linear infinite',
+            animation: 'scroll 10s linear infinite',
             width: 'max-content'
           }}
           onMouseEnter={(e) => e.target.style.animationPlayState = 'paused'}
           onMouseLeave={(e) => e.target.style.animationPlayState = 'running'}
         >
           {duplicatedLogos.map((src, index) => (
-            <div key={index} className="w-20 h-20 flex items-center justify-center flex-shrink-0">
+            <div key={index} className="w-35 h-30 flex items-center justify-center flex-shrink-0 opacity-[60%] ">
               <img src={src} alt={`Logo ${index}`} className="w-full h-full object-contain" />
             </div>
           ))}

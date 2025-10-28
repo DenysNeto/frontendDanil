@@ -42,19 +42,30 @@ export default function ModelBenchmarkPage() {
   return (
   
   <>
-    <div className={``}>
+    <div className={` flex justify-center items-center`}>
 
         <Template type={templateType}>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[40%_60%] gap-6 lg:gap-8 w-full">
-            <div >
-            <ViewTitle 
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
+
+                        <ViewTitle 
                     align={"left"}
-                    alignV={"top"}
+
                     backButton={true}
-                    title={'Select a Benchmark'} 
-                    desc={"Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements."} >
+                    title={'Select a Benchmark'}
+                    titleSize={
+                      7
+                    }
+   >
+
+                    <span className="text-xl">
+                    
+Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements.
+        
+                    </span>
+
+
             </ViewTitle>
-            </div>
+  
            <Template>
              {hasSelectedModel ? <ViewContent>
                 <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={3}/>

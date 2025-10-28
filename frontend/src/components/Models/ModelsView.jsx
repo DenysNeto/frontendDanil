@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ModelList from "./ModelsList";
 import Tabs from "../ui/Tabs";
+import Icon from "../ui/Icon"
 import { useModelStore1 } from "../../store/useModelStore1";
 import { useNavigate } from "react-router-dom";
 
@@ -36,11 +37,12 @@ export default function ModelsView({ activeTab, cardsInRow=null , pagination=fal
 
   return (
     <>
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full relative">
         <Tabs data={modelTabs} />
+        <div className="mt-4"> </div>
+    <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
 
-        <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
-    </div>
+         </div>
   
     </>
   );

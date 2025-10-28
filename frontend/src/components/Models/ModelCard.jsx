@@ -2,11 +2,13 @@ import React from "react";
 import { Button } from "../ui/Buttons";
 
 import { FaAnglesRight } from "react-icons/fa6";
+import defaultModelImage from "../../assets/modelsImage/Model.png";
 
 
 export default function ModelCard({
   id,
   title = "Untitled",
+  context_length = '',
   description = "",
   price = {
     currency: '',
@@ -14,32 +16,22 @@ export default function ModelCard({
     output_per_million_tokens : ''
   },
   imageUrl = {},
-  comingSoon = false,
   newModel= false,
   onSelect = ()=>{},
-  actionText = "Learn More",
-  pricing = "—",
-  content = "—",
-  onAction,
 }) {
-  const imgSrc = imageUrl.src  || null;
-  const icon = imageUrl.icon || "🔷";
-  const iconBg = imageUrl.iconBg || "#E5E7EB";
-  const iconColor = imageUrl.color || "#111827";
-  const gradient = imageUrl.bg || null;
 
   const truncated = typeof description === "string"
-    ? (description.length > 40 ? description.slice(0, 40) + "..." : description)
+    ? (description.length > 60 ? description.slice(0, 60) + "..." : description)
     : "";
 
 
   return (
 
-    <article className="group  p-6 pb-6 bg-white rounded-3xl border border-gray-100 hover:ring-2 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden max-w-sm">
-      {/* Image on top */}
-      
-      <div className="w-full flex justify-between mt-6 mb-6">
-       
+    <article onClick={() => onSelect(id)}  className="group  min-w-[13vw] min-h-[34vh] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-2 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
+    
+      <div className=" flex w-full h-full flex-col  justify-center ">
+          <div className="w-full flex justify-between mt-3 mb-3 ">
+         {/* Image on top */}
         {imageUrl && typeof imageUrl == "string"? (
           <img
             src={imageUrl}
@@ -48,22 +40,16 @@ export default function ModelCard({
             style={{ display: "block" }}
           />
         ) : (
-          <div
-            className="w-10 h-10  items-center justify-center"
-            style={{ background: gradient ?? iconBg, color: iconColor }}
-            aria-hidden="true"
-          >
-            <span className="text-3xl">{icon}</span>
-          </div>
+          <img
+          src={defaultModelImage}
+          alt={title}
+          className="w-10 h-10 object-cover"
+          style={{ display: "block" }}
+        />
         )}
-         <div className="flex items-center gap-2 flex-shrink-0">
-            {comingSoon && (
-              <span className="bg-gradient-to-r text-xs from-purple-400 via-blue-500 to-pink-400 bg-clip-text text-transparent">
-               Soon
-            </span>
-            )}
-            {newModel && (
-                <span className="inline-flex items-center px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">
+         <div className="flex items-top gap-2 flex-shrink-0">
+            {newModel && ( 
+              <span className="inline-flex h-1/2 items-center p-2 px-4 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full">
                   New
                 </span>
             )}
@@ -74,13 +60,13 @@ export default function ModelCard({
       {/* Body */}
       <div className="mb-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate" title={title}>
+          <h2 className="text-base sm:text-lg font-semibold text-gray-900 truncate" title={title}>
             {title}
-          </h3>
+          </h2>
         </div>
 
         {/* Description truncated to 20 chars */}
-        <p className="text-sm text-gray-600" title={description}>
+        <p className="text-xs text-gray-700 mt-2" title={description}>
           {truncated}
         </p>
 
@@ -88,19 +74,19 @@ export default function ModelCard({
       </div>
 
     <div className=" flex-col items-center justify-between">
-          <div className="flex items-center gap-3 text-sm text-gray-700 min-w-0">
+          <div className="flex items-center gap-3 in-w-0">
            
             <p className="truncate">
-              <span className="text-gray-600 text-xs">{price.input_per_million_tokens} {price.currency}</span>
+              <span className="text-[#303030] text-xs">${price.input_per_million_tokens}/M Tokens</span>
             </p>
 
 
             {(price && price.currency !="") && <>
-              <span className="w-2 h-2 rounded-full bg-blue-300 inline-block" aria-hidden="true" />
+              <span className="w-2 h-2 rounded-full bg-[#2E8CFF] inline-block" aria-hidden="true" />
 
             <p className="truncate">
 
-              <span className="text-gray-600 text-xs">{price.output_per_million_tokens} {price.currency}</span>
+              <span className="text-[#303030] text-xs">{context_length} Context</span>
             </p>
             </> 
             }
@@ -113,14 +99,16 @@ export default function ModelCard({
 
 
         </div>
-    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 mt-4">
+    <div className="opacity-0 mb-2 group-hover:opacity-100 transition-opacity duration-300 mt-2">
         <Button variant="info" onClick={() => onSelect(id)}>
-          <span className="inline-flex text-s items-center whitespace-nowrap gap-2">
+          <span className=" flex text-[16px] mt-4 items-center whitespace-nowrap ">
             MORE INFO <FaAnglesRight />
           </span>
         </Button>
 
     </div>
+      </div>
+    
 
     </article>
   );

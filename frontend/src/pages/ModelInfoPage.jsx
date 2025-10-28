@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 
 
-import ViewTitle from "../components/ui/ViewTitle.jsx";
-import ViewContent from "../components/ui/ViewContent.jsx";
+import ViewTitle from "../components/UI/ViewTitle.jsx";
+import ViewContent from "../components/UI/ViewContent.jsx";
 import Icon from "../components/ui/Icon.jsx"
 
-import Template from "../components/ui/Template.jsx";
+import Template from "../components/UI/Template.jsx";
 
 import { useModelStore1 } from "../store/useModelStore1.ts";
 import { useLocation, useNavigate } from "react-router-dom";
-import CodeViewer from "../components/ui/CodeViewer.jsx";
-import Accordion from "../components/ui/Accordion.jsx";
-import ScrollButton from "../components/ui/ScrollButton.jsx"
+import CodeViewer from "../components/UI/CodeViewer.jsx";
+import Accordion from "../components/UI/Accordion.jsx";
+import ScrollButton from "../components/UI/ScrollButton.jsx"
 import { FaServer, FaTools, FaMicrochip, FaRobot, FaBolt } from 'react-icons/fa';
 import { LuCopy } from "react-icons/lu";
-import Tabs from "../components/ui/Tabs.jsx";
+import Tabs from "../components/UI/Tabs.jsx";
+import defaultModelImage from "../assets/modelsImage/Model.png";
 
 
 
@@ -24,17 +25,17 @@ let tabs = [
     {label:"TYPESCRIPT", value : "TYPESCRIPT"}
 ]
   const code_example = `curl -X POST "https://api.together.xyz/v1/chat/completions" \\
-                        -H "Authorization: Bearer $TOGETHER_API_KEY" \\
-                        -H "Content-Type: application/json" \\
-                        -d '{
-                            "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
-                            "messages": [
-                                {
-                                    "role": "user",
-                                    "content": "What are some fun things to do in New York?"
-                                }
-                            ]
-                    }'`
+    -H "Authorization: Bearer $TOGETHER_API_KEY" \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
+        "messages": [
+            {
+                "role": "user",
+                "content": "What are some fun things to do in New York?"
+            }
+        ]
+}'`
 
 
 
@@ -80,7 +81,7 @@ export default function ModelInfoPage() {
           value :selectedModel.provider || "",
       },
       {
-        icon: "Stripes3" ,
+        icon: "ThreeStripes" ,
         title:"Model Type",
         value : selectedModel.type
       },
@@ -101,36 +102,46 @@ export default function ModelInfoPage() {
         value: "Available",
         tab:true
       },
-      {
-        title:"Pricing per audio minute",
-        icon:"Price",
-        value: "price",
-        tab:true
-      }
+{
+  title:"Pricing per audio minute",
+  icon:"Price",
+  value: "$0.3",
+  largeFont: true
+}
       ];
 
       return (
-          <div className="relative bg-repeat-y bg-center bg-[length:100%_300px] min-h-screen">
-          
+          <div className="relative ">
+            <img
+              src="/bg/variant3.svg"
+              alt="Right decoration"
+              className="absolute right-0 -translate-y-1/2 w-[20vw] h-auto animate-[fallUp_10s_ease-in-out_infinite] "
+            />
+
+            <style>
+              {`
+                @keyframes fallUp {
+                  0%   { top: 0rem; }   /* top-40 */
+                  50%  { top: 15rem; }   /* top-120 */
+                  100% { top: 0rem; }   /* обратно к top-40 */
+                }
+              `}
+            </style>
+
+
+
             <Template type={templateType} bgActive={true}>
                
-              <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-6 p-6 w-full">
+              <div className="mx-auto grid grid-cols-1 lg:grid-cols-[70%_30%] gap-10 p-6 w-full">
                     
-                      <div className=" rounded-xl  p-4">
+                      <div className="">
                                          
                            
-                        <ViewTitle backButton={true} title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
+                        <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
                 
                                   
                       <div className="pb-20"></div>
-                        <ViewTitle align={'center'} subtitleCustom={
-                            <div className="flex items-center justify-between text-center w-full">
-                            <h3>API USAGE</h3> 
-                           
-                            </div>
-
-                          
-                        } />
+                      
 
                         <div className="flex justify-between">
                             <Tabs data={tabs} align={"left"} />
@@ -157,36 +168,49 @@ export default function ModelInfoPage() {
                         
                       </div>
 
-    <div className="flex flex-col">
-        {model?.imageUrl && (
+                      <div className="flex flex-col">
 
-           <img
-            src={model.imageUrl}
-            className="mb-30 ml-auto bg-white shadow-[0_0_50px_#C3E6FF99] rounded-full p-4 h-48 w-48 object-cover "
-            alt="Model preview"
-          />
-      
-         
-   
-        )}
-      <ul className="space-y-3 text-gray-700 sticky top-28 bg-[#297A971A] rounded-2xl p-6">
-          {sideList.map((item, index) => {
-            return (
-              <li key={index} className={`flex items-center flex-wrap py-4  ${index+1!=sideList.length  && "border-b-2 border-gray-300"} `}>
-                <div className="p-3 bg-white rounded-full">
-                <Icon size="small" name={item.icon}/>
-                </div>
-                <span className={` text-md px-4 py-2 `}>
-                  {item.title}
-                </span>
-                <span className={`ml-auto font-bold ${item.tab && "rounded-full bg-[#297A971A] font-semibold px-4 py-2"} `} >{item.value}</span>
-              </li>
-            )
-          })}
-        </ul>
-        
-  
-    </div>
+                        <div className=" bg-white shadow-[0_0_50px_#C3E6FF99] rounded-full h-50 w-50 p-10 mb-30 ml-auto">
+                             <img
+                              src={model.imageUrl || defaultModelImage}
+                              className={`mx-auto ${!model.imageUrl && ""} `}
+                              alt="Model preview"
+                            />
+                        </div>
+                            
+
+
+
+
+                        <ul className="space-y-3 text-gray-700 sticky top-28 bg-[#297A971A] rounded-2xl p-6">
+                            {sideList.map((item, index) => {
+                              return (
+                                <li key={index} className={`py-4 ${index+1!=sideList.length  && "border-b-2 border-gray-300"} ${item.largeFont ? 'flex flex-col' : 'flex items-center'}`}>
+                                  <div className={`${item.largeFont ? 'flex items-center mb-2' : 'flex flex-row items-center justify-center'}`}>
+                                    <div className="hover:border-black hover:border-1 p-3 bg-white rounded-full flex flex-row items-center justify-center">
+                                    <Icon size="small" name={item.icon}/>
+                                    </div>
+                                    <span className={` text-md px-4 ${item.largeFont ? 'py-0' : 'py-2'}`}>
+                                      {item.title}
+                                    </span>
+                                  </div>
+                                  <span className={`${item.largeFont ? 'self-end font-bold text-[32px]' : 'ml-auto font-bold'} ${item.tab && "rounded-full bg-[#297A971A] font-semibold px-4 py-2"}`} >
+                                    {item.largeFont ? (
+                                      <>
+                                        <span className="text-[18px]">$</span>
+                                        <span>0.3</span>
+                                      </>
+                                    ) : (
+                                      item.value
+                                    )}
+                                  </span>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                          
+                    
+                      </div>
 
                     </div>
 

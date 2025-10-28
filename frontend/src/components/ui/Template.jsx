@@ -7,7 +7,7 @@ import {BgContainer} from "./BgImgPaste";
 const Template = ({ type = "main" ,padding = 2, children ,bgActive = false }) => {
   let resolvedPadding = padding;
   if (type === "main") resolvedPadding = 2
-  if (type == "action" ) resolvedPadding = 3
+  if (type == "action" ) resolvedPadding =3
 
   if (padding === 'm') resolvedPadding = 3;
   else if (padding === 'l') resolvedPadding = 4;

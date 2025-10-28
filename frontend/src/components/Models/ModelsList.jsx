@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 import ModelCard from "./ModelCard";
 import { BiArrowFromRight } from "react-icons/bi";
 import { BiArrowFromLeft } from "react-icons/bi";
-
+import Icon from "../ui/Icon"
 
 export default function ModelList({ cardsInRow = 3, models = [], pagination = false,onSelect= ()=>{} }) {
   const gridColsClass = {
@@ -35,15 +35,17 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
     setPageIndex(0);
   }, [models, itemsPerPage, pagination]);
 
-  const prev = () => setPageIndex((p) => Math.max(0, p - 1));
-  const next = () => setPageIndex((p) => Math.min(pages.length - 1, p + 1));
-  const goTo = (i) => setPageIndex(() => Math.max(0, Math.min(pages.length - 1, i)));
+  const prev = () =>
+  setPageIndex((p) => (p <= 0 ? pages.length - 1 : p - 1));
+  const next = () =>
+  setPageIndex((p) => (p >= pages.length - 1 ? 0 : p + 1));
+ const goTo = (i) => setPageIndex(() => Math.max(0, Math.min(pages.length - 1, i)));
 
   if (!pagination) {
     return (
       <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridColsClass} gap-6 p-6 w-full`}>
         {models && models.length > 0 ? models.map((model, index) => (
-          <ModelCard key={index} {...model} onSelect={() => onSelect(model.id)}/>
+        <ModelCard key={index} {...model} onSelect={() => onSelect(model.id)}/>
         )) : <ModelCard />}
       </div>
     );
@@ -54,20 +56,22 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
       <div className="relative max-w-full mx-auto">
         {pages.length > 1 && (
           <>
+ 
+            
             <button
               onClick={prev}
               aria-label="Previous"
-              className="absolute translate-x-[-20px]  top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-sm hover:shadow-md"
             >
-              <BiArrowFromRight/>
+                  <Icon name={'ArrowLeft'} className={'absolute left-[-4vw] top-1/2 w-14 h-14 transition-all duration-300 hover:w-15 hover:h-15 text-gray-500 border border-gray-300 rounded-full p-3 ' } />
+                 
             </button>
 
             <button
               onClick={next}
               aria-label="Next"
-              className="absolute translate-x-[20px] right-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white shadow-sm hover:shadow-md"
-            >
-              <BiArrowFromLeft/>
+               >
+                <Icon name={'ArrowRight'} className={'absolute right-[-4vw] top-1/2 w-14 h-14 transition-all duration-300 hover:w-15 hover:h-15  text-gray-500 border border-gray-300 rounded-full p-3 ' } />
+
             </button>
           </>
         )}
