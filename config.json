@@ -7,6 +7,7 @@
     "type": "instruct",
     "context_length": 131072,
     "baseline_id": "gpt-oss-base",
+    "model_fqdn": "example_baseline.tdops.net",
     "price": {
       "currency": "USD",
       "input_per_million_tokens": 0.1,
@@ -21,6 +22,7 @@
         "accuracy_vs_baseline": [
           { "benchmark": "SWE-Bench-Verified", "baseline": 82.6, "optimized": 81.5 }
         ],
+        "model_fqdn": "example_coding.tdops.net",
         "price": {
             "currency": "USD",
             "input_per_million_tokens": 0.03,
@@ -35,6 +37,7 @@
         "accuracy_vs_baseline": [
           { "benchmark": "Math500", "baseline": 95.2, "optimized": 95.0 }
         ],
+        "model_fqdn": "example_reasoning.tdops.net",
         "price": {
             "currency": "USD",
             "input_per_million_tokens": 0.03,

@@ -1,11 +1,12 @@
 """
 Mock Inference API Demo
-Implements the /api/v1/status and /api/v1/generate endpoints
+Implements the /api/v1/status, /api/v1/generate, and /api/models endpoints
 that the Flask app expects, returning sample data in the correct format.
 """
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 import json
 import time
+import os
 
 # CORS headers for allowing cross-origin requests
 CORS_HEADERS = {
@@ -27,6 +28,38 @@ SAMPLE_RESPONSES = [
     "This demonstrates the streaming behavior ",
     "without requiring a real model."
 ]
+
+
+@app.route('/api/models', methods=['GET'])
+def get_models():
+    """
+    Returns the models configuration from config.json.
+    This endpoint matches the backend Flask app's /api/models endpoint.
+    """
+    try:
+        # Try to load config.json from the same directory
+        config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                models = json.load(f)
+
+            return jsonify({
+                'status': 'success',
+                'models': models
+            }), 200, CORS_HEADERS
+        else:
+            # Return empty models if config.json doesn't exist
+            return jsonify({
+                'status': 'success',
+                'models': []
+            }), 200, CORS_HEADERS
+
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500, CORS_HEADERS
 
 
 @app.route('/api/v1/status', methods=['GET'])
@@ -99,7 +132,7 @@ def generate():
         return response, 200, CORS_HEADERS
 
 
-def generate_stream(prompt, max_tokens, temperature):
+def generate_stream(prompt, max_tokens, temperature, model_fqdn):
     """
     Generator function that yields JSON objects line by line.
     Each line contains: {"text": "content", "tokens_so_far": N}
@@ -144,6 +177,7 @@ def generate_stream(prompt, max_tokens, temperature):
 if __name__ == '__main__':
     print("🚀 Starting Mock Inference API Demo")
     print("📍 Endpoints:")
+    print("   GET  http://localhost:8000/api/models")
     print("   GET  http://localhost:8000/api/v1/status")
     print("   POST http://localhost:8000/api/v1/generate")
     print("\n✨ Ready to receive requests from Flask app!")
