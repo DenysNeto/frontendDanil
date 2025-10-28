@@ -66,7 +66,14 @@ export default function ModelInfoPage() {
     }
   }, [selectedModel, navigate]);
 
-  console.log("SELE", selectedModel)
+  function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
+
+
     let m_id = location.pathname.split('/')[2]
     let m_index =  models.findIndex(s=>s.id==m_id)
     if(index != m_index) setSelectedIndex(m_index)
@@ -137,7 +144,7 @@ export default function ModelInfoPage() {
                       <div className="">
                                          
                            
-                        <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={model.description} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
+                        <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
                 
                                   
                       <div className="pb-20"></div>
@@ -158,10 +165,12 @@ export default function ModelInfoPage() {
                        
                       </div>
                       
-
-                         <ViewTitle  subtitle={"FAQ"} align={'left'} />
+                      {selectedModel?.faq && <>
+                       <ViewTitle  subtitle={"FAQ"} align={'left'} />
                          
                         <Accordion data={selectedModel.faq} />
+                      </>}
+                        
                         
                       <div className="pb-20"></div>
                         <ScrollButton toTop={true}/>
@@ -187,7 +196,7 @@ export default function ModelInfoPage() {
                               return (
                                 <li key={index} className={`py-4 ${index+1!=sideList.length  && "border-b-2 border-gray-300"} ${item.largeFont ? 'flex flex-col' : 'flex items-center'}`}>
                                   <div className={`${item.largeFont ? 'flex items-center mb-2' : 'flex flex-row items-center justify-center'}`}>
-                                    <div className="hover:border-black hover:border-1 p-3 bg-white rounded-full flex flex-row items-center justify-center">
+                                    <div className="p-3 bg-white rounded-full flex flex-row items-center justify-center">
                                     <Icon size="small" name={item.icon}/>
                                     </div>
                                     <span className={` text-md px-4 ${item.largeFont ? 'py-0' : 'py-2'}`}>
@@ -198,7 +207,7 @@ export default function ModelInfoPage() {
                                     {item.largeFont ? (
                                       <>
                                         <span className="text-[18px]">$</span>
-                                        <span>0.3</span>
+                                        <span>{selectedModel.price.input_per_million_tokens}</span>
                                       </>
                                     ) : (
                                       item.value

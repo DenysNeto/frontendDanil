@@ -23,7 +23,7 @@ export default function ModelsPage() {
                               backButton={false}
                               title={'Select a Model'} 
                               titleSize={
-                                7
+                                6
                               }
             >
 

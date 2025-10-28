@@ -22,7 +22,7 @@ export default function ModelBenchmarkPage() {
 
   const hasSelectedModel = selectedModel ? true:false
 
-  const benchmarks = selectedModel && selectedModel['sub-models'] ? selectedModel['sub-models'].map((e)=>{
+  const benchmarks = selectedModel && selectedModel['derivatives'] ? selectedModel['derivatives'].map((e)=>{
     return {
       title:e.title,
       img: pickRandom(images)
@@ -31,7 +31,7 @@ export default function ModelBenchmarkPage() {
 
   function onSelectBenchmark(val){
 
-    let subModelData = selectedModel['sub-models'].filter(m=>m.title.toLowerCase()===val.toLowerCase())[0]
+    let subModelData = selectedModel['derivatives'].filter(m=>m.title.toLowerCase()===val.toLowerCase())[0]
     
     setSelectedModelBenchmark(subModelData)
     navigate('/models/prompt')
@@ -49,12 +49,9 @@ export default function ModelBenchmarkPage() {
 
                         <ViewTitle 
                     align={"left"}
-
+                    titleSize={6}
                     backButton={true}
                     title={'Select a Benchmark'}
-                    titleSize={
-                      7
-                    }
    >
 
                     <span className="text-xl">
@@ -68,7 +65,7 @@ Choose a baseline model to benchmark. We’ll compare it against our optimized v
   
            <Template>
              {hasSelectedModel ? <ViewContent>
-                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={3}/>
+                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>3? 3 : benchmarks.length}/>
             </ViewContent> : <ModelsSelectReminder/>}
            </Template>
 

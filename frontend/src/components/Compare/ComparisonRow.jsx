@@ -9,38 +9,38 @@ let rowIcon = name?.toUpperCase() == "LIVE DATA" ? 'Wifi' : name?.toUpperCase() 
  return (
   <div
         key={name+Math.random()}
-        className={` flex text-xs border-b border-gray-50 last:border-b-0 rounded-2xl`}
+        className={` flex text-xs border-b border-gray-50 last:border-b-0   rounded-3xl `}
       >
 
 
 
-<div className="w-[18%] w-[250px] flex flex-col gap-1 p-6 rounded-2xl">
-  <div className="flex items-center w-full text-base font-bold text-gray-800 gap-2">
-    <Icon name={rowIcon} className="w-6 h-6" />
+<div className="w-[250px] flex flex-col ">
+  <div className="flex p-6 items-center w-full text-base font-bold text-gray-800 ">
+    <Icon name={rowIcon} className="w-6 h-6 mr-2" />
     <span>{rowName}</span>
   </div>
 
   {metric?.improvement || metric?.change ? (
-    <div className="text-xs text-blue-600 font-medium">
+    <div className="text-xs p-6 text-blue-600 font-medium">
       {metric.improvement || metric.change}
     </div>
   ) : null}
 </div>
 
 
-        <div className="w-1/2 border-l p-6 border-gray-100  ">
+        <div className="flex-1 border-l p-6 border-gray-100  ">
           <div className={`${!isPrompt &&  "w-1/2" }`}>
             {metric && metric.unit ? <Metric
-            
+
                       value={metric[compareTypes[0]]}
                       unit={metric.unit}
                     /> : <span className="text-lg">{metric[compareTypes[0]]} </span>}
           </div>
-       
-        </div>
-         
 
-        <div className="w-1/2 border-l p-6  border-gray-100 ">
+        </div>
+
+
+        <div className="flex-1 border-l p-6  border-gray-100 ">
           <div className={`${!isPrompt &&  "w-1/2" }`} >
           {metric && metric.unit ? <Metric color='rgba(224, 158, 248, 1)'
                   value={metric[compareTypes[1]]}

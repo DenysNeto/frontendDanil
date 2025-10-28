@@ -53,13 +53,22 @@ export const useModelStore1 = create<ModelStore>((set, get) => ({
   selectedIndex: -1,
   selectedModelBenchmark: null,
 
-  updateModels: async (url = MODELS_URL) => {
+  updateModels: async (url = MODELS_URL,data?: Model[]) => {
     // Сброс состояния перед загрузкой
     set({ models: [], selectedModel: null, selectedIndex: -1, selectedModelBenchmark: null });
+    if(data && data.length>0){
+       set({ models:data, selectedModel: null, selectedIndex: -1, selectedModelBenchmark: null });
+   
+      return 
+    }
+    
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: Model[] = await res.json();
+      const response = await res.json()
+      
+      console.log("RESSSSs", response)
+      const data: Model[] = Array.isArray(response) ?response:response.models;
 
       const currentIndex = get().selectedIndex;
       const safeIndex = currentIndex >= 0 && currentIndex < data.length ? currentIndex : -1;

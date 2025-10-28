@@ -18,9 +18,10 @@ export default function ComparisonHeader({
   
   return (
 
-    <div className="flex  z-20 border-b border-gray-100">
-      <div className="w-[250px]  bg-tansparent flex flex-col gap-1 p-6">
+    <div className="flex w-full  z-20 border-b border-gray-100">
+      <div className="!w-[250px]   bg-tansparent flex flex-col gap-1 p-6">
         {backButton === true && <button><HiMiniArrowLeft /></button>}
+      
       </div>
 
       {headerData.map((item, index) => {
@@ -38,7 +39,9 @@ export default function ComparisonHeader({
             : null;
 
         return (
-          <div key={key} style={{marginRight:index === 0 ? "4px" : "0px"}} className="w-1/2  bg-[#297A971A] p-6 flex justify-between items-center rounded-t-2xl">
+
+
+          <div key={key}  className=" flex-1 bg-[#297A971A] p-6 flex justify-between items-center rounded-t-3xl">
             <div className="text-left">
               <span className="text-xl font-semibold text-gray-800">{item.toUpperCase()}</span>
               {pct !== null && <div className="text-sm ">- {pct}% coast savings</div>}
@@ -57,6 +60,7 @@ export default function ComparisonHeader({
               </span>
             </div>
           </div>
+
         );
       })}
     </div>

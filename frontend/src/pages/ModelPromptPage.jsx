@@ -34,15 +34,10 @@ function transformForCompare(input){
   return { id: input.id||null, title: input.title||null, price: input.price||null, compareFields, compareTypes: types };
 }
 
-// Memoize the store selector to prevent unnecessary re-renders
-const useSelectedBenchmark = () => {
-  return useModelStore1((s) => s.selectedModelBenchmark);
-};
-
 export default function ModelPromptPage() {
   const navigate = useNavigate();
-  const selectedModelBenchmark = useSelectedBenchmark();
-
+  const selectedModelBenchmark = useModelStore1((s) => s.selectedModelBenchmark);
+  const selectedModel = useModelStore1(s=>s.selectedModel)
   // Debug: Log when component re-renders (only when benchmark changes)
   const benchmarkId = selectedModelBenchmark?.id;
   console.log("🔄 ModelPromptPage re-render, benchmark:", benchmarkId || 'none');
@@ -79,8 +74,8 @@ export default function ModelPromptPage() {
   const sendPrompt = useCallback((val) => {
     if (!val.trim()) return;
     console.log("🎯 Sending prompt:", val);
-    optimizedAPI.sendPrompt(val);
-    baselineAPI.sendPrompt(val);
+    optimizedAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
+    baselineAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
     setResponsePrompt(true);
   }, [optimizedAPI, baselineAPI]);
 

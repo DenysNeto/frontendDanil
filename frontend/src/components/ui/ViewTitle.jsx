@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { HiMiniArrowLeft } from "react-icons/hi2";
 import { Button } from "./Buttons";
 import Icon from "./Icon"
+import Breadcrumbs from "../Breadcrumbs.jsx"
 export default function ViewTitle({
   title,
   titleFontSize,
@@ -44,12 +45,16 @@ const verticalAlignmentClass = {
 
 
       <div className={`${alignmentClass=="text-left" ?  '' : 'mx-auto'  } w-full `}>
-               {backButton && ( <button
+               {backButton && (<div className="flex gap-4 flex-inline mb-6">
+                 <button
             onClick={() => navigate(-1)}
-            className="mb-2 flex items-center gap-2 text-gray-700 hover:text-black transition"
+            className=" text-gray-600 hover:text-black transition "
           >
-            <Icon name={'ArrowLeft'} className={'w-7 h-7 mb-6'} />
-          </button>)}
+            <Icon name={'ArrowLeft'} className={'w-7 h-7 '} />
+          </button>
+          <Breadcrumbs/>
+                
+                </div>)}
         {uptitle && (
           <p className={`mb-3 ${uptitleSize ? `text-${uptitleSize}xl` : 'text-s'}  ${uptitleBold ? 'font-bold' : 'font-semibold '} `}
           >
