@@ -1,9 +1,25 @@
-import React from "react";
 import { Button } from "../ui/Buttons";
 
 import { FaAnglesRight } from "react-icons/fa6";
 import defaultModelImage from "../../assets/modelsImage/Model.png";
 
+// Dynamically import all images from the modelsImage folder using Vite's glob import
+const imageModules = import.meta.glob('../../assets/modelsImage/*.png', { eager: true });
+
+// Helper function to get image based on provider
+const getModelImage = (provider) => {
+  if (provider && typeof provider === "string") {
+    const lowerProvider = provider.toLowerCase();
+    // Try to find the image in the glob imports
+    const imagePath = `../../assets/modelsImage/${lowerProvider}.png`;
+
+    if (imageModules[imagePath]) {
+      return imageModules[imagePath].default;
+    }
+    console.warn(`Provider image not found for: ${provider}, using default`);
+  }
+  return defaultModelImage;
+};
 
 export default function ModelCard({
   id,
@@ -16,6 +32,7 @@ export default function ModelCard({
     output_per_million_tokens : ''
   },
   imageUrl = {},
+  provider = null,
   newModel= true,
   onSelect = ()=>{},
 }) {
@@ -24,11 +41,13 @@ export default function ModelCard({
     ? (description.length > 60 ? description.slice(0, 60) + "..." : description)
     : "";
 
+  // Get the model image based on provider from config
+  const modelImage = getModelImage(provider);
 
   return (
 
     <article onClick={() => onSelect(id)}  className="group  min-w-[17vw] min-h-[34vh] max-w-[340px] max-h-[340px] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-2 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
-    
+
       <div className=" flex w-full h-full flex-col  justify-center ">
           <div className="w-full flex justify-between mt-3 mb-3 ">
          {/* Image on top */}
@@ -41,7 +60,7 @@ export default function ModelCard({
           />
         ) : (
           <img
-          src={defaultModelImage}
+          src={modelImage}
           alt={title}
           className="w-[80px] h-[80px] object-cover"
           style={{ display: "block" }}
