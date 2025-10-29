@@ -20,11 +20,11 @@ import {Spinner} from "../components/loading/Spinner.jsx"
 
 
 export default function NewPageTemplate() {
-  const backendAPI = useInferenceAPI("http://localhost:8000/api/models")
+  const backendAPI = useInferenceAPI("http://localhost:8080/api/models")
   const updateModels = useModelStore1((s)=>s.updateModels)
   const models = useModelStore1(s=>s.models)
 useEffect(() => {
-  updateModels("http://localhost:8000/api/models")
+  updateModels("http://localhost:8080/api/models")
 
   }, [backendAPI] ); // ✅ пустой массив — вызов только один раз
 
