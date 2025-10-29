@@ -42,19 +42,15 @@ export default function useInferenceAPI(apiBaseUrl) {
     setIsStreaming(stream);
     setResponse("");
 
-    const requestData = {
-      prompt: promptText,
-      model_fqdn,
-      max_tokens: 100,
-      temperature: 0.7,
-      stream,
-    };
-
     try {
-      const res = await fetch(`${apiBaseUrl}/generate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(requestData),
+      // Use /stream endpoint with query parameters
+      const params = new URLSearchParams({
+        prompt: promptText,
+        model: model_fqdn
+      });
+
+      const res = await fetch(`${apiBaseUrl}/stream?${params.toString()}`, {
+        method: "GET"
       });
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
@@ -75,8 +71,17 @@ export default function useInferenceAPI(apiBaseUrl) {
           for (const line of lines) {
             if (line.trim()) {
               try {
-                const data = JSON.parse(line);
-                if (data.text) setResponse((prev) => prev + data.text);
+                // Skip "data: " prefix if present
+                const jsonStr = line.startsWith('data: ') ? line.slice(6) : line;
+                const data = JSON.parse(jsonStr);
+
+                // Handle different message types from backend
+                if (data.type === 'token' && data.content) {
+                  setResponse((prev) => prev + data.content);
+                } else if (data.type === 'error') {
+                  console.error("Stream error:", data.message);
+                  setResponse((prev) => prev + `\n[Error: ${data.message}]`);
+                }
               } catch (err) {
                 console.error("Error parsing stream chunk:", err);
               }

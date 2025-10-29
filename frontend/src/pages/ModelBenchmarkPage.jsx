@@ -32,10 +32,16 @@ export default function ModelBenchmarkPage() {
   function onSelectBenchmark(val){
 
     let subModelData = selectedModel['derivatives'].filter(m=>m.title.toLowerCase()===val.toLowerCase())[0]
-    
-    setSelectedModelBenchmark(subModelData)
+
+    // Add baseline_model_fqdn from parent model and rename model_fqdn to optimized_model_fqdn
+    const enhancedData = {
+      ...subModelData,
+      baseline_model_fqdn: selectedModel.baseline_model_fqdn || selectedModel.model_fqdn,
+      optimized_model_fqdn: subModelData.model_fqdn
+    }
+
+    setSelectedModelBenchmark(enhancedData)
     navigate('/models/prompt')
-    console.log("subModelData",subModelData)
   }
 
 

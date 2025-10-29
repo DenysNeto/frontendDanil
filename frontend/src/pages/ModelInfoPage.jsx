@@ -68,7 +68,7 @@ export default function ModelInfoPage() {
         "messages": [
             {
                 "role": "user",
-                "content": “Where can I find the best viewpoints in Tokyo?”
+                "content": "Where can I find the best viewpoints in Tokyo?"
             }
         ]
 }'` : '';

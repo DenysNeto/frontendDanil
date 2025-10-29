@@ -8,12 +8,6 @@ const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPro
   const dataRows = data?.compareFields ? data.compareFields : data;
   const price = data?.price;
 
-  console.log("SSS" , data)
-  // Only log when data changes (using JSON stringify to compare deep equality)
-  React.useEffect(() => {
-    console.log("📊 ComparisonContainer data changed:", data?.id || 'no-id', "has compareFields:", !!data?.compareFields, "data keys:", Object.keys(data || {}), "dataRows keys:", Object.keys(dataRows || {}));
-  }, [JSON.stringify(data)]);
-
   // If no data to display, show a message
   if (!dataRows || Object.keys(dataRows).length === 0) {
     return (
@@ -33,11 +27,12 @@ const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPro
     <ComparisonHeader headerData={data?.compareTypes} price={price} />
 
     <div className="border-t border-gray-100 flex flex-col ">
-      {/* Define display order: Latency, Throughput, Accuracy */}
+      {/* Define display order: Latency, Throughput, Accuracy, Live Data */}
     {[
       ['latency', dataRows?.latency],
       ['throughput', dataRows?.throughput],
-      ['accuracy', dataRows?.accuracy]
+      ['accuracy', dataRows?.accuracy],
+      ['Live Data', dataRows?.['Live Data']]
     ]
       .filter(([, value]) => value) // Only show metrics that exist
       .map(([metricName, metricObj], index) => (

@@ -34,7 +34,7 @@ let rowIcon = name?.toUpperCase() == "LIVE DATA" ? 'Wifi' : name?.toUpperCase() 
 
                       value={metric[compareTypes[0]]}
                       unit={metric.unit}
-                    /> : <span className="text-lg">{metric[compareTypes[0]]} </span>}
+                    /> : <span className="text-lg [&>*]:m-0">{metric[compareTypes[0]]} </span>}
           </div>
 
         </div>
@@ -45,7 +45,7 @@ let rowIcon = name?.toUpperCase() == "LIVE DATA" ? 'Wifi' : name?.toUpperCase() 
           {metric && metric.unit ? <Metric color='rgba(224, 158, 248, 1)'
                   value={metric[compareTypes[1]]}
             unit={metric.unit}
-          /> : <span className="p-6 text-lg">{metric[compareTypes[1]]} </span>}
+          /> : <span className="text-lg [&>*]:m-0">{metric[compareTypes[1]]} </span>}
           </div>
 
         </div>
