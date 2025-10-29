@@ -106,11 +106,12 @@ def generate():
     max_tokens = data.get('max_tokens', 100)
     temperature = data.get('temperature', 0.7)
     stream = data.get('stream', False)
-
+    model_fqdn = data.get('model_fqdn', '')
+    print("model_fqdn", model_fqdn)
     if stream:
         # Return streaming response
         response = Response(
-            generate_stream(prompt, max_tokens, temperature),
+            generate_stream(prompt, max_tokens, temperature,model_fqdn),
             content_type='application/json',
             headers={
                 'Cache-Control': 'no-cache',

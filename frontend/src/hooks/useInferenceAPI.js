@@ -5,9 +5,26 @@ export default function useInferenceAPI(apiBaseUrl) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [engineStatus, setEngineStatus] = useState(null);
+  const [allModels, setAllModels] = useState([])
+
+
+
+  const getModels = useCallback(async () => {
+    try {
+      const res = await fetch(`${apiBaseUrl}/api/models`);
+      const data = await res.json();
+      setAllModels(data.models);
+      return allModels;
+    } catch (error) {
+      setAllModels({ error: error.message });
+      throw error;
+    }
+  }, [apiBaseUrl]);
 
   const checkEngineStatus = useCallback(async () => {
     try {
+        // model data - s3
+        //model_fqdn
       const res = await fetch(`${apiBaseUrl}/status`);
       const data = await res.json();
       setEngineStatus(data);
@@ -18,8 +35,7 @@ export default function useInferenceAPI(apiBaseUrl) {
     }
   }, [apiBaseUrl]);
 
-  const sendPrompt = useCallback(async (promptText, stream = true) => {
-    console.log("INSIDE PROMPT", promptText)
+  const sendPrompt = useCallback(async (promptText,model_fqdn, stream = true) => {
     if (!promptText.trim()) return;
 
     setIsLoading(true);
@@ -28,6 +44,7 @@ export default function useInferenceAPI(apiBaseUrl) {
 
     const requestData = {
       prompt: promptText,
+      model_fqdn,
       max_tokens: 100,
       temperature: 0.7,
       stream,
@@ -80,6 +97,8 @@ export default function useInferenceAPI(apiBaseUrl) {
 
   // Memoize the return object to prevent re-renders
   return React.useMemo(() => ({
+    allModels,
+    getModels,
     response,
     isStreaming,
     isLoading,

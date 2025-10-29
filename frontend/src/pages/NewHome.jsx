@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect } from "react";
 import ViewTitle from "../components/ui/ViewTitle.jsx";
 import ViewContent from "../components/ui/ViewContent.jsx";
 import AppFooter from "../components/ui/AppFooter.jsx"
@@ -11,15 +11,33 @@ import {Button} from "../components/ui/Buttons.jsx"
 import BlockCTA from "../components/ui/BlockCTA.jsx";
 import {PageEnterAnimation} from "../components/Animation.jsx"
 import { motion } from "framer-motion";
+import useInferenceAPI from "../hooks/useInferenceAPI.js";
+import { useModelStore1 } from "../store/useModelStore1.js";
+import {Spinner} from "../components/loading/Spinner.jsx"
+
+
+
+
 
 export default function NewPageTemplate() {
+  const backendAPI = useInferenceAPI("http://localhost:8080/api/models")
+  const updateModels = useModelStore1((s)=>s.updateModels)
+  const models = useModelStore1(s=>s.models)
+useEffect(() => {
+  updateModels("http://localhost:8080/api/models")
+
+  }, [backendAPI] ); // ✅ пустой массив — вызов только один раз
+
     const templateType = "action"
 
   return (
-    <PageEnterAnimation>
+<div className="min-h-[100vh]">
+
+    { models.length==0 ? <Spinner  withText={true} className="flex class  justify-center w-full mt-[10%] "/> :
+   (<PageEnterAnimation>
 
 <div className={`min-h-screen overflow-hidden mt-10 `}>
-   
+  
 
 <motion.img
   src="/bg/variant5.svg"
@@ -105,9 +123,8 @@ export default function NewPageTemplate() {
 
     <Template type={templateType} bgActive={true}> 
        <ViewTitle
-           uptitleSize = "2"
             uptitle="BENCHMARK TASKS"
-            titleSize="7"
+            titleSize={6}
             uptitleBold={false}
             title='All capabilities needed'
             desc={`From experimentation to production, Fireworks provides the platform to build your \nGenerative AI capabilities - optimized and at scale`}
@@ -146,6 +163,9 @@ export default function NewPageTemplate() {
 
 </div>
     </PageEnterAnimation>
+  )}
 
+  </div>
   );
+
 }

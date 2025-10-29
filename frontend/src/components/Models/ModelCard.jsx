@@ -1,9 +1,25 @@
-import React from "react";
 import { Button } from "../ui/Buttons";
 
 import { FaAnglesRight } from "react-icons/fa6";
 import defaultModelImage from "../../assets/modelsImage/Model.png";
 
+// Dynamically import all images from the modelsImage folder using Vite's glob import
+const imageModules = import.meta.glob('../../assets/modelsImage/*.png', { eager: true });
+
+// Helper function to get image based on provider
+const getModelImage = (provider) => {
+  if (provider && typeof provider === "string") {
+    const lowerProvider = provider.toLowerCase();
+    // Try to find the image in the glob imports
+    const imagePath = `../../assets/modelsImage/${lowerProvider}.png`;
+
+    if (imageModules[imagePath]) {
+      return imageModules[imagePath].default;
+    }
+    console.warn(`Provider image not found for: ${provider}, using default`);
+  }
+  return defaultModelImage;
+};
 
 export default function ModelCard({
   id,
@@ -16,7 +32,8 @@ export default function ModelCard({
     output_per_million_tokens : ''
   },
   imageUrl = {},
-  newModel= false,
+  provider = null,
+  newModel= true,
   onSelect = ()=>{},
 }) {
 
@@ -24,11 +41,13 @@ export default function ModelCard({
     ? (description.length > 60 ? description.slice(0, 60) + "..." : description)
     : "";
 
+  // Get the model image based on provider from config
+  const modelImage = getModelImage(provider);
 
   return (
 
-    <article onClick={() => onSelect(id)}  className="group  min-w-[13vw] min-h-[34vh] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-2 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
-    
+    <article onClick={() => onSelect(id)}  className="group  min-w-[17vw] min-h-[34vh] max-w-[340px] max-h-[340px] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-2 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
+
       <div className=" flex w-full h-full flex-col  justify-center ">
           <div className="w-full flex justify-between mt-3 mb-3 ">
          {/* Image on top */}
@@ -41,15 +60,15 @@ export default function ModelCard({
           />
         ) : (
           <img
-          src={defaultModelImage}
+          src={modelImage}
           alt={title}
-          className="w-10 h-10 object-cover"
+          className="w-[80px] h-[80px] object-cover"
           style={{ display: "block" }}
         />
         )}
          <div className="flex items-top gap-2 flex-shrink-0">
             {newModel && ( 
-              <span className="inline-flex h-1/2 items-center p-2 px-4 text-xs font-semibold bg-gray-100 text-gray-700 rounded-full">
+              <span className="inline-flex h-1/2 items-center p-2 px-4 text-xs font-bold bg-[#297A971A] text-gray-800 rounded-full">
                   New
                 </span>
             )}
@@ -60,7 +79,7 @@ export default function ModelCard({
       {/* Body */}
       <div className="mb-4">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-900 truncate" title={title}>
+          <h2 className="text-xl font-semibold text-gray-900 truncate" title={title}>
             {title}
           </h2>
         </div>
@@ -82,7 +101,7 @@ export default function ModelCard({
 
 
             {(price && price.currency !="") && <>
-              <span className="w-2 h-2 rounded-full bg-[#2E8CFF] inline-block" aria-hidden="true" />
+              <span className="w-2 h-2 mx-2 rounded-full bg-[#2E8CFF] inline-block" aria-hidden="true" />
 
             <p className="truncate">
 

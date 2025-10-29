@@ -28,12 +28,19 @@ const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPro
   return (
     <>
  
-  <div className="w-full mx-auto max-h-[60vh] bg-transparent rounded-2xl shadow-[0_10px_20px_rgba(199,233,255,0.3)] !bg-white z-20 ">
+  <div className="w-full mx-auto bg-transparent rounded-3xl shadow-[0_10px_20px_rgba(199,233,255,0.3)] !bg-white z-20 ">
 
     <ComparisonHeader headerData={data?.compareTypes} price={price} />
 
     <div className="border-t border-gray-100 flex flex-col ">
-      {Object.entries(dataRows).map(([metricName, metricObj], index) => (
+      {/* Define display order: Latency, Throughput, Accuracy */}
+    {[
+      ['latency', dataRows?.latency],
+      ['throughput', dataRows?.throughput],
+      ['accuracy', dataRows?.accuracy]
+    ]
+      .filter(([, value]) => value) // Only show metrics that exist
+      .map(([metricName, metricObj], index) => (
         <ComparisonRow
           key={metricName + index}
           name={metricName}
