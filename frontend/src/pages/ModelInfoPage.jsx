@@ -42,18 +42,6 @@ let tabs = [
    {label:"PYTHON", value : "PYTHON"},
     {label:"TYPESCRIPT", value : "TYPESCRIPT"}
 ]
-  const code_example = `curl -X POST "https://api.together.xyz/v1/chat/completions" \\
-    -H "Authorization: Bearer $TOGETHER_API_KEY" \\
-    -H "Content-Type: application/json" \\
-    -d '{
-        "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
-        "messages": [
-            {
-                "role": "user",
-                "content": "What are some fun things to do in New York?"
-            }
-        ]
-}'`
 
 
 
@@ -70,6 +58,20 @@ export default function ModelInfoPage() {
   const location = useLocation();
 
    const [copied, setCopied] = useState(false);
+
+  // Generate dynamic code example based on selected model
+  const code_example = selectedModel ? `curl -X POST "https://${selectedModel.baseline_model_fqdn}/v1/chat/completions" \\
+    -H "Authorization: Bearer $TWODELTA_API_KEY" \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "model": "${selectedModel.provider}/${selectedModel.id}",
+        "messages": [
+            {
+                "role": "user",
+                "content": “Where can I find the best viewpoints in Tokyo?”
+            }
+        ]
+}'` : '';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code_example);
