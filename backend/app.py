@@ -189,10 +189,10 @@ def health_check():
 @app.route('/stream', methods=['GET'])
 def stream():
     prompt = request.args.get('prompt', '')
-    max_tokens = int(request.args.get('max_tokens'))
-    temperature = float(request.args.get('temperature'))
+    max_tokens = int(request.args.get('max_tokens', 100))  # Default: 100 tokens
+    temperature = float(request.args.get('temperature', 0.7))  # Default: 0.7
     model_fqdn = request.args.get('model', 'localhost:8000')  # Default to local FastAPI
-    
+
     if not prompt:
         return Response('data: {"error": "No prompt provided"}\n\n', content_type='text/event-stream')
     
