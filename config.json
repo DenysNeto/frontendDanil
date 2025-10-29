@@ -7,7 +7,33 @@
     "type": "instruct",
     "context_length": 131072,
     "baseline_id": "gpt-oss-base",
-    "model_fqdn": "example_baseline.tdops.net",
+    "faq": [
+      {
+        "title": "Application & Use Cases",
+        "body": "GPT-OSS is a versatile model suitable for a wide range of tasks including content generation, software development assistance, data analysis, summarization, and general-purpose reasoning. Its balanced optimization makes it ideal for both research and production applications that require cost efficiency and adaptability."
+      },
+      {
+        "title": "Model Architecture",
+        "body": "The GPT-OSS-20B model is based on a 20-billion parameter transformer architecture trained on diverse open datasets. It features optimized attention mechanisms to support long-context understanding up to 131,072 tokens."
+      },
+      {
+        "title": "Performance & Optimization",
+        "body": "The model achieves strong performance across reasoning and coding benchmarks, with reduced latency and improved throughput when optimized. Sub-models such as 'Coding' and 'Reasoning' are fine-tuned for specific workloads to deliver superior efficiency and task accuracy."
+      },
+      {
+        "title": "Integration & Compatibility",
+        "body": "Developers can integrate GPT-OSS via standard OpenAI-compatible APIs. It supports both CPU and GPU environments and can be deployed in self-hosted or managed cloud environments. The API provides flexible input/output token pricing for scalable workloads."
+      },
+      {
+        "title": "Licensing & Open Source",
+        "body": "GPT-OSS-20B is open source under a permissive license, enabling modification, redistribution, and self-hosted deployment. Users are encouraged to review the specific license terms for compliance before integration into commercial applications."
+      },
+      {
+        "title": "Limitations & Responsible Use",
+        "body": "While GPT-OSS-20B is optimized for instruction-following and factual accuracy, it can still produce incorrect or biased outputs. It should not be used for high-stakes or safety-critical applications without human oversight and verification mechanisms."
+      }
+    ],
+    "baseline_model_fqdn": "example_baseline.tdops.net",
     "price": {
       "currency": "USD",
       "input_per_million_tokens": 0.1,
@@ -24,9 +50,9 @@
         ],
         "model_fqdn": "example_coding.tdops.net",
         "price": {
-            "currency": "USD",
-            "input_per_million_tokens": 0.03,
-            "output_per_million_tokens": 0.08
+          "currency": "USD",
+          "input_per_million_tokens": 0.03,
+          "output_per_million_tokens": 0.08
         }
       },
       {
@@ -39,9 +65,155 @@
         ],
         "model_fqdn": "example_reasoning.tdops.net",
         "price": {
-            "currency": "USD",
-            "input_per_million_tokens": 0.03,
-            "output_per_million_tokens": 0.08
+          "currency": "USD",
+          "input_per_million_tokens": 0.03,
+          "output_per_million_tokens": 0.08
+        }
+      }
+    ]
+  },
+  {
+    "id": "gpt-oss-120b",
+    "title": "OpenAI gpt-oss-120b",
+    "description": "versatile open-source language model optimized for balanced performance across reasoning, writing, and instruction-following tasks.",
+    "provider": "OpenAI",
+    "type": "instruct",
+    "context_length": 131072,
+    "baseline_id": "gpt-oss-base",
+    "faq": [
+      {
+        "title": "Application & Use Cases",
+        "body": "GPT-OSS is a versatile model suitable for a wide range of tasks including content generation, software development assistance, data analysis, summarization, and general-purpose reasoning. Its balanced optimization makes it ideal for both research and production applications that require cost efficiency and adaptability."
+      },
+      {
+        "title": "Model Architecture",
+        "body": "The GPT-OSS-20B model is based on a 20-billion parameter transformer architecture trained on diverse open datasets. It features optimized attention mechanisms to support long-context understanding up to 131,072 tokens."
+      },
+      {
+        "title": "Performance & Optimization",
+        "body": "The model achieves strong performance across reasoning and coding benchmarks, with reduced latency and improved throughput when optimized. Sub-models such as 'Coding' and 'Reasoning' are fine-tuned for specific workloads to deliver superior efficiency and task accuracy."
+      },
+      {
+        "title": "Integration & Compatibility",
+        "body": "Developers can integrate GPT-OSS via standard OpenAI-compatible APIs. It supports both CPU and GPU environments and can be deployed in self-hosted or managed cloud environments. The API provides flexible input/output token pricing for scalable workloads."
+      },
+      {
+        "title": "Licensing & Open Source",
+        "body": "GPT-OSS-20B is open source under a permissive license, enabling modification, redistribution, and self-hosted deployment. Users are encouraged to review the specific license terms for compliance before integration into commercial applications."
+      },
+      {
+        "title": "Limitations & Responsible Use",
+        "body": "While GPT-OSS-20B is optimized for instruction-following and factual accuracy, it can still produce incorrect or biased outputs. It should not be used for high-stakes or safety-critical applications without human oversight and verification mechanisms."
+      }
+    ],
+    "baseline_model_fqdn": "example_baseline.tdops.net",
+    "price": {
+      "currency": "USD",
+      "input_per_million_tokens": 0.1,
+      "output_per_million_tokens": 0.2
+    },
+    "derivatives": [
+      {
+        "id": "gpt-oss-120b-coding",
+        "title": "Coding",
+        "latency_ms": { "baseline": 1224, "optimized": 758 },
+        "throughput_tps": { "baseline": 32, "optimized": 167 },
+        "accuracy_vs_baseline": [
+          { "benchmark": "SWE-Bench-Verified", "baseline": 86.4, "optimized": 85.8 }
+        ],
+        "model_fqdn": "example_coding.tdops.net",
+        "price": {
+          "currency": "USD",
+          "input_per_million_tokens": 0.05,
+          "output_per_million_tokens": 0.12
+        }
+      },
+      {
+        "id": "gpt-oss-120b-reasoning",
+        "title": "Reasoning",
+        "latency_ms": { "baseline": 1112, "optimized": 642 },
+        "throughput_tps": { "baseline": 33, "optimized": 123 },
+        "accuracy_vs_baseline": [
+          { "benchmark": "Math500", "baseline": 98.5, "optimized": 98.0 }
+        ],
+        "model_fqdn": "example_reasoning.tdops.net",
+        "price": {
+          "currency": "USD",
+          "input_per_million_tokens": 0.05,
+          "output_per_million_tokens": 0.12
+        }
+      }
+    ]
+  },
+  {
+    "id": "deepseek-r1",
+    "title": "DeepSeek R1",
+    "description": "high-performance open-weight reasoning model designed for advanced logical tasks, coding, and multi-step problem solving.",
+    "provider": "DeepSeek",
+    "type": "reasoning",
+    "context_length": 131072,
+    "baseline_id": "deepseek-base",
+    "faq": [
+      {
+        "title": "Application & Use Cases",
+        "body": "GPT-OSS is a versatile model suitable for a wide range of tasks including content generation, software development assistance, data analysis, summarization, and general-purpose reasoning. Its balanced optimization makes it ideal for both research and production applications that require cost efficiency and adaptability."
+      },
+      {
+        "title": "Model Architecture",
+        "body": "The GPT-OSS-20B model is based on a 20-billion parameter transformer architecture trained on diverse open datasets. It features optimized attention mechanisms to support long-context understanding up to 131,072 tokens."
+      },
+      {
+        "title": "Performance & Optimization",
+        "body": "The model achieves strong performance across reasoning and coding benchmarks, with reduced latency and improved throughput when optimized. Sub-models such as 'Coding' and 'Reasoning' are fine-tuned for specific workloads to deliver superior efficiency and task accuracy."
+      },
+      {
+        "title": "Integration & Compatibility",
+        "body": "Developers can integrate GPT-OSS via standard OpenAI-compatible APIs. It supports both CPU and GPU environments and can be deployed in self-hosted or managed cloud environments. The API provides flexible input/output token pricing for scalable workloads."
+      },
+      {
+        "title": "Licensing & Open Source",
+        "body": "GPT-OSS-20B is open source under a permissive license, enabling modification, redistribution, and self-hosted deployment. Users are encouraged to review the specific license terms for compliance before integration into commercial applications."
+      },
+      {
+        "title": "Limitations & Responsible Use",
+        "body": "While GPT-OSS-20B is optimized for instruction-following and factual accuracy, it can still produce incorrect or biased outputs. It should not be used for high-stakes or safety-critical applications without human oversight and verification mechanisms."
+      }
+    ],
+    "baseline_model_fqdn": "deepseek_r1.tdops.net",
+    "price": {
+      "currency": "USD",
+      "input_per_million_tokens": 0.06,
+      "output_per_million_tokens": 0.12
+    },
+    "derivatives": [
+      {
+        "id": "deepseek-r1-coding",
+        "title": "Coding",
+        "latency_ms": { "baseline": 980, "optimized": 540 },
+        "throughput_tps": { "baseline": 40, "optimized": 140 },
+        "accuracy_vs_baseline": [
+          { "benchmark": "SWE-Bench-Verified", "baseline": 87.2, "optimized": 86.9 }
+        ],
+        "model_fqdn": "deepseek_r1_coding.tdops.net",
+        "price": {
+          "currency": "USD",
+          "input_per_million_tokens": 0.04,
+          "output_per_million_tokens": 0.10
+        }
+      },
+      {
+        "id": "deepseek-r1-reasoning",
+        "title": "Reasoning",
+        "latency_ms": { "baseline": 910, "optimized": 500 },
+        "throughput_tps": { "baseline": 42, "optimized": 155 },
+        "accuracy_vs_baseline": [
+          { "benchmark": "Math500", "baseline": 99.1, "optimized": 98.8 }
+        ],
+        "model_fqdn": "deepseek_r1_reasoning.tdops.net",
+        "price": {
+          "currency": "USD",
+          "input_per_million_tokens": 0.04,
+          "output_per_million_tokens": 0.10
         }
       }
     ]
