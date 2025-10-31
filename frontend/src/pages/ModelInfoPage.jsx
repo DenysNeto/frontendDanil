@@ -17,24 +17,6 @@ import { LuCopy } from "react-icons/lu";
 import Tabs from "../components/ui/Tabs.jsx";
 import defaultModelImage from "../assets/modelsImage/Model.png";
 
-// Dynamically import all images from the modelsImage folder using Vite's glob import
-const imageModules = import.meta.glob('../assets/modelsImage/*.png', { eager: true });
-
-// Helper function to get image based on provider
-const getModelImage = (provider) => {
-  if (provider && typeof provider === "string") {
-    const lowerProvider = provider.toLowerCase();
-    // Try to find the image in the glob imports
-    const imagePath = `../assets/modelsImage/${lowerProvider}.png`;
-
-    if (imageModules[imagePath]) {
-      return imageModules[imagePath].default;
-    }
-    console.warn(`Provider image not found for: ${provider}, using default`);
-  }
-  return defaultModelImage;
-};
-
 
 
 let tabs = [
@@ -42,6 +24,18 @@ let tabs = [
    {label:"PYTHON", value : "PYTHON"},
     {label:"TYPESCRIPT", value : "TYPESCRIPT"}
 ]
+  const code_example = `curl -X POST "https://api.together.xyz/v1/chat/completions" \\
+    -H "Authorization: Bearer $TOGETHER_API_KEY" \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
+        "messages": [
+            {
+                "role": "user",
+                "content": "What are some fun things to do in New York?"
+            }
+        ]
+}'`
 
 
 
@@ -58,20 +52,6 @@ export default function ModelInfoPage() {
   const location = useLocation();
 
    const [copied, setCopied] = useState(false);
-
-  // Generate dynamic code example based on selected model
-  const code_example = selectedModel ? `curl -X POST "https://${selectedModel.baseline_model_fqdn}/v1/chat/completions" \\
-    -H "Authorization: Bearer $TWODELTA_API_KEY" \\
-    -H "Content-Type: application/json" \\
-    -d '{
-        "model": "${selectedModel.provider}/${selectedModel.id}",
-        "messages": [
-            {
-                "role": "user",
-                "content": "Where can I find the best viewpoints in Tokyo?"
-            }
-        ]
-}'` : '';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code_example);
@@ -163,11 +143,12 @@ export default function ModelInfoPage() {
                     
                       <div className="">
                                          
-                           
-                        <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
-                
+                        <div className={'h-[400px]'} >
+                          <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/> 
+                        </div>   
+                       
                                   
-                      <div className="pb-20"></div>
+                      
                       
 
                         <div className="flex justify-between">
@@ -197,14 +178,16 @@ export default function ModelInfoPage() {
                         
                       </div>
 
-                      <div className="flex flex-col">
+                      <div className="flex flex-col ">
 
-                        <div className=" bg-white shadow-[0_0_50px_#C3E6FF99] rounded-full h-50 w-50 p-10 mb-30 ml-auto">
-                             <img
-                              src={model.imageUrl || getModelImage(model.provider)}
-                              className={`mx-auto ${!model.imageUrl && ""} `}
+                        <div className="h-[400px]    ml-auto">
+                    
+                              <img
+                              src={model.imageUrl || defaultModelImage}
+                              className={`mx-auto ${!model.imageUrl && ""} bg-white  h-50 w-50 p-6 shadow-[0_0_50px_#C3E6FF99] rounded-full`}
                               alt="Model preview"
                             />
+                    
                         </div>
                             
 

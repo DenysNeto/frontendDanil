@@ -40,12 +40,10 @@ export default function ModelPromptPage() {
   const selectedModel = useModelStore1(s=>s.selectedModel)
   // Debug: Log when component re-renders (only when benchmark changes)
   const benchmarkId = selectedModelBenchmark?.id;
-  console.log("🔄 ModelPromptPage re-render, benchmark:", benchmarkId || 'none');
 
   // Use hooks directly, not in useState
-  // Use empty string as base URL since we're calling the Flask backend's /generate endpoint
-  const optimizedAPI = useInferenceAPI("");
-  const baselineAPI = useInferenceAPI("");
+  const optimizedAPI = useInferenceAPI("http://localhost:8000/api/v1");
+  const baselineAPI = useInferenceAPI("http://localhost:8000/api/v1");
 
   // Memoize the transformed data to prevent unnecessary recalculations
   const compareData = useMemo(() => {
@@ -74,28 +72,30 @@ export default function ModelPromptPage() {
   // Memoize sendPrompt function to prevent recreation
   const sendPrompt = useCallback((val) => {
     if (!val.trim()) return;
-    optimizedAPI.sendPrompt(val, selectedModelBenchmark.optimized_model_fqdn);
-    baselineAPI.sendPrompt(val, selectedModelBenchmark.baseline_model_fqdn);
+    console.log("🎯 Sending prompt:", val);
+    optimizedAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
+    baselineAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
     setResponsePrompt(true);
-  }, [optimizedAPI, baselineAPI, selectedModelBenchmark]);
+  }, [optimizedAPI, baselineAPI]);
 
   // Scroll to bottom when responses update - use more stable dependencies
   useEffect(() => {
     if (responsePrompt && (optimizedAPI.response || baselineAPI.response)) {
+      console.log("✅ Optimized response:", optimizedAPI.response);
+      console.log("✅ Baseline response:", baselineAPI.response);
       scrollToBottom();
     }
   }, [optimizedAPI.response, baselineAPI.response, responsePrompt, scrollToBottom]);
 
   // Memoize the response data to prevent recreation of objects passed to components
   const responseData = useMemo(() => {
-    if (!responsePrompt) return null;
-    if (!optimizedAPI.response && !baselineAPI.response) return null;
+    if (!responsePrompt || !optimizedAPI.response || !baselineAPI.response) return null;
 
     return {
       compareFields: {
         "Live Data": {
-          "optimized": optimizedAPI.response || "Loading...",
-          "baseline": baselineAPI.response || "Loading..."
+          "optimized": optimizedAPI.response,
+          "baseline": baselineAPI.response
         }
       },
       compareTypes: ["optimized", "baseline"]
@@ -106,7 +106,7 @@ export default function ModelPromptPage() {
 return (
   <div className="text-black h-full">
     <Template type="action">
-      <ViewTitle  title="Model Demo" titleSize="6" align="left" backButton={true} />
+      <ViewTitle title={`${selectedModel.title.toUpperCase()} - ${selectedModelBenchmark.title} Benchmark`} titleSize="6" align="left" backButton={true} />
 
 
       <ViewContent> 

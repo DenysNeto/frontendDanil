@@ -11,7 +11,7 @@ function Tab({data,isActive, onTabClick}){
       }`}
     >
       <span
-        class="text-md transition-all duration-300 hover:font-bold hover:bg-gradient-to-r hover:from-purple-400 hover:via-blue-500 hover:to-pink-400 hover:bg-clip-text hover:text-transparent"
+        class="text-md transition-all duration-300 hover:font-semibold hover:text-[#2E8CFF]"
       >
 
 

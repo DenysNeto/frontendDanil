@@ -3,7 +3,7 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import { FaDesktop, FaHome,FaBookmark, FaChartBar, FaUser } from "react-icons/fa";
 import { CgShapeHexagon } from "react-icons/cg";
-
+import { useLocation } from 'react-router-dom';
 
 import useNavigationStore from "../../store/useNavStore";
 
@@ -27,7 +27,10 @@ let actBtns = [
 
 export default function NavComp({ typeNav }) {
   const navigate = useNavigate();
-  const main_nav = useNavigationStore((s) => s.main_nav);
+  let location = useLocation();
+  location = location.pathname
+  location = location.slice(1)
+  console.log("AAA" , location)
   if(!typeNav) typeNav = "main";
   if (typeNav === 'main') typeNav = "horizontal";
   if (typeNav === 'act') typeNav = 'horizontal';
@@ -46,7 +49,7 @@ if (typeNav === "horizontal") {
         <button
          onClick={() => navigate("/")}
           className={` text-sm rounded-full transition px-3 py-3 rounded-full  hover:text-[#51FFA3] 
-             ${main_nav === "/" ? " hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
+             ${location === "/" ? " hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
              `}
  
         >
@@ -58,13 +61,12 @@ if (typeNav === "horizontal") {
             key={index}
             onClick={() => !btn.disabled && navigate(btn.link)}
             className={`
-              ${main_nav === btn.label.toLowerCase() ? " text-[#51FFA3]" : "text-white"}
-              ${btn.disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-800"}
+              ${location === btn.label.toLowerCase() ? " bg-[#51FFA3] hover:text-black" : "text-white"}
+              ${btn.disabled ? "opacity-50 cursor-not-allowed" : "hover:text-[#51FFA3]"}
 
               px-4
               py-2
               rounded-full
-              hover:bg-gray-800
               text-sm
               font-medium
             `}
@@ -90,7 +92,7 @@ if (typeNav === "horizontal") {
               key={index}
               onClick={() => navigate(btn.link)}
               className={`
-                ${main_nav === btn.label.toLowerCase() ? "bg-[#51FFA3] text-black" : "text-white"}
+                ${location === btn.label.toLowerCase() ? "bg-[#51FFA3] text-black" : "text-white"}
                 ${isUser ? "mt-auto" : ""}
                 w-10 h-10
                 text-white
@@ -110,7 +112,7 @@ if (typeNav === "horizontal") {
 
           <button
              className={`
-              ${main_nav === "user" ? "bg-[#51FFA3] text-black" : "text-white"}
+              ${location === "user" ? "bg-[#51FFA3] text-black" : "text-white"}
                mt-auto
                 w-10 h-10
                 text-white

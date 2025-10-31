@@ -23,11 +23,13 @@ export default function NewPageTemplate() {
   const backendAPI = useInferenceAPI("/api/models")
   const updateModels = useModelStore1((s)=>s.updateModels)
   const models = useModelStore1(s=>s.models)
+
+
 useEffect(() => {
-  updateModels("/api/models")
+  updateModels(("http://localhost:8000/api/models"))
 
-  }, [backendAPI] ); // ✅ пустой массив — вызов только один раз
-
+  }, [] ); // ✅ пустой массив — вызов только один раз
+  console.log("MODELSHOME", models);
     const templateType = "action"
 
   return (
