@@ -5,8 +5,6 @@ import { FaDesktop, FaHome,FaBookmark, FaChartBar, FaUser } from "react-icons/fa
 import { CgShapeHexagon } from "react-icons/cg";
 import { useLocation } from 'react-router-dom';
 
-import useNavigationStore from "../../store/useNavStore";
-
 let navBtns = [
   { label: "Platform", link: "/platform",disabled:true },
   { label: "Models", link: "/models" },
@@ -30,31 +28,32 @@ export default function NavComp({ typeNav }) {
   let location = useLocation();
   location = location.pathname
   location = location.slice(1)
-  console.log("AAA" , location)
   if(!typeNav) typeNav = "main";
   if (typeNav === 'main') typeNav = "horizontal";
   if (typeNav === 'act') typeNav = 'horizontal';
 
 let H_style = "fixed top-5 left-1/2 -translate-x-1/2 bg-gray-900 rounded-full px-1 py-1 flex gap-4 shadow-lg z-[9999]";
-let V_style = "fixed left-6 top-1/2 -translate-y-1/2 w-[70px] min-h-[60vh] bg-gray-900 rounded-full py-6 flex flex-col items-center gap-4 shadow-lg z-[40]";
+let V_style = "fixed left-6 top-1/2 -translate-y-1/2 w-[100px] bg-gray-900 rounded-full py-6 flex flex-col items-center gap-4 shadow-lg z-[40]";
  
 
 if (typeNav === "horizontal") {
     return (
-      <nav
+      <nav style={{height : "62px"}}
         className={H_style}
         aria-label="Horizontal navigation"
       >
-       
-        <button
+        <div style={location === "/" ? {backgroundColor:"#51FFA3" , borderRadius:"24px", color:"black"} : {}} className="rounded-2xl ">
+       <button
          onClick={() => navigate("/")}
-          className={` text-sm rounded-full transition px-3 py-3 rounded-full  hover:text-[#51FFA3] 
-             ${location === "/" ? " hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
+          className={`  rounded-full transition px-3 py-3 rounded-full  hover:text-[#51FFA3] text-[24px]
+             ${location === "/" ? " bg-[#51FFA3] hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
              `}
  
         >
-          <FaHome />
+          <FaHome  />
         </button>
+       </div>
+     
 
         {navBtns.map((btn, index) => (
           <button
@@ -62,12 +61,12 @@ if (typeNav === "horizontal") {
             onClick={() => !btn.disabled && navigate(btn.link)}
             className={`
               ${location === btn.label.toLowerCase() ? " bg-[#51FFA3] hover:text-black" : "text-white"}
-              ${btn.disabled ? "opacity-50 cursor-not-allowed" : "hover:text-[#51FFA3]"}
+              ${btn.disabled ? " cursor-not-allowed" : "hover:text-[#51FFA3]"}
 
               px-4
               py-2
               rounded-full
-              text-sm
+              text-lg
               font-medium
             `}
             title={btn.label}
@@ -99,7 +98,7 @@ if (typeNav === "horizontal") {
                 flex items-center justify-center
                 rounded-full
                 hover:bg-gray-800
-                text-xs font-medium
+                text-[18px] font-medium
               `}
               title={btn.label}
             >
@@ -119,7 +118,7 @@ if (typeNav === "horizontal") {
                 flex items-center justify-center
                 rounded-full
                 hover:bg-gray-800
-                text-xs font-medium
+                text-[18px] font-medium
               `
             } title={"FaDesktop"}>
               <FaUser />
