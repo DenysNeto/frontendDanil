@@ -27,7 +27,7 @@ export default function ModelCard({
 
   return (
 
-    <article onClick={() => onSelect(id)}  className="group  min-h-[34vh] max-w-[340px] max-h-[340px] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-1 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
+    <article onClick={() => onSelect(id)}  className="group  w-[340px] h-[340px] p-6 bg-white rounded-3xl border border-gray-100 hover:ring-1 hover:ring-black shadow-sm shadow-md  transition-shadow duration-400  overflow-hidden ">
     
       <div className=" flex w-full h-full flex-col  justify-center ">
           <div className="w-full flex justify-between ">

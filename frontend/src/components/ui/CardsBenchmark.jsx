@@ -15,7 +15,7 @@ const gridColsClass = {
 }[cardsInRow] || "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3";
 
   return (
-    <div className={`grid   ${gridColsClass} gap-4 py-4 w-full `}>
+    <div className={`grid   ${gridColsClass} gap-4  w-full `}>
       {benchmarks.map((item, i) => (
         <div
           key={'benchmark' + Math.random()*100}
