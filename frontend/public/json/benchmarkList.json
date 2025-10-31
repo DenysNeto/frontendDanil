@@ -2,31 +2,37 @@
   {
     "id": 1,
     "title": "Code Assistance",
-    "img": "/cards/card1.png"
+    "img": "/cards/card1.png",
+    "icon" : "Code"
   },
   {
     "id": 2,
     "title": "Conversational AI",
-    "img": "/cards/card2.png"
+    "img": "/cards/card2.png",
+    "icon" : "Message"
   },
   {
     "id": 3,
     "title": "Agentic Systems",
-    "img": "/cards/card3.png"
+    "img": "/cards/card3.png",
+    "icon" : "Social"
   },
   {
     "id": 4,
     "title": "Search",
-    "img": "/cards/card4.png"
+    "img": "/cards/card4.png",
+    "icon" : "Search"
   },
   {
     "id": 5,
     "title": "Multimedia",
-    "img": "/cards/card5.png"
+    "img": "/cards/card5.png",
+    "icon" : "Music"
   },
   {
     "id": 6,
     "title": "Enterprise",
-    "img": "/cards/card6.png"
+    "img": "/cards/card6.png",
+    "icon" : "Store"
   }
 ]

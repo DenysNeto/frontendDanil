@@ -71,7 +71,7 @@ Choose a baseline model to benchmark. We’ll compare it against our optimized v
   
            <Template>
              {hasSelectedModel ? <ViewContent>
-                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>3? 3 : benchmarks.length}/>
+                <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={3}/>
             </ViewContent> : <ModelsSelectReminder/>}
            </Template>
 
