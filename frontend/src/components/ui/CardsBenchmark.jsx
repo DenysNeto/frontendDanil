@@ -15,13 +15,14 @@ const gridColsClass = {
 }[cardsInRow] || "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3";
 
   return (
-    <div className={`grid   ${gridColsClass} gap-4  w-full `}>
+    <div className={`flex flex-row w-[80vw] flex-wrap gap-6 pt-10`}>
       {benchmarks.map((item, i) => (
         <div
           key={'benchmark' + Math.random()*100}
           className="w-[220px] h-[290px] rounded-3xl  overflow-hidden relative group transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl ring-1 ring-white/6 bg-transparent"
           onClick={()=>onSelect(item.title)}
         >
+
           {item?.img &&     <img
             src={item.img}
             alt={item.title}

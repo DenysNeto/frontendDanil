@@ -43,7 +43,7 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
 
   if (!pagination) {
     return (
-      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridColsClass} gap-6 p-6 w-full`}>
+        <div className={`flex flex-row w-[80vw] flex-wrap gap-6`}>
         {models && models.length > 0 ? models.map((model, index) => (
         <ModelCard key={index} {...model} onSelect={() => onSelect(model.id)}/>
         )) : <ModelCard />}
@@ -90,7 +90,7 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
                 className="w-full flex-shrink-0 px-6 py-4"
                 style={{ width: `${100 / pages.length}%` }}
               >
-                <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 ${gridColsClass} gap-6`}>
+                <div className={`flex flex-row w-[80vw] flex-wrap gap-6`}>
                   {chunk.map((model, i) => (
                     <ModelCard key={i} {...model} onSelect={() => onSelect(model.id)}/>
                   ))}
