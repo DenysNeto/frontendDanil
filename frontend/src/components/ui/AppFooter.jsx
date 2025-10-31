@@ -36,10 +36,10 @@ export default function AppFooter({isFull = false}) {
             
             
           <div className="">
-              <img src={logo} alt="Logo" className="w-10" />
+              <img src={logo} alt="Logo" className="w-[55px] h-[50px]" />
                 <div className="flex flex-col my-6">
-                  <span className="text-md">We are always improving. </span>
-                  <span className="text-3xl font-semibold">Subscribe to newsletter</span>
+                  <span className="text-xl">We are always improving. </span>
+                  <span className="text-[36px] font-semibold">Subscribe to newsletter</span>
               </div>
     
 
@@ -65,11 +65,11 @@ export default function AppFooter({isFull = false}) {
           {footerColumns.map((column, colIndex) => {
             let nameClass = ''
             switch(colIndex){
-              case 0: nameClass='text-md !justify-between';
+              case 0: nameClass='text-lg !justify-between';
               break;
-              case 1: nameClass='text-sm ';
+              case 1: nameClass='text-base ';
                break;
-              case 2: nameClass='text-sm';
+              case 2: nameClass='text-base';
               break;
             }
 

@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import { FaDesktop, FaHome,FaBookmark, FaChartBar, FaUser } from "react-icons/fa";
 import { CgShapeHexagon } from "react-icons/cg";
 import { useLocation } from 'react-router-dom';
+import Icon from "./Icon";
 
 let navBtns = [
   { label: "Platform", link: "/platform",disabled:true },
@@ -38,19 +39,19 @@ let V_style = "fixed left-6 top-1/2 -translate-y-1/2 w-[100px] bg-gray-900 round
 
 if (typeNav === "horizontal") {
     return (
-      <nav style={{height : "62px"}}
+      <nav style={{height : "64px"}}
         className={H_style}
         aria-label="Horizontal navigation"
       >
-        <div style={location === "/" ? {backgroundColor:"#51FFA3" , borderRadius:"24px", color:"black"} : {}} className="rounded-2xl ">
+        <div style={location === "/" ? {backgroundColor:"#51FFA3" , borderRadius:"24px", color:"black"} : {}} className="rounded-full ">
        <button
          onClick={() => navigate("/")}
-          className={`  rounded-full transition px-3 py-3 rounded-full  hover:text-[#51FFA3] text-[24px]
-             ${location === "/" ? " bg-[#51FFA3] hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
+          className={`rounded-full transition p-4 hover:text-[#51FFA3] w-max
+             ${location === "" ? " bg-[#51FFA3] hover:text-gray-600  bg-[#51FFA3] text-black" : "text-white"}
              `}
  
         >
-          <FaHome  />
+          <Icon name="Home" className={'mr-[2px] w-full'}  style={{ stroke: "white" }} />
         </button>
        </div>
      

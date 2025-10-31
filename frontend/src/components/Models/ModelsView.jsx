@@ -17,7 +17,7 @@ const modelTabs = [
 
 
 
-export default function ModelsView({ activeTab, cardsInRow=null , pagination=false,onTabClick }) {
+export default function ModelsView({ gap=0,activeTab, cardsInRow=null , pagination=false,onTabClick }) {
   const navigate = useNavigate()
 
   const updateModels = useModelStore1(s=>s.updateModels)
@@ -44,9 +44,9 @@ export default function ModelsView({ activeTab, cardsInRow=null , pagination=fal
 
   return (
     <>
-    <div className="flex flex-col w-full relative">
+    <div className={`flex flex-col w-full relative gap-${gap ? gap : 2 }`} >
         <Tabs data={modelTabs} />
-        <div className="mt-4"> </div>
+        <div> </div>
     <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
 
          </div>

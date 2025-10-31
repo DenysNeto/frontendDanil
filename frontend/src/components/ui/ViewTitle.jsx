@@ -86,7 +86,7 @@ const verticalAlignmentClass = {
 
         {actionText && 
         <div className={` flex py-6 ${align=='center' ? 'justify-center items-center' : 'items-center'} `} >
-          <Button onSelect={onAction} size={'lg'} variant={actionVariant}><span className="flex justify-center items-center"> {actionText} <Icon name='ChevronsRight' style={{ paddingLeft:"5px" }} /> </span> </Button>
+          <Button onSelect={onAction} size={'xl'} variant={actionVariant}><span className="flex justify-center items-center"> {actionText} <Icon name='ChevronsRight' style={{ paddingLeft:"5px" }} /> </span> </Button>
                     
             </div>
         }

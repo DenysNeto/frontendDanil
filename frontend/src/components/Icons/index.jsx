@@ -14,3 +14,11 @@ export { default as Zap } from "./Zap";
 export { default as Clock } from "./Clock";
 export { default as Clipboard } from "./Clipboard";
 export {default as Wifi} from "./Wifi"
+export { default as Code } from "./Code";
+export { default as Message } from "./Message";
+export { default as Music } from "./Music";
+export { default as Search } from "./Search";
+export { default as Social } from "./Social";
+export { default as Store } from "./Store";
+export { default as Home } from "./Home";
+

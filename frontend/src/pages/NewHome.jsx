@@ -33,36 +33,37 @@ useEffect(() => {
     const templateType = "action"
 
   return (
-<div className="min-h-[100vh]">
+<div className={` relative min-h-screen overflow-hidden `}>
 
     { models.length==0 ? <Spinner  withText={true} className="flex class  justify-center w-full mt-[10%] "/> :
    (<PageEnterAnimation>
 
-<div className={`min-h-screen overflow-hidden mt-10 `}>
+<div >
   
 
 <motion.img
   src="/bg/variant5.svg"
   alt="Left decoration"
-  initial={{ opacity: 0.3, y:-50 }}
-  animate={{ opacity: 1, y: 0 }}
+  initial={{ opacity: 0.3, y:0 }}
+  animate={{ opacity: 1, y: 300 }}
   transition={{ duration: 0.8, ease: "easeOut" }}
-  className="absolute top-30 left-0 w-[25vw] h-auto z-[96] overflow-hidden animate-[floatY_6s_ease-in-out_infinite]"
+  className="absolute top-0 left-0 w-[400px] h-[800px] z-[96] overflow-hidden "
      style={{
-    animation: "floatY 6s ease-in-out infinite",
+    animation: "floatY 10s ease-in-out infinite",
   }}
 />
 
 <motion.img
   src="/bg/variant4.svg"
   alt="Right decoration"
-  initial={{ opacity: 0.3, y:100}}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+  initial={{ opacity: 0.3, y:200}}
+  animate={{ opacity: 1, y: 0}}
+  transition={{ duration: 0.8, ease: "easeOut" }}
    style={{
-    animation: "floatY 6s ease-in-out infinite",
+    animation: "floatY 8s ease-in-out infinite",
+    margin:0
   }}
-  className="absolute top-[-20%] right-0  w-[18vw] h-auto z-[96] overflow-hidden animate-[floatY_6s_ease-in-out_infinite]"
+  className="absolute top-[-10%]  right-[-100px]   w-[400px] h-[800px] z-[96] overflow-hidden"
 />
 
   
@@ -71,7 +72,7 @@ useEffect(() => {
 {`
   @keyframes floatY {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(50px); }
+    50% { transform: translateY(150px); }
   }
 `}
 </style>
@@ -141,7 +142,7 @@ useEffect(() => {
 
     <Template  type={templateType} bgActive={true}>
 <div className="flex flex-col gap-[250px]">
-  <div>
+  <div className="flex flex-col gap-10">
   <ViewTitle  uptitle="MODEL LIBRARY"
             titleSize={6}
             uptitleBold={false}
@@ -149,7 +150,7 @@ useEffect(() => {
             desc={`Build with open-source and specialized multimodal models for chat, images,  code, and  more.\n  Migrate from closed models with OpenAI-compatible APIs.`}
       /> 
       
-        <ModelsView cardsInRow={4} pagination={true}/>
+        <ModelsView cardsInRow={4} pagination={true} gap={'4'}/>
   </div>
 
 
