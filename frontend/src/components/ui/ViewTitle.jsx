@@ -13,6 +13,7 @@ export default function ViewTitle({
   subtitleCustom,
   uptitle,
   desc,
+  breadcrumbs=false,
   actionText,
   actionVariant= "secondary",
   onAction=()=>{},
@@ -44,23 +45,29 @@ const verticalAlignmentClass = {
     <div className={`flex   ${verticalAlignmentClass} ${alignmentClass}   w-full `} >
 
 
-      <div className={`${alignmentClass=="text-left" ?  '' : 'mx-auto'  } w-full `}>
-               {backButton && (<div className="flex gap-4 flex-inline mb-6">
-                 <button
-            onClick={() => navigate(-1)}
-            className=" text-gray-600 hover:text-black transition "
-          >
-            <Icon name={'ArrowLeft'} className={'w-7 h-7 '} />
-          </button>
-          <Breadcrumbs/>
-                
-                </div>)}
+          <div className={`${alignmentClass === "text-left" ? "" : "mx-auto"} w-full`}>
+        {(backButton  || breadcrumbs )&& (
+          <div className="flex items-center gap-4 mb-6">
+            <button
+              onClick={() => navigate(-1)}
+              className="text-gray-600 hover:text-black transition"
+            >
+              <Icon name="ArrowLeft" className="w-7 h-7" />
+            </button>
+            {breadcrumbs && <Breadcrumbs />}
+          </div>
+        )}
+
         {uptitle && (
-          <p className={`mb-3 ${uptitleSize ? `text-${uptitleSize}xl` : 'text-s'}  ${uptitleBold ? 'font-bold' : 'font-semibold '} `}
+          <p
+            className={`mb-3 ${
+              uptitleSize ? `text-${uptitleSize}xl` : "text-sm"
+            } ${uptitleBold ? "font-bold" : "font-semibold"}`}
           >
-           {uptitle}
+            {uptitle}
           </p>
         )}
+
 
         {titleCustom ? (
           titleCustom

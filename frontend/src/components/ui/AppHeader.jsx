@@ -7,7 +7,7 @@ export default function AppHeader() {
     <>
     
         <NavComp/>
-<header className="sticky top-0 z-9997">
+<header className="sticky top-0 z-9997 mb-20 ">
 <div
   className="fixed  w-full h-full pointer-events-none "
   style={{

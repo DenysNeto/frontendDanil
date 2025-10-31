@@ -39,19 +39,8 @@ useEffect(() => {
    (<PageEnterAnimation>
 
 <div >
-  
 
-<motion.img
-  src="/bg/variant5.svg"
-  alt="Left decoration"
-  initial={{ opacity: 0.3, y:0 }}
-  animate={{ opacity: 1, y: 300 }}
-  transition={{ duration: 0.8, ease: "easeOut" }}
-  className="absolute top-0 left-0 w-[400px] h-[800px] z-[96] overflow-hidden "
-     style={{
-    animation: "floatY 10s ease-in-out infinite",
-  }}
-/>
+
 
 <motion.img
   src="/bg/variant4.svg"
@@ -67,9 +56,42 @@ useEffect(() => {
 />
 
   
+  
+<motion.div
+  initial={{ opacity: 0.3, y: 0 }}
+   animate={{ opacity: 1, y: 0}}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+   style={{
+    animation: "floatYL  13s ease-in-out infinite",
+    margin:0
+  }}
+  className="absolute top-0 left-0 w-[400px] h-[800px] z-[96] overflow-hidden animate-left-clip"
+>
+  <img
+    src="/bg/variant5.svg"
+    alt="Left decoration"
+    className="w-full h-full object-cover"
+    style={{ margin: 0 }}
+  />
+</motion.div>
+
 
 <style>
 {`
+
+@keyframes floatYL {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    left: 0;
+  }
+  50% {
+    transform: translateY(150px) scale(1.3);
+    left: -5%;
+  }
+}
+
+
+
   @keyframes floatY {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(150px); }
@@ -79,7 +101,7 @@ useEffect(() => {
 
 
 <motion.div
-  alt="Right decoration"
+  alt="Content "
   initial={{ opacity: 0, y:100 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 1.5, ease: "easeIn", delay: 0.1 }}
@@ -98,8 +120,8 @@ useEffect(() => {
             
             From Spark To{" "}
             <span className="bg-gradient-to-r from-purple-400 via-blue-500 to-pink-400 bg-clip-text text-transparent">
-                Scale.
-            </span>
+                Scale
+            </span>.
             </p>
             }
             desc={`Open-source AI models at blazing speed, optimized for your \n use case,scaled globally with our AI Cloud.`}

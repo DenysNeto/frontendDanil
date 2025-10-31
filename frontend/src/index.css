@@ -18,6 +18,25 @@ body {
 }
 
 
+@keyframes LeftAnim {
+  0% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+  50% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 50px), 0% calc(100% - 100px));
+  }
+  100% {
+    clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  }
+}
+
+.animate-left-clip {
+  animation: LeftAnim 4s ease-in-out infinite;
+  transform-origin: left;
+}
+
+
+
 
 
 

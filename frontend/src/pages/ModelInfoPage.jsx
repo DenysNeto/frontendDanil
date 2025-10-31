@@ -144,7 +144,7 @@ export default function ModelInfoPage() {
                       <div className="">
                                          
                         <div className={'h-[400px]'} >
-                          <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/> 
+                          <ViewTitle breadcrumbs={true} backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/> 
                         </div>   
                        
                                   
