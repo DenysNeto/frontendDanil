@@ -1,5 +1,5 @@
 // components/ModelTabs.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModelList from "./ModelsList";
 import Tabs from "../ui/Tabs";
 import Icon from "../ui/Icon"
@@ -17,14 +17,21 @@ const modelTabs = [
 
 
 
-export default function ModelsView({ activeTab, cardsInRow=null , pagination=false,onTabClick }) {
+export default function ModelsView({ gap=0,activeTab, cardsInRow=null , pagination=false,onTabClick }) {
   const navigate = useNavigate()
 
+  const updateModels = useModelStore1(s=>s.updateModels)
     const models = useModelStore1((s) => s.models);
-  const selectedIndex = useModelStore1((s) => s.selectedIndex);
-  const selectedModel = useModelStore1((s) => s.selectedModel);
-
+    const selectedIndex = useModelStore1(s=>s.selectedIndex)
   const setSelectedIndex = useModelStore1((s) => s.setSelectedIndex);
+
+  useEffect(() => {
+    if (models.length === 0) {
+      updateModels("http://localhost:8000/api/models");
+      setSelectedIndex(0)
+    }
+  }, []);
+
 
   const handleSelect = (modelId) => {
     let model = models.filter(m=>m.id == modelId)[0]
@@ -37,9 +44,9 @@ export default function ModelsView({ activeTab, cardsInRow=null , pagination=fal
 
   return (
     <>
-    <div className="flex flex-col w-full relative">
+    <div className={`flex flex-col w-full relative gap-${gap ? gap : 2 }`} >
         <Tabs data={modelTabs} />
-        <div className="mt-4"> </div>
+        <div> </div>
     <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
 
          </div>

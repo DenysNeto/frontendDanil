@@ -21,7 +21,7 @@ export function Button({
   const isDisabled = disabled || loading;
 
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 font-semibold rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center  rounded-full transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantStyles = {
     primary: "bg-emerald-500 text-white hover:bg-emerald-600",
@@ -30,13 +30,14 @@ export function Button({
     ghost: "bg-transparent text-emerald-500 border border-emerald-500 hover:bg-emerald-50",
     info: " text-black-500  hover:text-blue-300 !p-0",
     // 3-layer shadow example
-    shadowDemo: "bg-blue-500 text-white hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.12),0_8px_16px_rgba(0,0,0,0.15)] transition-shadow duration-600",
+    shadowDemo: " bg-blue-500 text-white hover:shadow-[0_1px_2px_rgba(0,0,0,0.1),0_4px_8px_rgba(0,0,0,0.12),0_8px_16px_rgba(0,0,0,0.15)] transition-shadow duration-600",
   };
 
   const sizeStyles = {
     sm: "h-8  px-6 py-3 text-sm ",
     md: "h-10 px-6 py-3 text-base",
     lg: "h-12 px-6 py-3 text-lg",
+    xl: " px-8 py-4 text-xl",
   };
 
   return (
