@@ -42,8 +42,9 @@ export default function ModelPromptPage() {
   const benchmarkId = selectedModelBenchmark?.id;
 
   // Use hooks directly, not in useState
-  const optimizedAPI = useInferenceAPI("http://localhost:8000/api/v1");
-  const baselineAPI = useInferenceAPI("http://localhost:8000/api/v1");
+  // Since Flask serves the React app, use relative URLs (same origin)
+  const optimizedAPI = useInferenceAPI("");
+  const baselineAPI = useInferenceAPI("");
 
   // Memoize the transformed data to prevent unnecessary recalculations
   const compareData = useMemo(() => {
@@ -73,10 +74,24 @@ export default function ModelPromptPage() {
   const sendPrompt = useCallback((val) => {
     if (!val.trim()) return;
     console.log("🎯 Sending prompt:", val);
-    optimizedAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
-    baselineAPI.sendPrompt(val,selectedModelBenchmark.model_fqdn);
+
+    // Get the correct model FQDNs from config
+    // Optimized model: use the derivative's model_fqdn
+    const optimizedModelFqdn = selectedModelBenchmark?.model_fqdn;
+    // Baseline model: use the parent model's baseline_model_fqdn
+    const baselineModelFqdn = selectedModel?.baseline_model_fqdn;
+
+    console.log("📡 Optimized model FQDN:", optimizedModelFqdn);
+    console.log("📡 Baseline model FQDN:", baselineModelFqdn);
+
+    if (optimizedModelFqdn) {
+      optimizedAPI.sendPrompt(val, optimizedModelFqdn);
+    }
+    if (baselineModelFqdn) {
+      baselineAPI.sendPrompt(val, baselineModelFqdn);
+    }
     setResponsePrompt(true);
-  }, [optimizedAPI, baselineAPI]);
+  }, [optimizedAPI, baselineAPI, selectedModelBenchmark, selectedModel]);
 
   // Scroll to bottom when responses update - use more stable dependencies
   useEffect(() => {
@@ -88,14 +103,19 @@ export default function ModelPromptPage() {
   }, [optimizedAPI.response, baselineAPI.response, responsePrompt, scrollToBottom]);
 
   // Memoize the response data to prevent recreation of objects passed to components
+  // Each response is independent - display as soon as either arrives
   const responseData = useMemo(() => {
-    if (!responsePrompt || !optimizedAPI.response || !baselineAPI.response) return null;
+    if (!responsePrompt) return null;
+
+    // Show responses independently - even if only one is available
+    const hasAnyResponse = optimizedAPI.response || baselineAPI.response;
+    if (!hasAnyResponse) return null;
 
     return {
       compareFields: {
         "Live Data": {
-          "optimized": optimizedAPI.response,
-          "baseline": baselineAPI.response
+          "optimized": optimizedAPI.response || "Loading...",
+          "baseline": baselineAPI.response || "Loading..."
         }
       },
       compareTypes: ["optimized", "baseline"]

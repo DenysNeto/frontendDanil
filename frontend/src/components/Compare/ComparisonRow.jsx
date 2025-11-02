@@ -1,6 +1,9 @@
 import Icon from "../ui/Icon.jsx";
 import Metric from "../ui/Metric.jsx"
 import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 export default function ComparisonRow({name, metric, compareTypes =["optimized","baseline"] ,isPrompt}) {
 
 let rowName = name?.toUpperCase() || metric?.name?.toUpperCase()
@@ -54,11 +57,21 @@ const maxValue = getMaxValue();
 
         <div className="flex-1 border-l p-6 border-gray-100  ">
           <div className={`${!isPrompt &&  "w-1/2" }`}>
-            {metric && metric.unit ? <Metric
-                      value={metric[compareTypes[0]]}
-                      unit={metric.unit}
-                      max={maxValue}
-                    /> : <span className="text-lg [&>*]:m-0">{metric[compareTypes[0]]} </span>}
+            {metric && metric.unit ? (
+              <Metric
+                value={metric[compareTypes[0]]}
+                unit={metric.unit}
+                max={maxValue}
+              />
+            ) : name?.toUpperCase() === "LIVE DATA" ? (
+              <div className="prose prose-lg max-w-none text-gray-800 text-base leading-relaxed break-words overflow-wrap-anywhere">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {metric[compareTypes[0]] || ""}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <span className="text-lg [&>*]:m-0">{metric[compareTypes[0]]} </span>
+            )}
           </div>
 
         </div>
@@ -66,11 +79,22 @@ const maxValue = getMaxValue();
 
         <div className="flex-1 border-l p-6  border-gray-100 ">
           <div className={`${!isPrompt &&  "w-1/2" }`} >
-          {metric && metric.unit ? <Metric color='rgba(224, 158, 248, 1)'
-                  value={metric[compareTypes[1]]}
-            unit={metric.unit}
-            max={maxValue}
-          /> : <span className="text-lg [&>*]:m-0">{metric[compareTypes[1]]} </span>}
+            {metric && metric.unit ? (
+              <Metric
+                color='rgba(224, 158, 248, 1)'
+                value={metric[compareTypes[1]]}
+                unit={metric.unit}
+                max={maxValue}
+              />
+            ) : name?.toUpperCase() === "LIVE DATA" ? (
+              <div className="prose prose-lg max-w-none text-gray-800 text-base leading-relaxed break-words overflow-wrap-anywhere">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {metric[compareTypes[1]] || ""}
+                </ReactMarkdown>
+              </div>
+            ) : (
+              <span className="text-lg [&>*]:m-0">{metric[compareTypes[1]]} </span>
+            )}
           </div>
 
         </div>

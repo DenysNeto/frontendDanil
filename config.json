@@ -22,7 +22,7 @@
         "body": "The model achieves strong performance across reasoning and coding benchmarks, with reduced latency and improved throughput when optimized. Sub-models such as 'Coding' and 'Reasoning' are fine-tuned for specific workloads to deliver superior efficiency and task accuracy."
       }
     ],
-    "baseline_model_fqdn": "deepseek_r1.tdops.net",
+    "baseline_model_fqdn": "deepseek-32b-baseline.tdops.net",
     "price": {
       "currency": "USD",
       "input_per_million_tokens": 0.06,
@@ -38,7 +38,7 @@
         "accuracy_vs_baseline": [
           { "benchmark": "SWE-Bench-Verified", "baseline": 87.2, "optimized": 86.9 }
         ],
-        "model_fqdn": "deepseek_r1_coding.tdops.net",
+        "model_fqdn": "deepseek-32b-optimized.tdops.net",
         "price": {
           "currency": "USD",
           "input_per_million_tokens": 0.04,
@@ -54,7 +54,7 @@
         "accuracy_vs_baseline": [
           { "benchmark": "Math500", "baseline": 99.1, "optimized": 98.8 }
         ],
-        "model_fqdn": "deepseek_r1_reasoning.tdops.net",
+        "model_fqdn": "deepseek-32b-reasoning.tdops.net",
         "price": {
           "currency": "USD",
           "input_per_million_tokens": 0.04,
