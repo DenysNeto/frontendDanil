@@ -81,13 +81,13 @@ input, textarea {
 }
 
 input::placeholder, textarea::placeholder {
-  color: white !important;
-  opacity: 0.7; /* Немного прозрачнее для лучшего вида */
+  color: gray !important;
+  opacity: 1;
 }
 
 /* Более специфичный селектор для переопределения стилей Tailwind */
 input.placeholder\:gray-400::placeholder,
 textarea.placeholder\:gray-400::placeholder {
-  color: white !important;
-  opacity: 0.7;
+  color: gray !important;
+  opacity: 1;
 }

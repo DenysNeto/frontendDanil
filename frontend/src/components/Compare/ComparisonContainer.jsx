@@ -1,12 +1,14 @@
 import React from "react";
 import ComparisonRow from "./ComparisonRow";
-import ComparisonHeader from "./ComparisonHeader"
-import { HiMiniArrowLeft } from "react-icons/hi2";
+import ComparisonHeader from "./ComparisonHeader";
 
 
 const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPrompt}) {
   const dataRows = data?.compareFields ? data.compareFields : data;
   const price = data?.price;
+  const costSaving = data?.cost_saving;
+  const baselinePrice = data?.baseline_price;
+  const optimizedPrice = data?.optimized_price;
 
   // If no data to display, show a message
   if (!dataRows || Object.keys(dataRows).length === 0) {
@@ -21,10 +23,10 @@ const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPro
 
   return (
     <>
- 
+
   <div className="w-full mx-auto bg-transparent rounded-3xl shadow-[0_10px_20px_rgba(199,233,255,0.3)] !bg-white z-20 ">
 
-    <ComparisonHeader headerData={data?.compareTypes} price={price} />
+    <ComparisonHeader headerData={data?.compareTypes} price={price} costSaving={costSaving} baselinePrice={baselinePrice} optimizedPrice={optimizedPrice} />
 
     <div className="border-t border-gray-100 flex flex-col ">
       {/* Define display order: Latency, Throughput, Accuracy, Live Data */}

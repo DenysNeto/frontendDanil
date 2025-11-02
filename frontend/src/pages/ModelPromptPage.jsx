@@ -17,7 +17,7 @@ function transformForCompare(input){
   const norm=k=>k.replace(/_vs_.*|_(list|array|items)|_(ms|tps|%|s|sec|kb|mb|gb|ops|rps|qps)$/i,'').replace(/[^a-z0-9_]/ig,'').toLowerCase();
   const raw={};
   Object.keys(input).forEach(k=>{
-    if(['id','title','price'].includes(k)) return;
+    if(['id','title','price','cost_saving','baseline_price','optimized_price'].includes(k)) return;
     const v=input[k];
     if(isObj(v)){
       const n=norm(k); raw[n]=raw[n]||{unit:null,vals:{}}; if(k.match(unitPat)) raw[n].unit=(k.match(unitPat)[1].toLowerCase());
@@ -31,7 +31,7 @@ function transformForCompare(input){
   let types=Object.entries(counts).filter(([t,c])=>c>=2).map(([t])=>t); if(types.length===0) types=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,2).map(([t])=>t);
   const pref=['optimized','baseline']; types.sort((a,b)=>{const ai=pref.findIndex(p=>a.startsWith(p));const bi=pref.findIndex(p=>b.startsWith(p)); if(ai===-1&&bi===-1) return a.localeCompare(b); if(ai===-1) return 1; if(bi===-1) return -1; return ai-bi;});
   const compareFields={}; Object.keys(raw).forEach(m=>{ const e=raw[m]; if(types.some(t=>t in e.vals)){ compareFields[m]={}; types.forEach(t=>compareFields[m][t]=t in e.vals?e.vals[t]:null); compareFields[m].unit=e.unit||null; }});
-  return { id: input.id||null, title: input.title||null, price: input.price||null, compareFields, compareTypes: types };
+  return { id: input.id||null, title: input.title||null, price: input.price||null, cost_saving: input.cost_saving||null, baseline_price: input.baseline_price||null, optimized_price: input.optimized_price||null, compareFields, compareTypes: types };
 }
 
 export default function ModelPromptPage() {
