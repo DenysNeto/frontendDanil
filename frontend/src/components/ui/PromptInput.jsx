@@ -21,11 +21,11 @@ export default function PromptInput({
         rows={rows}
         disabled={disabled}
         className={`
-      
+
           w-full px-4 py-3 pr-12 rounded-2xl resize-none
           text-gray-800
           border border-gray-400
-           focus:outline-none  
+           focus:outline-none
           disabled:opacity-50 disabled:cursor-not-allowed
           transition-all duration-200
           ${className}
