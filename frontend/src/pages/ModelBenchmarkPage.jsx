@@ -41,7 +41,7 @@ export default function ModelBenchmarkPage() {
     }
 
     setSelectedModelBenchmark(enhancedData)
-    navigate('/models/prompt')
+    navigate(`/models/${selectedModel.id}/prompt`)
   }
 
 
