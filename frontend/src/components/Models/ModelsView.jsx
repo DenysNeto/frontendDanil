@@ -1,23 +1,10 @@
 // components/ModelTabs.jsx
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import ModelList from "./ModelsList";
-import Tabs from "../ui/Tabs";
-import Icon from "../ui/Icon"
 import { useModelStore1 } from "../../store/useModelStore1";
 import { useNavigate } from "react-router-dom";
 
-const modelTabs = [
-  { label: "ALL MODELS", value: "all" },
-  { label: "TRANSCRIBE", value: "transcribe" },
-  { label: "AUDIO", value: "audio" },
-  { label: "VISION", value: "vision" },
-  { label: "RERANK", value: "rerank" },
-  { label: "EMBEDDINGS", value: "embeddings" },
-];
-
-
-
-export default function ModelsView({ gap=0,activeTab, cardsInRow=null , pagination=false,onTabClick }) {
+export default function ModelsView({ gap=0, cardsInRow=null , pagination=false }) {
   const navigate = useNavigate()
 
   const updateModels = useModelStore1(s=>s.updateModels)
@@ -46,8 +33,6 @@ export default function ModelsView({ gap=0,activeTab, cardsInRow=null , paginati
   return (
     <>
     <div className={`flex flex-col w-full relative gap-${gap ? gap : 2 }`} >
-        <Tabs data={modelTabs} />
-        <div> </div>
     <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
 
          </div>
