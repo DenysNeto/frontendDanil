@@ -180,7 +180,7 @@ export default function ModelInfoPage() {
       {
         title:"Parameters",
         icon:"Parameters",
-        value: "Available",
+        value: selectedModel.parameters || "N/A",
         tab:true
       }
       ];

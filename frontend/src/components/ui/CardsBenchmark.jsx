@@ -15,7 +15,7 @@ const gridColsClass = {
 }[cardsInRow] || "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3";
 
   return (
-    <div className={`flex flex-row w-[80vw] flex-wrap gap-6 pt-10 mx-auto justify-center`}>
+    <div className={`flex flex-row w-full max-w-full flex-wrap gap-6 pt-10 mx-auto justify-center`}>
       {benchmarks.map((item, i) => (
         <div
           key={'benchmark' + Math.random()*100}
