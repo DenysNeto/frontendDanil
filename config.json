@@ -32,6 +32,7 @@
       {
         "id": "deepseek-r1-coding",
         "title": "Coding",
+        "cost_saving": 33.33,
         "latency_ms": { "baseline": 980, "optimized": 540 },
         "throughput_tps": { "baseline": 40, "optimized": 140 },
         "accuracy_vs_baseline": [
@@ -47,6 +48,7 @@
       {
         "id": "deepseek-r1-reasoning",
         "title": "Reasoning",
+        "cost_saving": 33.33,
         "latency_ms": { "baseline": 910, "optimized": 500 },
         "throughput_tps": { "baseline": 42, "optimized": 155 },
         "accuracy_vs_baseline": [
@@ -94,6 +96,7 @@
       {
         "id": "gpt-oss-120b-coding",
         "title": "Coding",
+        "cost_saving": 50,
         "latency_ms": { "baseline": 1224, "optimized": 758 },
         "throughput_tps": { "baseline": 32, "optimized": 167 },
         "accuracy_vs_baseline": [
@@ -109,6 +112,7 @@
       {
         "id": "gpt-oss-120b-reasoning",
         "title": "Reasoning",
+        "cost_saving": 50,
         "latency_ms": { "baseline": 1112, "optimized": 642 },
         "throughput_tps": { "baseline": 33, "optimized": 123 },
         "accuracy_vs_baseline": [
@@ -156,6 +160,7 @@
       {
         "id": "gpt-oss-20b-coding",
         "title": "Coding",
+        "cost_saving": 66.67,
         "latency_ms": { "baseline": 824, "optimized": 458 },
         "throughput_tps": { "baseline": 45, "optimized": 136 },
         "accuracy_vs_baseline": [
@@ -171,6 +176,7 @@
       {
         "id": "gpt-oss-20b-reasoning",
         "title": "Reasoning",
+        "cost_saving": 66.67,
         "latency_ms": { "baseline": 812, "optimized": 362 },
         "throughput_tps": { "baseline": 47, "optimized": 154 },
         "accuracy_vs_baseline": [
