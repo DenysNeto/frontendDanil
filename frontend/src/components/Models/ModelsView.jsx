@@ -27,7 +27,7 @@ export default function ModelsView({ gap=0,activeTab, cardsInRow=null , paginati
 
   useEffect(() => {
     if (models.length === 0) {
-      updateModels("http://localhost:8000/api/models");
+      updateModels("/api/models");
       setSelectedIndex(0)
     }
   }, []);

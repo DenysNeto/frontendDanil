@@ -37,22 +37,74 @@ const getModelImage = (provider) => {
 
 
 let tabs = [
-  {label:"CURL", value : "CURL"},
-   {label:"PYTHON", value : "PYTHON"},
-    {label:"TYPESCRIPT", value : "TYPESCRIPT"}
+  {label:"CURL", value : "curl"},
+   {label:"PYTHON", value : "python"},
+    {label:"TYPESCRIPT", value : "typescript"}
 ]
-  const code_example = `curl -X POST "https://api.together.xyz/v1/chat/completions" \\
-    -H "Authorization: Bearer $TOGETHER_API_KEY" \\
+
+// Code snippet templates for different languages based on selectedModel
+const getCodeTemplates = (selectedModel) => {
+  if (!selectedModel) return { curl: '', python: '', typescript: '' };
+
+  const apiUrl = `https://${selectedModel.baseline_model_fqdn}/v1/chat/completions`;
+  const modelPath = `${selectedModel.provider}/${selectedModel.id}`;
+
+  return {
+    curl: `curl -X POST "${apiUrl}" \\
+    -H "Authorization: Bearer $TWODELTA_API_KEY" \\
     -H "Content-Type: application/json" \\
     -d '{
-        "model": "Qwen/Qwen3-235B-A22B-Instruct-2507-tput",
+        "model": "${modelPath}",
         "messages": [
             {
                 "role": "user",
-                "content": "What are some fun things to do in New York?"
+                "content": "Where can I find the best viewpoints in Tokyo?"
             }
         ]
-}'`
+}'`,
+    python: `from openai import OpenAI
+import os
+
+client = OpenAI(
+    api_key=os.environ.get("TWODELTA_API_KEY"),
+    base_url="https://${selectedModel.baseline_model_fqdn}/v1"
+)
+
+response = client.chat.completions.create(
+    model="${modelPath}",
+    messages=[
+        {
+            "role": "user",
+            "content": "Where can I find the best viewpoints in Tokyo?"
+        }
+    ]
+)
+
+print(response.choices[0].message.content)`,
+    typescript: `import OpenAI from "openai";
+
+const client = new OpenAI({
+    apiKey: process.env.TWODELTA_API_KEY,
+    baseURL: "https://${selectedModel.baseline_model_fqdn}/v1"
+});
+
+async function main() {
+    const response = await client.chat.completions.create({
+        model: "${modelPath}",
+        messages: [
+            {
+                role: "user",
+                content: "Where can I find the best viewpoints in Tokyo?"
+            }
+        ]
+    });
+
+    console.log(response.choices[0].message.content);
+}
+
+main();`
+  };
+}
 
 
 
@@ -68,12 +120,17 @@ export default function ModelInfoPage() {
   const model =  useModelStore1((s) => s.selectedModel);
   const location = useLocation();
 
-   const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('curl');
+
+  // Get code templates based on selected model
+  const codeTemplates = getCodeTemplates(selectedModel);
+  const code_example = codeTemplates[selectedLanguage] || '';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code_example);
     setCopied(true);
-    setTimeout(() => setCopied(false), 500); // ⏱️ сброс через 2 секунды
+    setTimeout(() => setCopied(false), 500);
   };
 
   // Redirect to main page if no model is selected
@@ -169,15 +226,15 @@ export default function ModelInfoPage() {
                       
 
                         <div className="flex justify-between">
-                            <Tabs data={tabs} align={"left"} />
-                         
+                            <Tabs data={tabs} align={"left"} activeTab={selectedLanguage} onTabClick={setSelectedLanguage} />
+
                             <button onClick={handleCopy} className={`p-3 rounded-full text-sm font-medium transition-colors duration-300
                                 ${copied ? 'bg-green-300 text-black' : 'text-black hover:bg-gray-300'}
                               `}> <LuCopy/>
                             </button>
                         </div>
-                        
-                        <CodeViewer language={'js'} code={code_example}/>
+
+                        <CodeViewer language={selectedLanguage === 'typescript' ? 'typescript' : selectedLanguage === 'python' ? 'python' : 'bash'} code={code_example}/>
     
                       <div className="pb-20 ">
                        
