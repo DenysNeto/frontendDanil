@@ -22,7 +22,7 @@ class S3ConfigLoader:
         bucket_name: Optional[str] = None,
         config_key: Optional[str] = None,
         refresh_interval_minutes: int = 5,
-        fallback_path: str = "../config.json",
+        fallback_path: str = "./config.json",
         region: Optional[str] = None,
     ):
         """
