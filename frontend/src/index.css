@@ -75,3 +75,19 @@ h1 {
 .grid-24 > .col-18 {
   grid-column: span 18;
 }
+
+input, textarea {
+  background-color: transparent !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: white !important;
+  opacity: 0.7; /* Немного прозрачнее для лучшего вида */
+}
+
+/* Более специфичный селектор для переопределения стилей Tailwind */
+input.placeholder\:gray-400::placeholder,
+textarea.placeholder\:gray-400::placeholder {
+  color: white !important;
+  opacity: 0.7;
+}

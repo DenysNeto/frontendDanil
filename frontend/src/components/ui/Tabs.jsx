@@ -6,8 +6,8 @@ function Tab({data,isActive, onTabClick}){
   return (
     <button
       onClick={() => onTabClick(data.value)}
-      className={` group text-[14px] rounded-full px-6 py-3 transition-all duration-800 text-black ${
-        isActive && "bg-white font-bold pointer-events-none" 
+      className={` group text-sm rounded-full px-6 py-3 transition-all duration-800 text-black ${
+        isActive && "bg-white font-bold pointer-events-none"
       }`}
     >
       <span

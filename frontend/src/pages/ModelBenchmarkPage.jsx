@@ -53,9 +53,9 @@ export default function ModelBenchmarkPage() {
         <Template type={templateType}>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
 
-                        <ViewTitle 
+                        <ViewTitle
                     align={"left"}
-                    titleSize={6}
+                    titleSize={5}
                     backButton={true}
                     title={'Select a Benchmark'}
    >

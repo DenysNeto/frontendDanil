@@ -106,7 +106,7 @@ export default function ModelPromptPage() {
 return (
   <div className="text-black h-full">
     <Template type="action">
-      <ViewTitle  title="Model Demo" titleSize="6" align="left" backButton={true} />
+      <ViewTitle  title="Model Demo" titleSize="5" align="left" backButton={true} />
 
 
       <ViewContent> 

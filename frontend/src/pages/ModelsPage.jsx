@@ -17,13 +17,13 @@ export default function ModelsPage() {
           
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
           <div className="pt-30">
-            <ViewTitle 
+            <ViewTitle
                               align={"left"}
                               alignV={"top"}
                               backButton={false}
-                              title={'Select a Model'} 
+                              title={'Select a Model'}
                               titleSize={
-                                6
+                                5
                               }
             >
 
