@@ -103,14 +103,19 @@ export default function ModelPromptPage() {
   }, [optimizedAPI.response, baselineAPI.response, responsePrompt, scrollToBottom]);
 
   // Memoize the response data to prevent recreation of objects passed to components
+  // Each response is independent - display as soon as either arrives
   const responseData = useMemo(() => {
-    if (!responsePrompt || !optimizedAPI.response || !baselineAPI.response) return null;
+    if (!responsePrompt) return null;
+
+    // Show responses independently - even if only one is available
+    const hasAnyResponse = optimizedAPI.response || baselineAPI.response;
+    if (!hasAnyResponse) return null;
 
     return {
       compareFields: {
         "Live Data": {
-          "optimized": optimizedAPI.response,
-          "baseline": baselineAPI.response
+          "optimized": optimizedAPI.response || "Loading...",
+          "baseline": baselineAPI.response || "Loading..."
         }
       },
       compareTypes: ["optimized", "baseline"]

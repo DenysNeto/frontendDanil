@@ -54,7 +54,7 @@
         "accuracy_vs_baseline": [
           { "benchmark": "Math500", "baseline": 99.1, "optimized": 98.8 }
         ],
-        "model_fqdn": "deepseek-32b-optimized.tdops.net",
+        "model_fqdn": "deepseek-32b-reasoning.tdops.net",
         "price": {
           "currency": "USD",
           "input_per_million_tokens": 0.04,
