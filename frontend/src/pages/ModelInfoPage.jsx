@@ -178,17 +178,11 @@ export default function ModelInfoPage() {
         tab:true
       },
       {
-        title:"Fine-Tuning",
-        icon:"FineTune",
+        title:"Parameters",
+        icon:"Parameters",
         value: "Available",
         tab:true
-      },
-{
-  title:"Pricing per audio minute",
-  icon:"Price",
-  value: "$0.3",
-  largeFont: true
-}
+      }
       ];
 
       return (

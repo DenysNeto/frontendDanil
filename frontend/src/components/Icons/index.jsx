@@ -9,6 +9,7 @@ export { default as Cloud } from "./Cloud";
 export { default as CntxLength } from "./CntxLength";
 export { default as Cube } from "./Cube";
 export { default as FineTune } from "./FineTune";
+export { default as Parameters } from "./Parameters";
 export { default as Price } from "./Price";
 export { default as Zap } from "./Zap";
 export { default as Clock } from "./Clock";
