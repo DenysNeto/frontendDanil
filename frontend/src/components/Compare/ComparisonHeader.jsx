@@ -8,6 +8,8 @@ function percentChange(oldVal, newVal) {
 export default function ComparisonHeader({
   backButton = false,
   price,
+  baselinePrice = null,
+  optimizedPrice = null,
   headerData = ["optimized", "baseline"],
   costSaving = null,
 }) {
@@ -16,6 +18,10 @@ export default function ComparisonHeader({
   const hasPrice = price && Object.keys(price).length > 0;
   const input = hasPrice ? Number(price.input_per_million_tokens ?? 0) : null;
   const output = hasPrice ? Number(price.output_per_million_tokens ?? 0) : null;
+
+  // Use separate prices if provided
+  const baselinePriceValue = baselinePrice ? Number(baselinePrice.input_per_million_tokens ?? 0) : input;
+  const optimizedPriceValue = optimizedPrice ? Number(optimizedPrice.input_per_million_tokens ?? 0) : output;
 
   return (
 
@@ -30,8 +36,8 @@ export default function ComparisonHeader({
         const lower = item.toLowerCase();
 
         const showValue =
-          hasPrice && lower === "optimized" ? `$ ${output}` :
-          hasPrice && lower === "baseline" ? `$ ${input} ` :
+          lower === "optimized" && optimizedPriceValue ? `$ ${optimizedPriceValue}` :
+          lower === "baseline" && baselinePriceValue ? `$ ${baselinePriceValue}` :
           "";
 
         // Use costSaving prop if provided, otherwise calculate

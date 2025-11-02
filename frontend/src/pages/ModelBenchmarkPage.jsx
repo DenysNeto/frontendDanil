@@ -34,10 +34,13 @@ export default function ModelBenchmarkPage() {
     let subModelData = selectedModel['derivatives'].filter(m=>m.title.toLowerCase()===val.toLowerCase())[0]
 
     // Add baseline_model_fqdn from parent model and rename model_fqdn to optimized_model_fqdn
+    // Also add baseline_price and optimized_price for proper display
     const enhancedData = {
       ...subModelData,
       baseline_model_fqdn: selectedModel.baseline_model_fqdn || selectedModel.model_fqdn,
-      optimized_model_fqdn: subModelData.model_fqdn
+      optimized_model_fqdn: subModelData.model_fqdn,
+      baseline_price: selectedModel.price,
+      optimized_price: subModelData.price
     }
 
     setSelectedModelBenchmark(enhancedData)
