@@ -17,6 +17,23 @@ import { LuCopy } from "react-icons/lu";
 import Tabs from "../components/ui/Tabs.jsx";
 import defaultModelImage from "../assets/modelsImage/Model.png";
 
+// Dynamically import all images from the modelsImage folder using Vite's glob import
+const imageModules = import.meta.glob('../assets/modelsImage/*.png', { eager: true });
+
+// Helper function to get image based on provider
+const getModelImage = (provider) => {
+  if (provider && typeof provider === "string") {
+    const lowerProvider = provider.toLowerCase();
+    // Try to find the image in the glob imports
+    const imagePath = `../assets/modelsImage/${lowerProvider}.png`;
+
+    if (imageModules[imagePath]) {
+      return imageModules[imagePath].default;
+    }
+    console.warn(`Provider image not found for: ${provider}, using default`);
+  }
+  return defaultModelImage;
+};
 
 
 let tabs = [
@@ -183,7 +200,7 @@ export default function ModelInfoPage() {
                         <div className="h-[400px]    ml-auto">
 
                               <img
-                              src={model.imageUrl || defaultModelImage}
+                              src={model.imageUrl || getModelImage(model.provider)}
                               className={`mx-auto ${!model.imageUrl && ""} bg-white  h-50 w-50 p-6 shadow-[0_0_50px_#C3E6FF99] rounded-full`}
                               alt="Model preview"
                             />
