@@ -28,7 +28,7 @@ export default function ModelsPage() {
             >
 
                     <span className="text-xl mr-1000">
-                            Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements.
+                            Choose a baseline model for evaluation. Our optimized variant will be benchmarked against it to highlight performance gains.
 
                     </span>
 

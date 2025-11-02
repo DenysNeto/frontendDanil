@@ -57,13 +57,13 @@ export default function ModelBenchmarkPage() {
                     align={"left"}
                     titleSize={5}
                     backButton={true}
-                    title={'Select a Benchmark'}
+                    title={'Select a Task'}
    >
 
                     <span className="text-xl">
-                    
-Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements.
-        
+
+Choose a target task for optimization. We'll benchmark the optimized model against the baseline to demonstrate performance gains.
+
                     </span>
 
 
