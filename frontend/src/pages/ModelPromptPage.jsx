@@ -106,7 +106,7 @@ export default function ModelPromptPage() {
 return (
   <div className="text-black h-full">
     <Template type="action">
-      <ViewTitle title={`${selectedModel.title.toUpperCase()} - ${selectedModelBenchmark.title} Benchmark`} titleSize="6" align="left" backButton={true} />
+      <ViewTitle titleCustom={<p className="text-6xl font-semibold" style={{color: '#213547'}}>{`${selectedModel.title} - ${selectedModelBenchmark.title}`}</p>} align="left" backButton={true} />
 
 
       <ViewContent> 

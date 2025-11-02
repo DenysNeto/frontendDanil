@@ -52,11 +52,13 @@ export default function ModelBenchmarkPage() {
 
         <Template type={templateType}>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
-
+          <div>
                         <ViewTitle
                     align={"left"}
+                    alignV={"top"}
                     titleSize={5}
                     backButton={true}
+                    uptitle={<div className="mt-24"></div>}
                     title={'Select a Task'}
    >
 
@@ -68,7 +70,8 @@ Choose a target task for optimization. We'll benchmark the optimized model again
 
 
             </ViewTitle>
-  
+          </div>
+
            <Template>
              {hasSelectedModel ? <ViewContent>
                 <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>3? 3 : benchmarks.length}/>
