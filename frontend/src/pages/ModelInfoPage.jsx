@@ -62,10 +62,10 @@ const getCodeTemplates = (selectedModel) => {
             }
         ]
 }'`,
-    python: `from openai import OpenAI
+    python: `from twodelta import TwoDelta
 import os
 
-client = OpenAI(
+client = TwoDelta(
     api_key=os.environ.get("TWODELTA_API_KEY"),
     base_url="https://${selectedModel.baseline_model_fqdn}/v1"
 )
@@ -81,9 +81,9 @@ response = client.chat.completions.create(
 )
 
 print(response.choices[0].message.content)`,
-    typescript: `import OpenAI from "openai";
+    typescript: `import TwoDelta from "twodelta";
 
-const client = new OpenAI({
+const client = new TwoDelta({
     apiKey: process.env.TWODELTA_API_KEY,
     baseURL: "https://${selectedModel.baseline_model_fqdn}/v1"
 });
