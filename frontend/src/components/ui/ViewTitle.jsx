@@ -56,7 +56,7 @@ const verticalAlignmentClass = {
                 
                 </div>)}
         {uptitle && (
-          <p className={`mb-3 ${uptitleSize ? `text-${uptitleSize}xl` : 'text-s'}  ${uptitleBold ? 'font-bold' : 'font-semibold '} `}
+          <p className={`mb-3 ${uptitleSize ? `text-${uptitleSize}xl` : 'text-lg'}  ${uptitleBold ? 'font-bold' : 'font-semibold '} `}
           >
            {uptitle}
           </p>
@@ -65,12 +65,12 @@ const verticalAlignmentClass = {
         {titleCustom ? (
           titleCustom
         ) :  titleCustom != "" ? (
-          <p className={`text-${titleSize}xl font-semibold`}>
+          <p className={`text-${titleSize}xl font-bold`}>
             {title || ""}
           </p>
         ): null}
 
-        {subtitleCustom ? subtitleCustom : (    <h4 className={`text-${subtitleSize}xl  mt-4`}>
+        {subtitleCustom ? subtitleCustom : (    <h4 className={`text-${subtitleSize}xl text-xl  mt-4`}>
             {subtitle}
           </h4>)}
 

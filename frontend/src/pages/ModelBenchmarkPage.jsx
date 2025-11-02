@@ -41,7 +41,7 @@ export default function ModelBenchmarkPage() {
     }
 
     setSelectedModelBenchmark(enhancedData)
-    navigate('/models/prompt')
+    navigate(`/models/${selectedModel.id}/prompt`)
   }
 
 
@@ -52,23 +52,26 @@ export default function ModelBenchmarkPage() {
 
         <Template type={templateType}>
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
-
-                        <ViewTitle 
+          <div>
+                        <ViewTitle
                     align={"left"}
-                    titleSize={6}
+                    alignV={"top"}
+                    titleSize={5}
                     backButton={true}
-                    title={'Select a Benchmark'}
+                    uptitle={<div className="mt-24"></div>}
+                    title={'Select a Task'}
    >
 
                     <span className="text-xl">
-                    
-Choose a baseline model to benchmark. We’ll compare it against our optimized varient to show preformance improvements.
-        
+
+Choose a target task for optimization. We'll benchmark the optimized model against the baseline to demonstrate performance gains.
+
                     </span>
 
 
             </ViewTitle>
-  
+          </div>
+
            <Template>
              {hasSelectedModel ? <ViewContent>
                 <CardsBenchmark onSelect={onSelectBenchmark} benchmarks={benchmarks} cardsInRow={benchmarks.length>3? 3 : benchmarks.length}/>

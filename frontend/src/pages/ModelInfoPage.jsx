@@ -36,12 +36,75 @@ const getModelImage = (provider) => {
 };
 
 
-
 let tabs = [
-  {label:"CURL", value : "CURL"},
-   {label:"PYTHON", value : "PYTHON"},
-    {label:"TYPESCRIPT", value : "TYPESCRIPT"}
+  {label:"CURL", value : "curl"},
+   {label:"PYTHON", value : "python"},
+    {label:"TYPESCRIPT", value : "typescript"}
 ]
+
+// Code snippet templates for different languages based on selectedModel
+const getCodeTemplates = (selectedModel) => {
+  if (!selectedModel) return { curl: '', python: '', typescript: '' };
+
+  const apiUrl = `https://${selectedModel.baseline_model_fqdn}/v1/chat/completions`;
+  const modelPath = `${selectedModel.provider}/${selectedModel.id}`;
+
+  return {
+    curl: `curl -X POST "${apiUrl}" \\
+    -H "Authorization: Bearer $TWODELTA_API_KEY" \\
+    -H "Content-Type: application/json" \\
+    -d '{
+        "model": "${modelPath}",
+        "messages": [
+            {
+                "role": "user",
+                "content": "Where can I find the best viewpoints in Tokyo?"
+            }
+        ]
+}'`,
+    python: `from twodelta import TwoDelta
+import os
+
+client = TwoDelta(
+    api_key=os.environ.get("TWODELTA_API_KEY"),
+    base_url="https://${selectedModel.baseline_model_fqdn}/v1"
+)
+
+response = client.chat.completions.create(
+    model="${modelPath}",
+    messages=[
+        {
+            "role": "user",
+            "content": "Where can I find the best viewpoints in Tokyo?"
+        }
+    ]
+)
+
+print(response.choices[0].message.content)`,
+    typescript: `import TwoDelta from "twodelta";
+
+const client = new TwoDelta({
+    apiKey: process.env.TWODELTA_API_KEY,
+    baseURL: "https://${selectedModel.baseline_model_fqdn}/v1"
+});
+
+async function main() {
+    const response = await client.chat.completions.create({
+        model: "${modelPath}",
+        messages: [
+            {
+                role: "user",
+                content: "Where can I find the best viewpoints in Tokyo?"
+            }
+        ]
+    });
+
+    console.log(response.choices[0].message.content);
+}
+
+main();`
+  };
+}
 
 
 
@@ -57,26 +120,17 @@ export default function ModelInfoPage() {
   const model =  useModelStore1((s) => s.selectedModel);
   const location = useLocation();
 
-   const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('curl');
 
-  // Generate dynamic code example based on selected model
-  const code_example = selectedModel ? `curl -X POST "https://${selectedModel.baseline_model_fqdn}/v1/chat/completions" \\
-    -H "Authorization: Bearer $TWODELTA_API_KEY" \\
-    -H "Content-Type: application/json" \\
-    -d '{
-        "model": "${selectedModel.provider}/${selectedModel.id}",
-        "messages": [
-            {
-                "role": "user",
-                "content": "Where can I find the best viewpoints in Tokyo?"
-            }
-        ]
-}'` : '';
+  // Get code templates based on selected model
+  const codeTemplates = getCodeTemplates(selectedModel);
+  const code_example = codeTemplates[selectedLanguage] || '';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code_example);
     setCopied(true);
-    setTimeout(() => setCopied(false), 500); // ⏱️ сброс через 2 секунды
+    setTimeout(() => setCopied(false), 500);
   };
 
   // Redirect to main page if no model is selected
@@ -124,17 +178,11 @@ export default function ModelInfoPage() {
         tab:true
       },
       {
-        title:"Fine-Tuning",
-        icon:"FineTune",
-        value: "Available",
+        title:"Parameters",
+        icon:"Parameters",
+        value: selectedModel.parameters || "N/A",
         tab:true
-      },
-{
-  title:"Pricing per audio minute",
-  icon:"Price",
-  value: "$0.3",
-  largeFont: true
-}
+      }
       ];
 
       return (
@@ -162,24 +210,25 @@ export default function ModelInfoPage() {
               <div className="mx-auto grid grid-cols-1 lg:grid-cols-[70%_30%] gap-10 p-6 w-full">
                     
                       <div className="">
-                                         
-                           
-                        <ViewTitle backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate("/models/benchmark")}} align={"left"}/>
-                
-                                  
-                      <div className="pb-20"></div>
+
+                        <div className={'h-[400px]'} >
+                          <ViewTitle breadcrumbs={true} backButton={true} titleCustom={<p className="text-6xl font-semibold">{model.title}</p>} title={model.title} desc={capitalize(model.description)} actionText= {"TRY DEMO"} onAction={()=>{navigate(`/models/${model.id}/tasks`)}} align={"left"}/>
+                        </div>
+
+
+
                       
 
                         <div className="flex justify-between">
-                            <Tabs data={tabs} align={"left"} />
-                         
+                            <Tabs data={tabs} align={"left"} activeTab={selectedLanguage} onTabClick={setSelectedLanguage} />
+
                             <button onClick={handleCopy} className={`p-3 rounded-full text-sm font-medium transition-colors duration-300
                                 ${copied ? 'bg-green-300 text-black' : 'text-black hover:bg-gray-300'}
                               `}> <LuCopy/>
                             </button>
                         </div>
-                        
-                        <CodeViewer language={'js'} code={code_example}/>
+
+                        <CodeViewer language={selectedLanguage === 'typescript' ? 'typescript' : selectedLanguage === 'python' ? 'python' : 'bash'} code={code_example}/>
     
                       <div className="pb-20 ">
                        
@@ -197,14 +246,16 @@ export default function ModelInfoPage() {
                         
                       </div>
 
-                      <div className="flex flex-col">
+                      <div className="flex flex-col ">
 
-                        <div className=" bg-white shadow-[0_0_50px_#C3E6FF99] rounded-full h-50 w-50 p-10 mb-30 ml-auto">
-                             <img
+                        <div className="h-[400px]    ml-auto">
+
+                              <img
                               src={model.imageUrl || getModelImage(model.provider)}
-                              className={`mx-auto ${!model.imageUrl && ""} `}
+                              className={`mx-auto ${!model.imageUrl && ""} bg-white  h-50 w-50 p-6 shadow-[0_0_50px_#C3E6FF99] rounded-full`}
                               alt="Model preview"
                             />
+
                         </div>
                             
 

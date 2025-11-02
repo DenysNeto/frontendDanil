@@ -6,6 +6,7 @@
     "provider": "OpenAI",
     "type": "instruct",
     "context_length": 131072,
+    "parameters": "22B",
     "baseline_id": "gpt-oss-base",
     "faq": [
       {
@@ -79,6 +80,7 @@
     "provider": "OpenAI",
     "type": "instruct",
     "context_length": 131072,
+    "parameters": "122B",
     "baseline_id": "gpt-oss-base",
     "faq": [
       {
@@ -152,6 +154,7 @@
     "provider": "DeepSeek",
     "type": "reasoning",
     "context_length": 131072,
+    "parameters": "33B",
     "baseline_id": "deepseek-base",
     "faq": [
       {

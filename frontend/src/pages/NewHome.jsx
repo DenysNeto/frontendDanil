@@ -86,13 +86,13 @@ useEffect(() => {
         
         <div className="py-30"> 
           
-       <ViewTitle 
+       <ViewTitle
             uptitle="Build the future of AI"
             align={"center"}
             uptitleSize = "6"
             uptitleBold={false}
-            titleCustom = {<p className="text-8xl font-semibold">
-            
+            titleCustom = {<p className="text-8xl font-bold">
+
             From Spark To{" "}
             <span className="bg-gradient-to-r from-purple-400 via-blue-500 to-pink-400 bg-clip-text text-transparent">
                 Scale.

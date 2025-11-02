@@ -43,10 +43,10 @@ function App() {
                             <Route path="/" element={<NewPageTemplate/>}/>  
                             <Route path="*" element={<NotFoundPage/>}/>
 
-                            <Route path="/models" element={<ModelsPage />} /> 
-                            <Route path="/models/*" element={<ModelInfoPage />} />
-                            <Route path="/models/benchmark" element={<ModelBenchmarkPage />} />
-                            <Route path="/models/prompt" element={<ModelPromptPage />} />
+                            <Route path="/models" element={<ModelsPage />} />
+                            <Route path="/models/:modelId" element={<ModelInfoPage />} />
+                            <Route path="/models/:modelId/tasks" element={<ModelBenchmarkPage />} />
+                            <Route path="/models/:modelId/prompt" element={<ModelPromptPage />} />
                             <Route path="/stream-demo" element={<StreamDemoPage />} />
 
                             {/* <Route path='/result/' element={<ResultPage/>} */}
