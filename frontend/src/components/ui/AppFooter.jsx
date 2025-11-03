@@ -11,7 +11,7 @@ import ViewTitle from "./ViewTitle";
 let footerColumns= [
   ["Platform", "Models", "Developers", "Pricing", "Partners", "Company"],
   ["Cookie Policy", "Privacy Policy", "Terms of service"],
-  ["© 2025 Fireworks AI, Inc. All rights reserved."]
+  ["© 2025 TwoDelta AI, Inc. All rights reserved."]
 ]
 
 
