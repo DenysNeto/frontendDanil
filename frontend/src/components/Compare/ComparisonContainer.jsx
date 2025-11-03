@@ -3,7 +3,7 @@ import ComparisonRow from "./ComparisonRow";
 import ComparisonHeader from "./ComparisonHeader";
 
 
-const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPrompt}) {
+const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPrompt, showHeader = true, stickyHeader = false}) {
   const dataRows = data?.compareFields ? data.compareFields : data;
   const price = data?.price;
   const costSaving = data?.cost_saving;
@@ -21,14 +21,20 @@ const ComparisonContainer = React.memo(function ComparisonContainer({data ,isPro
     );
   }
 
+  const headerWrapperClass = stickyHeader ? "sticky top-0 z-30 bg-white" : "";
+
   return (
     <>
 
   <div className="w-full mx-auto bg-transparent rounded-3xl shadow-[0_10px_20px_rgba(199,233,255,0.3)] !bg-white z-20 ">
 
-    <ComparisonHeader headerData={data?.compareTypes} price={price} costSaving={costSaving} baselinePrice={baselinePrice} optimizedPrice={optimizedPrice} />
+    {showHeader && (
+      <div className={headerWrapperClass}>
+        <ComparisonHeader headerData={data?.compareTypes} price={price} costSaving={costSaving} baselinePrice={baselinePrice} optimizedPrice={optimizedPrice} />
+      </div>
+    )}
 
-    <div className="border-t border-gray-100 flex flex-col ">
+    <div className={showHeader ? "border-t border-gray-100 flex flex-col " : "flex flex-col "}>
       {/* Define display order: Latency, Throughput, Accuracy, Live Data */}
     {[
       ['latency', dataRows?.latency],

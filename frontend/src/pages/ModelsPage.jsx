@@ -15,7 +15,7 @@ export default function ModelsPage() {
        
         <Template type={templateType} >
           
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[30%_70%] gap-6 lg:gap-8 w-full max-w-full">
           <div className="pt-30">
             <ViewTitle
                               align={"left"}
@@ -37,8 +37,8 @@ export default function ModelsPage() {
           
 
 
-            <ViewContent>
-                <ModelsView cardsInRow={3}/>
+            <ViewContent className="overflow-x-auto overflow-y-visible max-w-full">
+                <ModelsView cardsInRow={3} compact={true}/>
             </ViewContent>
 
               </div>

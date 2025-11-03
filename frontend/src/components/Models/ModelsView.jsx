@@ -4,7 +4,7 @@ import ModelList from "./ModelsList";
 import { useModelStore1 } from "../../store/useModelStore1";
 import { useNavigate } from "react-router-dom";
 
-export default function ModelsView({ gap=0, cardsInRow=null , pagination=false }) {
+export default function ModelsView({ gap=0, cardsInRow=null , pagination=false, compact=false }) {
   const navigate = useNavigate()
 
   const updateModels = useModelStore1(s=>s.updateModels)
@@ -33,7 +33,7 @@ export default function ModelsView({ gap=0, cardsInRow=null , pagination=false }
   return (
     <>
     <div className={`flex flex-col w-full relative gap-${gap ? gap : 2 }`} >
-    <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect}/>
+    <ModelList cardsInRow={cardsInRow} models={models} pagination={pagination} onSelect={handleSelect} compact={compact}/>
 
          </div>
 

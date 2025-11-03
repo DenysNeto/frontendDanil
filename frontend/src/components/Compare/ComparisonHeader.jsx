@@ -26,7 +26,7 @@ export default function ComparisonHeader({
   return (
 
     <div className="flex w-full  z-20 border-b border-gray-100">
-      <div className="!w-[250px]   bg-tansparent flex flex-col gap-1 p-6">
+      <div className="!w-[250px] bg-transparent flex flex-col gap-1 p-6">
         {backButton === true && <button><HiMiniArrowLeft /></button>}
 
       </div>

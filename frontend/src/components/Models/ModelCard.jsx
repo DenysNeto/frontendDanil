@@ -36,6 +36,7 @@ export default function ModelCard({
   provider = null,
   newModel= true,
   onSelect = ()=>{},
+  compact = false,
 }) {
 
   const truncated = typeof description === "string"
@@ -48,10 +49,10 @@ export default function ModelCard({
 
   return (
 
-    <article onClick={() => onSelect(id)}  className="group w-[340px] h-[340px] p-6 bg-white rounded-3xl border border-gray-100 hover:border-black shadow-sm shadow-md transition-all duration-400 overflow-hidden cursor-pointer">
+    <article onClick={() => onSelect(id)}  className={`group w-full ${compact ? 'max-w-[280px] min-w-[240px] h-[280px]' : 'max-w-[340px] min-w-[280px] h-[340px]'} ${compact ? (newModel ? 'p-4 pt-6' : 'p-4') : (newModel ? 'p-6 pt-8' : 'p-6')} bg-white rounded-3xl border border-gray-100 hover:border-black shadow-sm shadow-md transition-all duration-400 overflow-hidden cursor-pointer`}>
 
       <div className=" flex w-full h-full flex-col  justify-center ">
-          <div className="w-full flex justify-between ">
+          <div className={`w-full flex justify-between ${compact ? 'items-center' : ''} `}>
          {/* Image on top */}
         {imageUrl && typeof imageUrl == "string"? (
           <img
@@ -68,9 +69,9 @@ export default function ModelCard({
           style={{ display: "block" }}
         />
         )}
-         <div className="flex items-top gap-2 flex-shrink-0">
+         <div className="flex items-top gap-2 flex-shrink-0 mt-2">
             {newModel && (
-              <span className="inline-flex h-1/2 items-center p-2 px-4 text-xs font-bold bg-[#297A971A] text-gray-800 rounded-full">
+              <span className="inline-flex items-center p-2 px-4 text-xs font-bold bg-[#297A971A] text-gray-800 rounded-full">
                   New
                 </span>
             )}

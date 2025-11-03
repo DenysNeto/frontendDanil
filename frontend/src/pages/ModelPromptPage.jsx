@@ -4,6 +4,7 @@ import ViewTitle from "../components/ui/ViewTitle.jsx";
 import ViewContent from "../components/ui/ViewContent.jsx";
 import Template from "../components/ui/Template.jsx";
 import ComparisonContainer from "../components/Compare/ComparisonContainer.jsx";
+import ComparisonHeader from "../components/Compare/ComparisonHeader.jsx";
 import PromptInput from "../components/ui/PromptInput.jsx";
 import useInferenceAPI from "../hooks/useInferenceAPI.js";
 import { useModelStore1 } from "../store/useModelStore1.js";
@@ -126,22 +127,33 @@ export default function ModelPromptPage() {
 return (
   <div className="text-black h-full">
     <Template type="action">
-      <ViewTitle titleCustom={<p className="text-6xl font-semibold" style={{color: '#213547'}}>{`${selectedModel.title} - ${selectedModelBenchmark.title}`}</p>} align="left" backButton={true} />
+      <ViewTitle titleCustom={<p className="text-6xl font-semibold" style={{color: '#213547'}}>{`${selectedModel?.title || 'Model'} - ${selectedModelBenchmark?.title || 'Benchmark'}`}</p>} align="left" backButton={true} />
 
+      {hasBenchmarkData && (
+        <div className="px-4 py-2">
+          <ComparisonHeader 
+            headerData={compareData?.compareTypes} 
+            price={compareData?.price} 
+            costSaving={compareData?.cost_saving} 
+            baselinePrice={compareData?.baseline_price} 
+            optimizedPrice={compareData?.optimized_price} 
+          />
+        </div>
+      )}
 
       <ViewContent> 
         <div className="flex flex-col max-h-[65vh]">
 
-          <div ref={promptChat} className=" flex-1 overflow-y-auto px-4 py-2">
+          <div ref={promptChat} className="flex-1 overflow-y-auto px-4 py-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]" style={{scrollbarWidth: 'none'}}>
             {hasBenchmarkData ? (
               <>
-                <ComparisonContainer data={compareData} />
+                <ComparisonContainer data={compareData} showHeader={false} />
                 <div className="mb-20" />
 
                 {responseData && (
                     <ComparisonContainer
                       data={responseData}
-                      header={true}
+                      showHeader={false}
                       isPrompt="true"
                     />
                   )}

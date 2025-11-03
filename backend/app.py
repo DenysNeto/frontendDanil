@@ -40,11 +40,28 @@ def serve_react_app(path):
         return None
 
     file_path = os.path.join(REACT_BUILD_DIR, path)
-    if os.path.exists(file_path):
-        return send_from_directory(REACT_BUILD_DIR, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        # Determine MIME type based on file extension
+        mimetype = None
+        if path.endswith('.js'):
+            mimetype = 'application/javascript'
+        elif path.endswith('.css'):
+            mimetype = 'text/css'
+        elif path.endswith('.json'):
+            mimetype = 'application/json'
+        elif path.endswith('.svg'):
+            mimetype = 'image/svg+xml'
+        elif path.endswith('.png'):
+            mimetype = 'image/png'
+        elif path.endswith('.jpg') or path.endswith('.jpeg'):
+            mimetype = 'image/jpeg'
+        elif path.endswith('.gif'):
+            mimetype = 'image/gif'
+        
+        return send_from_directory(REACT_BUILD_DIR, path, mimetype=mimetype)
     else:
         # For client-side routing, serve index.html
-        return send_from_directory(REACT_BUILD_DIR, 'index.html')
+        return send_from_directory(REACT_BUILD_DIR, 'index.html', mimetype='text/html')
 
 
 # API: Get all available models from config

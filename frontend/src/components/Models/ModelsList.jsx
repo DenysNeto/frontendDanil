@@ -4,7 +4,7 @@ import { BiArrowFromRight } from "react-icons/bi";
 import { BiArrowFromLeft } from "react-icons/bi";
 import Icon from "../ui/Icon"
 
-export default function ModelList({ cardsInRow = 3, models = [], pagination = false,onSelect= ()=>{} }) {
+export default function ModelList({ cardsInRow = 3, models = [], pagination = false, onSelect= ()=>{}, compact = false }) {
   const gridColsClass = {
     1: "lg:grid-cols-1",
     2: "lg:grid-cols-2",
@@ -43,10 +43,10 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
 
   if (!pagination) {
     return (
-        <div className={`flex flex-row w-[80vw] flex-wrap gap-6`}>
+        <div className={`flex flex-row w-full max-w-full flex-wrap gap-3 sm:gap-4 md:gap-6`}>
         {models && models.length > 0 ? models.map((model, index) => (
-        <ModelCard key={index} {...model} onSelect={() => onSelect(model.id)}/>
-        )) : <ModelCard />}
+        <ModelCard key={index} {...model} onSelect={() => onSelect(model.id)} compact={compact}/>
+        )) : <ModelCard compact={compact} />}
       </div>
     );
   }
@@ -61,16 +61,18 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
             <button
               onClick={prev}
               aria-label="Previous"
+              className="absolute left-0 md:left-[-4vw] top-1/2 -translate-y-1/2 z-10"
             >
-                  <Icon name={'ArrowLeft'} className={'absolute left-[-4vw] top-1/2 w-14 h-14 transition-all duration-300 hover:w-15 hover:h-15 text-gray-500 border border-gray-300 rounded-full p-3 ' } />
+                  <Icon name={'ArrowLeft'} className={'w-10 h-10 md:w-14 md:h-14 transition-all duration-300 hover:scale-110 text-gray-500 border border-gray-300 rounded-full p-3 bg-white shadow-sm'} />
                  
             </button>
 
             <button
               onClick={next}
               aria-label="Next"
+              className="absolute right-0 md:right-[-4vw] top-1/2 -translate-y-1/2 z-10"
                >
-                <Icon name={'ArrowRight'} className={'absolute right-[-4vw] top-1/2 w-14 h-14 transition-all duration-300 hover:w-15 hover:h-15  text-gray-500 border border-gray-300 rounded-full p-3 ' } />
+                <Icon name={'ArrowRight'} className={'w-10 h-10 md:w-14 md:h-14 transition-all duration-300 hover:scale-110 text-gray-500 border border-gray-300 rounded-full p-3 bg-white shadow-sm'} />
 
             </button>
           </>
@@ -87,12 +89,12 @@ export default function ModelList({ cardsInRow = 3, models = [], pagination = fa
             {pages.map((chunk, pageIdx) => (
               <div
                 key={pageIdx}
-                className="w-full flex-shrink-0 px-6 py-4"
+                className="w-full flex-shrink-0 px-2 sm:px-4 md:px-6 py-4"
                 style={{ width: `${100 / pages.length}%` }}
               >
-                <div className={`flex flex-row w-[80vw] flex-wrap gap-6`}>
+                <div className={`flex flex-row w-full max-w-full flex-wrap gap-3 sm:gap-4 md:gap-6`}>
                   {chunk.map((model, i) => (
-                    <ModelCard key={i} {...model} onSelect={() => onSelect(model.id)}/>
+                    <ModelCard key={i} {...model} onSelect={() => onSelect(model.id)} compact={compact}/>
                   ))}
                 </div>
               </div>

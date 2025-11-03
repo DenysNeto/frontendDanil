@@ -3,6 +3,7 @@ import Metric from "../ui/Metric.jsx"
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { HiMiniArrowUp, HiMiniArrowDown } from "react-icons/hi2";
 
 export default function ComparisonRow({name, metric, compareTypes =["optimized","baseline"] ,isPrompt}) {
 
@@ -33,30 +34,86 @@ const getMaxValue = () => {
 
 const maxValue = getMaxValue();
 
+// Calculate improvement with arrow and value based on metric type
+const getImprovement = () => {
+  if (!metric || !metric.unit || name?.toUpperCase() === "LIVE DATA") {
+    return null;
+  }
+
+  const optimizedValue = metric[compareTypes[0]]; // optimized
+  const baselineValue = metric[compareTypes[1]]; // baseline
+
+  // Extract numeric values
+  const optimizedNum = typeof optimizedValue === 'number' 
+    ? optimizedValue 
+    : Number(String(optimizedValue).replace(/[^0-9.]/g, ''));
+  const baselineNum = typeof baselineValue === 'number' 
+    ? baselineValue 
+    : Number(String(baselineValue).replace(/[^0-9.]/g, ''));
+
+  if (!Number.isFinite(optimizedNum) || !Number.isFinite(baselineNum) || baselineNum === 0) {
+    return null;
+  }
+
+  const metricName = name?.toUpperCase() || '';
+
+  // For LATENCY: lower is better, so show times less and arrow down
+  if (metricName === "LATENCY") {
+    if (optimizedNum === 0) return null;
+    const timesFaster = baselineNum / optimizedNum;
+    return {
+      value: `${timesFaster.toFixed(2)}x`,
+      arrow: <HiMiniArrowDown className="inline" />
+    };
+  }
+
+  // For THROUGHPUT and ACCURACY: higher is better, show percentage and arrow up
+  if (metricName === "THROUGHPUT" || metricName === "ACCURACY") {
+    const percentIncrease = ((optimizedNum - baselineNum) / baselineNum) * 100;
+    if (percentIncrease > 0) {
+      return {
+        value: `${percentIncrease.toFixed(1)}%`,
+        arrow: <HiMiniArrowUp className="inline" />
+      };
+    } else if (percentIncrease < 0) {
+      return {
+        value: `${Math.abs(percentIncrease).toFixed(1)}%`,
+        arrow: <HiMiniArrowDown className="inline" />
+      };
+    }
+    return null;
+  }
+
+  return null;
+};
+
+const improvement = getImprovement();
+
  return (
   <div
         key={name+Math.random()}
-        className={` flex text-xs border-b border-gray-50 last:border-b-0   rounded-3xl `}
+        className={` flex text-xs border-b border-gray-50 last:border-b-0 rounded-3xl ${isPrompt ? 'max-h-[50vw]' : ''}`}
       >
 
 
 
-<div className="w-[250px] flex flex-col ">
+<div className="w-[250px] flex flex-col gap-2">
   <div className="flex p-6 items-center w-full text-base font-bold text-gray-800 ">
     <Icon name={rowIcon} className="w-6 h-6 mr-2" />
     <span>{rowName}</span>
   </div>
 
-  {metric?.improvement || metric?.change ? (
-    <div className="text-xs p-6 text-blue-600 font-medium">
-      {metric.improvement || metric.change}
+  {improvement && (
+    <div className="px-6 pb-6 text-green-600 font-bold flex items-center gap-1" style={{fontSize: '30px'}}>
+      <span>{improvement.value}</span>
+      {improvement.arrow}
     </div>
-  ) : null}
+  )}
 </div>
 
 
-        <div className="flex-1 border-l p-6 border-gray-100  ">
-          <div className={`${!isPrompt &&  "w-1/2" }`}>
+        <div className={`flex-1 border-l border-gray-100 ${isPrompt ? 'overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]' : 'p-6'}`} style={isPrompt ? {scrollbarWidth: 'none'} : {}}>
+          <div className={`${!isPrompt &&  "w-1/2" } ${isPrompt ? 'p-6' : ''}`}>
             {metric && metric.unit ? (
               <Metric
                 value={metric[compareTypes[0]]}
@@ -77,8 +134,8 @@ const maxValue = getMaxValue();
         </div>
 
 
-        <div className="flex-1 border-l p-6  border-gray-100 ">
-          <div className={`${!isPrompt &&  "w-1/2" }`} >
+        <div className={`flex-1 border-l border-gray-100 ${isPrompt ? 'overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]' : 'p-6'}`} style={isPrompt ? {scrollbarWidth: 'none'} : {}}>
+          <div className={`${!isPrompt &&  "w-1/2" } ${isPrompt ? 'p-6' : ''}`} >
             {metric && metric.unit ? (
               <Metric
                 color='rgba(224, 158, 248, 1)'
