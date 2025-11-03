@@ -78,7 +78,7 @@ export default function NewPageTemplate() {
             titleSize="1"
             uptitleSmall = {true}
             title='All capabilities needed'
-            desc={`From experimentation to production, Fireworks provides the platform to build your \nGenerative AI capabilities - optimized and at scale`}
+            desc={`Two Delta provides an end-to-end platform for Generative AI, enabling smooth transitions from experimentation \nto production with models optimized for speed, efficiency, and scale.`}
        / > 
 
         
