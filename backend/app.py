@@ -244,7 +244,7 @@ def generate_stream(prompt, max_tokens, temperature, model_fqdn):
             json=payload,
             headers=headers,
             stream=True,
-            timeout=60,
+            timeout=(10, None),  # 10s connection timeout, no read timeout for streaming
             verify=False  # For development with self-signed certs
         ) as response:
             
