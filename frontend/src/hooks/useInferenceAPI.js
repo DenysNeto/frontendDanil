@@ -87,6 +87,11 @@ export default function useInferenceAPI(apiBaseUrl) {
           const { done, value } = await reader.read();
           if (done) break;
 
+          // Clear the timeout once we start receiving data - connection is established
+          if (!hasReceivedData) {
+            clearTimeout(timeoutId);
+          }
+
           hasReceivedData = true;
           buffer += decoder.decode(value, { stream: true });
           const lines = buffer.split("\n");
