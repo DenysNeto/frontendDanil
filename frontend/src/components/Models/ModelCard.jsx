@@ -69,7 +69,7 @@ export default function ModelCard({
           style={{ display: "block" }}
         />
         )}
-         <div className="flex items-top gap-2 flex-shrink-0 mt-2">
+         <div className={`${compact ? 'flex items-top gap-2 flex-shrink-0' : ''} mt-2`}>
             {newModel && (
               <span className="inline-flex items-center p-2 px-4 text-xs font-bold bg-[#297A971A] text-gray-800 rounded-full">
                   New
